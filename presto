@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+require_once 'vendor/autoload.php';
+
+try{
+    $kanel = app(\App\Consoles\Kanel::class, $argv);
+    $status = $kanel->handler();
+}catch(\Exception $e){
+    $status = $e->getCode();
+    echo $e->getMessage();
+}
+exit($status);
