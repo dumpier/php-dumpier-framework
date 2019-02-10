@@ -1,4 +1,7 @@
 # PHP Presto Framework
+
+<img src=https://i.imgur.com/fpeJwF8.png>
+
 ## Collection
 - 連想配列の検索や結合を行う
 ```
