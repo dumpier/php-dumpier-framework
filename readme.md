@@ -1,5 +1,25 @@
 # PHP Presto Framework
 
+##
+```
+// DB検索
+$parameters = [];
+$parameters["conditions"]["last_login"][">="] = "2019-02-11";
+$parameters["conditions"]["or"]["level"]["in"] = [10,11,12];
+$parameters["conditions"]["or"]["rank"]["between"] = [3,4];
+
+$players = dataabse("shard_01")->table("player")->paging($parameters);
+
+
+// 配列検索
+$condition = [];
+$condition["A"]["in"] = [1,2,3,4,6];
+$condition["or"]["B"]["in"] = [1,2];
+$condition["or"]["C"] = 31;
+
+collection($rows)->where($condition);
+```
+
 <img src=https://i.imgur.com/fpeJwF8.png>
 
 ## Collection
