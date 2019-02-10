@@ -84,6 +84,6 @@ EOF;
     private function getPropertyNameByClass(string $class)
     {
         $name = str()->toCamel(preg_replace("/^.+\\\\/", "", $class));
-        return trim($name, "Repository");
+        return str_replace("Repository", "", $name);
     }
 }
