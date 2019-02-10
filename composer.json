@@ -40,5 +40,6 @@
         }
     },
 
+    "minimum-stability": "master",
     "prefer-stable": true
 }
