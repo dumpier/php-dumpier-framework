@@ -19,7 +19,7 @@ if(! function_exists('app')){
 // path
 if(! function_exists('path')) {
     function path(string $sub=null) {
-        $path = (dirname(dirname(dirname(__FILE__))));
+        $path = (dirname(dirname(dirname(dirname(__FILE__)))));
         if($sub) { $path .= DIRECTORY_SEPARATOR.$sub; }
         return str()->cleanDirectorySeparator($path);
     }
