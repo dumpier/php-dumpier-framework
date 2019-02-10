@@ -1,7 +1,7 @@
 <?php
 namespace Presto\Consoles;
 
-class MigrateCommand extends \Command
+class MigrateCommand extends \Presto\Consoles\Command
 {
 
 
