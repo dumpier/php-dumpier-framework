@@ -1,9 +1,8 @@
 <?php
-namespace Prest\Consoles;
+namespace Presto\Consoles;
 
 use Presto\Mvc\Model\Entity\Table;
 use Presto\Services\Codes\GenerateModelService;
-use Presto\Consoles\Command;
 
 
 /**

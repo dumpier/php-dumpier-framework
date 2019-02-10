@@ -302,7 +302,7 @@ class QueryBuilder
     {
         $name = empty($name) ? config("database", "default") : $name;
 
-        $config = config("database", $name);
+        $config = config("database", "connections.{$name}");
 
         $config['host'] = empty($config['host']) ? "127.0.0.0" : $config['host'];
         $config['port'] = empty($config['port']) ? 3306 : $config['port'];
