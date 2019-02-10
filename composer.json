@@ -19,6 +19,12 @@
         "phpunit/phpunit": "^7.2"
     },
 
+    "extra": {
+        "branch-alias": {
+            "dev-master": "master"
+        }
+    },
+    
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
@@ -40,6 +46,6 @@
         }
     },
 
-    "minimum-stability": "master",
+    "minimum-stability": "dev-master",
     "prefer-stable": true
 }
