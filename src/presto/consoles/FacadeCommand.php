@@ -11,6 +11,7 @@ class FacadeCommand extends \Presto\Consoles\Command
         $service_comment = $this->getServiceAndRepositoryList(service_path());
         // リポジトリ一覧
         $repository_comment = $this->getServiceAndRepositoryList(repository_path());
+
         // サービスとリポジトリ一覧
         $phpcomment = "/**" . PHP_EOL . $service_comment ." *".PHP_EOL. $repository_comment . " */";
 
@@ -82,6 +83,7 @@ EOF;
     // 変数名
     private function getPropertyNameByClass(string $class)
     {
-        return str()->toCamel(preg_replace("/^.+\\\\/", "", $class));
+        $name = str()->toCamel(preg_replace("/^.+\\\\/", "", $class));
+        return trim($name, "Repository");
     }
 }

@@ -7,6 +7,11 @@ if(! function_exists('compare')) { /** @return \Presto\Utilities\CompareUtility 
 // collection
 if(! function_exists('collection')) { /** @return \Presto\Collection */ function collection(array $rows=[]) { return new \Presto\Collection($rows); }}
 
+// helpers
+// paging
+if(! function_exists('paging')) { /** @return \Presto\Helpers\Paging */ function paging() { return \Presto\Helpers\Paging::getInstance(); }}
+// breadcrumb
+if(! function_exists('breadcrumb')) { /** @return \Presto\Helpers\Breadcrumb */ function breadcrumb(array $breadcrumbs=[]) { return \Presto\Helpers\Breadcrumb::getInstance()->adds($breadcrumbs); }}
 
 if(! function_exists('app')){
     function app(string $class, ...$parameters) {
@@ -54,12 +59,6 @@ if(! function_exists('html')) { /** @return \Presto\Helpers\Html\HtmlTag */ func
 if(! function_exists('directory')) { /** @return \Presto\Files\DirectoryLoader */ function directory() { return \Presto\Files\DirectoryLoader::getInstance(); }}
 // csv
 if(! function_exists('csv')) { /** @return \Presto\Files\CsvLoader */ function csv() { return \Presto\Files\CsvLoader::getInstance(); }}
-
-// helpers
-// paging
-if(! function_exists('paging')) { /** @return \Presto\Helpers\Paging */ function paging() { return \Presto\Helpers\Paging::getInstance(); }}
-// breadcrumb
-if(! function_exists('breadcrumb')) { /** @return \Presto\Helpers\Breadcrumb */ function breadcrumb(array $breadcrumbs=[]) { return \Presto\Helpers\Breadcrumb::getInstance()->adds($breadcrumbs); }}
 
 
 // debugbar
