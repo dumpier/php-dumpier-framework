@@ -18,6 +18,13 @@ $condition["or"]["B"]["in"] = [1,2];
 $condition["or"]["C"] = 31;
 
 collection($rows)->where($condition);
+
+// 配列の結合
+$condition = [];
+$condition["row1_key1"] = "row2_key1";
+$condition["or"]["row1_key2"] = "row2_key2";
+$condition["or"]["row1_key3"] = "row2_key3";
+collection()->join($rows1, $rows2, $condition);
 ```
 
 <img src=https://i.imgur.com/fpeJwF8.png>
