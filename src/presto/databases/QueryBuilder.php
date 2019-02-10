@@ -27,7 +27,7 @@ class QueryBuilder
      */
     public function tables()
     {
-        return $this->execute("SHOW TABLE STATUS");
+        return $this->querySelect("SHOW TABLE STATUS");
     }
 
     /**
@@ -37,7 +37,7 @@ class QueryBuilder
      */
     public function columns(string $table)
     {
-        return $this->execute("SHOW FULL COLUMNS FROM `{$table}`");
+        return $this->querySelect("SHOW FULL COLUMNS FROM `{$table}`");
     }
 
 
