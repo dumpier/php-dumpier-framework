@@ -3,6 +3,7 @@
 軽い、速い、シンプル、開発効率がいいを目指す。
 最速のPHPフレームワークを目指す。
 ```
+<img src=https://i.imgur.com/fpeJwF8.png>
 
 ##
 ```
@@ -30,8 +31,6 @@ $condition["or"]["row1_key2"] = "row2_key2";
 $condition["or"]["row1_key3"] = "row2_key3";
 collection()->join($rows1, $rows2, $condition);
 ```
-
-<img src=https://i.imgur.com/fpeJwF8.png>
 
 ## Collection
 - 連想配列の検索や結合を行う
