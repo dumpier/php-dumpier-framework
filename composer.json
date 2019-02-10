@@ -33,8 +33,7 @@
 
     "autoload":{
         "files": [
-            "helpers.php",
-            "presto"
+            "helpers.php"
         ],
         "psr-4": {
             "Presto\\": "src/presto/"
