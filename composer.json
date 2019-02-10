@@ -1,5 +1,6 @@
 {
     "name": "dumpier/php-presto-framework",
+    "type": "library",
     "description": "The Presto Framework.",
     "keywords": [ "php", "framework", "presto" ],
     "license": "MIT",
@@ -20,7 +21,7 @@
 
     "extra": {
         "branch-alias": {
-            "dev-master": "master"
+            "dev-master": "master-dev"
         }
     },
     
@@ -45,6 +46,6 @@
         }
     },
 
-    "minimum-stability": "dev-master",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
