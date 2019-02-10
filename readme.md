@@ -56,7 +56,7 @@ collection()->mapping($rows, $foreigns, $join);
 ```
 
 ## Repository
-- テーブル間JOINをシンプルに記述する
+- 複数のテーブルデータをJOINなしで結合する
 ```
 // リポジトリの定義
 class PlayerDeckRepository extends Repository
@@ -64,13 +64,17 @@ class PlayerDeckRepository extends Repository
     protected $class = PlayerDeckModel::class;
 
     protected $relations = [
+        // 結合する名前（任意の文字列 | リポジトリクラスの場合テーブル名に変換される）
         PlayerCharacterRepository::class=>[
             'type'=>Model::HAS_ONE,
+            
+            // 結合対象テーブルのリポジトリ
             "repository"=>PlayerCharacterRepository::class,
-            // PlayerCharacterの下位リレーションは自動でロードしない
+
+            // 0の場合は、PlayerCharacterの下位リレーションは自動でロードしない
             'recursion'=>0,
 
-            // 親テーブルが満たすべき条件
+            // 現在テーブルが満たすべき条件
             'where'=>[
                 "or"=>[
                     "player_character_id_1"=>['>'=> 0],
@@ -82,7 +86,7 @@ class PlayerDeckRepository extends Repository
                 ],
             ],
 
-            // JOIN条件（foregin_name=>[colurmn=>foreign_column]）
+            // 結合条件（foregin_name=>[colurmn=>foreign_column]）
             'join'=>[
                 "player_character_1"=>["player_character_id_1"=>"id"],
                 "player_character_2"=>["player_character_id_2"=>"id"],
@@ -91,6 +95,12 @@ class PlayerDeckRepository extends Repository
                 "player_character_5"=>["player_character_id_5"=>"id"],
                 "player_character_6"=>["player_character_id_6"=>"id"],
             ],
+            
+             // 外部テーブルが満たすべき条件
+            'conditions'=>[
+                ["player_id"=>"player_id"],
+            ],
+
         ],
     ];
 
