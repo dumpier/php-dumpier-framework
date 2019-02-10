@@ -20,6 +20,9 @@ class Controller
     /** コンテンツ */
     public $contents = [];
 
+    /** ぱんくず */
+    protected $breadcrumbs = [];
+
 
     /**
      * コンテンツを設定
@@ -44,6 +47,9 @@ class Controller
     {
         // コンテンツをマージ
         $contents = array_merge($this->contents, $contents);
+
+        // ぱんくずを追加
+        $contents["breadcrumbs"] = $this->breadcrumbs;
 
         // Viewテンプレート
         $template = $template ?? $this->template;

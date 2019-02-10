@@ -19,8 +19,8 @@ class View
         self::TYPE_JSON,
     ];
 
-    private $type = self::TYPE_HTML;
-    private $layout = NULL;
+    protected $type = self::TYPE_HTML;
+    protected $layout = NULL;
 
     // テンプレートの指定
     public function path(string $path=NULL)
@@ -82,6 +82,8 @@ class View
 
     private function renderToHtml(array $contents=[], string $template="", string $layout="")
     {
+        breadcrumb()->adds($contents["breadcrumbs"]);
+
         $template_file = $this->getDefaultHtmlTemplate($template);
 
         if( config('cache', 'views.enable') )
