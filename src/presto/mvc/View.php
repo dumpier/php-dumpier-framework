@@ -82,7 +82,10 @@ class View
 
     private function renderToHtml(array $contents=[], string $template="", string $layout="")
     {
-        breadcrumb()->adds($contents["breadcrumbs"]);
+        if(!empty($contents["breadcrumbs"]))
+        {
+            breadcrumb()->adds($contents["breadcrumbs"]);
+        }
 
         $template_file = $this->getDefaultHtmlTemplate($template);
 
