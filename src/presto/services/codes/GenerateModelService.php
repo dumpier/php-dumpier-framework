@@ -57,15 +57,15 @@ class GenerateModelService extends \Presto\Service
         $codes[] = "     * @param array \$row";
         $codes[] = "     * @return \\{$model_namespace}\\{$model_classname}";
         $codes[] = "     */";
-        $codes[] = "    public static function addNew(array \$row=[])";
+        $codes[] = "    public static function add(array \$row=[])";
         $codes[] = "    {";
         $codes[] = "        \$self = new static;";
         $codes[] = "";
         $codes[] = "        // 入力値のチェック";
-        $codes[] = "        \$this->validateNewRow(\$row);";
+        $codes[] = "        \$self->validate(\$row);";
         $codes[] = "";
         $codes[] = "        // 代入処理";
-        $codes[] = "        \$this->initByNewRow(\$row);";
+        $codes[] = "        \$self->initialize(\$row);";
         $codes[] = "";
         $codes[] = "        \$self->save();";
         $codes[] = "        return \$self;";
