@@ -8,12 +8,10 @@ class CompareUtility
     use Singletonable;
 
     const EXPRESSION = [
-        "=", "equal",
-        "!=", "<>", "notEqual",
-        ">", ">=",
-        "<", "<=",
+        "between",
         "in", "not in",
-        "like", "l-like", "r-like"
+        "like", "l-like", "r-like",
+        "=", "!=", "<>", ">", ">=", "<", "<=",
     ];
 
 
@@ -29,9 +27,11 @@ class CompareUtility
     {
         switch ($expression)
         {
+            case "between":
+                return ($val >= $target_val[0]) && ($val <= $target_val[1]);
+
             case "in":
                 return in_array($val, $target_val, true);
-
             case "not in":
                 return ! in_array($val, $target_val, true);
 
@@ -43,22 +43,16 @@ class CompareUtility
                 return preg_match("/{$val}$/", $target_val);
 
             case "=":
-            case "equal":
                 return ($val == $target_val);
-
             case "!=":
             case "<>":
                 return !($val == $target_val);
-
             case ">":
                 return $val > $target_val;
-
             case ">=":
                 return $val >= $target_val;
-
             case "<":
                 return $val < $target_val;
-
             case "<=":
                 return $val <= $target_val;
 
