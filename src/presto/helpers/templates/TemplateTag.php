@@ -1,7 +1,6 @@
 <?php
 namespace Presto\Helpers\Templates;
 
-use Presto\Utilities\PregUtility;
 use Presto\Traits\Singletonable;
 
 class TemplateTag
@@ -42,7 +41,7 @@ class TemplateTag
     public function includes(string $phtml)
     {
         // includeタグ一覧
-        $includes = PregUtility::getAll("/@include\(.+?\)/", $phtml);
+        $includes = preg()->all("/@include\(.+?\)/", $phtml);
 
         foreach ($includes as $include)
         {
@@ -73,7 +72,7 @@ class TemplateTag
     public function variables(string $phtml)
     {
         // 例）{{ $xxx.yyy }}
-        $variables = PregUtility::getAll("/\{\{ *\\$.+? *\}\} */", $phtml);
+        $variables = preg()->all("/\{\{ *\\$.+? *\}\} */", $phtml);
 
         foreach ($variables as $variable)
         {
@@ -101,7 +100,7 @@ class TemplateTag
     public function callables(string $phtml)
     {
         // 関数の呼び出し一覧 例）{@ debug() }
-        $variables = PregUtility::getAll("/\{@ *.+? *\( *.* *\) *\}/", $phtml);
+        $variables = preg()->all("/\{@ *.+? *\( *.* *\) *\}/", $phtml);
 
         foreach ($variables as $variable)
         {
@@ -153,7 +152,7 @@ class TemplateTag
     // 独自タグをPHP構文に変換
     public function syntax(string $phtml, string $pattern, string $replace)
     {
-        foreach (PregUtility::getAll($pattern, $phtml) as $matche)
+        foreach (preg()->all($pattern, $phtml) as $matche)
         {
             $phtml = str_replace($matche, preg_replace($pattern, $replace, $matche), $phtml);
         }

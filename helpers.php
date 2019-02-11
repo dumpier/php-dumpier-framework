@@ -2,7 +2,9 @@
 // utilities
 if(! function_exists('str')) { /** @return \Presto\Utilities\StringUtility */ function str() { return \Presto\Utilities\StringUtility::getInstance(); }}
 if(! function_exists('arr')) { /** @return \Presto\Utilities\ArrayUtility */ function arr() { return \Presto\Utilities\ArrayUtility::getInstance(); }}
+if(! function_exists('preg')) { /** @return \Presto\Utilities\PregUtility */ function preg() { return \Presto\Utilities\PregUtility::getInstance(); }}
 if(! function_exists('compare')) { /** @return \Presto\Utilities\CompareUtility */ function compare() { return \Presto\Utilities\CompareUtility::getInstance(); }}
+if(! function_exists('validate')) { /** @return \Presto\Utilities\ValidateUtility */ function validate() { return \Presto\Utilities\ValidateUtility::getInstance(); }}
 
 // collection
 if(! function_exists('collection')) { /** @return \Presto\Collection */ function collection(array $rows=[]) { return new \Presto\Collection($rows); }}

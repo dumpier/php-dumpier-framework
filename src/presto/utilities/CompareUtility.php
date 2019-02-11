@@ -11,6 +11,7 @@ class CompareUtility
         "between",
         "in", "not in",
         "like", "l-like", "r-like",
+        "equal", "not", "differ", "large", "large-equal", "less", "less-equal",
         "=", "!=", "<>", ">", ">=", "<", "<=",
     ];
 
@@ -43,17 +44,24 @@ class CompareUtility
                 return preg_match("/{$val}$/", $target_val);
 
             case "=":
+            case "equal":
                 return ($val == $target_val);
             case "!=":
             case "<>":
+            case "not":
+            case "differ":
                 return !($val == $target_val);
             case ">":
+            case "large":
                 return $val > $target_val;
             case ">=":
+            case "large-equal":
                 return $val >= $target_val;
             case "<":
+            case "less":
                 return $val < $target_val;
             case "<=":
+            case "less-equal":
                 return $val <= $target_val;
 
             default:
@@ -69,7 +77,7 @@ class CompareUtility
      * @param bool $isAnd
      * @return boolean
      */
-    public function isMatch(array $row, array $conditions, bool $isAnd=true)
+    public function isMatch(array $row, array $conditions, bool $isOr=FALSE)
     {
         foreach ($conditions as $key=>$val)
         {
@@ -78,16 +86,16 @@ class CompareUtility
             {
                 if( $this->isMatch($row, $val) )
                 {
-                    if($isAnd) continue; return true;
+                    if($isOr) return true; continue;
                 }
 
-                if ($isAnd) return false; continue;
+                if ($isOr) continue; return false;
             }
 
             // OR検索
             if("or" === strtolower($key))
             {
-                if( $this->isMatch($row, $val, FALSE) ) return true; continue;
+                if( $this->isMatch($row, $val, TRUE) ) return true; continue;
             }
 
             // 配列の場合
@@ -99,10 +107,10 @@ class CompareUtility
                 {
                     if($this->compare($row[$key], $expression, $val[$expression]))
                     {
-                        if($isAnd) continue; return true;
+                        if($isOr) return true; continue;
                     }
 
-                    if ($isAnd) return false; continue;
+                    if ($isOr) continue; return false;
                 }
 
                 throw new \Exception("不明条件," . json_encode($conditions));
@@ -111,7 +119,7 @@ class CompareUtility
             // プリミティブな比較
             if($row[$key] != $val)
             {
-                if ($isAnd) return false; continue;
+                if ($isOr) continue; return false;
             }
         }
 
