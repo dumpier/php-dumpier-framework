@@ -74,7 +74,7 @@ class CompareUtility
      * 指定条件に該当するデータであるか
      * @param array $row
      * @param array $conditions
-     * @param bool $isAnd
+     * @param bool $isOr
      * @return boolean
      */
     public function isMatch(array $row, array $conditions, bool $isOr=FALSE)
@@ -123,7 +123,7 @@ class CompareUtility
             }
         }
 
-        if ($isAnd) return true; return false;
+        if ($isOr) return false; return true;
     }
 
 
