@@ -266,19 +266,27 @@ class QueryBuilder
     {
         list($name, $database, $config) = $this->config($name, $database);
 
-        if(empty($this->conns[$name][$database]))
+        // 接続がある場合
+        if( ! empty($this->conns[$name][$database]) )
         {
-            $conn = new \mysqli($config['host'], $config['user'], $config['pass'], $config['db'], $config['port']);
-
-            if($conn->connect_error)
-            {
-                throw new \Exception("Mysql接続エラー[{$name}]\n{$conn->connect_error}");
-            }
-
-            $this->current_conn = $name;
-            $this->current_database = $database;
-            $this->conns[$name][$database] = $conn;
+            return $this->conns[$name][$database];
         }
+
+        // 新しい接続
+        $conn = new \mysqli($config['host'], $config['user'], $config['pass'], $config['db'], $config['port']);
+
+        if($conn->connect_error)
+        {
+            throw new \Exception("Mysql接続エラー[{$name}]\n{$conn->connect_error}");
+        }
+
+        // CHARSET
+        $charset = empty($config["charset"]) ? "utf8" : $config["charset"];
+        $conn->set_charset($charset);
+
+        $this->current_conn = $name;
+        $this->current_database = $database;
+        $this->conns[$name][$database] = $conn;
 
         return $this->conns[$name][$database];
     }

@@ -2,7 +2,6 @@
 namespace Presto\Databases;
 
 use Presto\Traits\Singletonable;
-use Presto\Utilities\CompareUtility;
 
 class ArrayToWhere
 {

@@ -2,7 +2,6 @@
 namespace Presto;
 
 use Presto\Traits\Singletonable;
-use Presto\Express;
 
 class Validator
 {
