@@ -1,18 +1,66 @@
 <?php
-namespace Presto\Utilities;
+namespace Presto;
 
 use Presto\Traits\Singletonable;
 
-class CompareUtility
+class Express
 {
     use Singletonable;
 
-    const EXPRESSION = [
-        "between",
-        "in", "not in",
-        "like", "l-like", "r-like",
-        "equal", "not", "differ", "large", "large-equal", "less", "less-equal",
-        "=", "!=", "<>", ">", ">=", "<", "<=",
+    // -----------------------------------
+    // 演算式
+    // -----------------------------------
+    const SIGN_EQUAL = "=";
+    const SIGN_NOT = "!=";
+    const SIGN_DIFFER = "<>";
+    const SIGN_LARGE = ">";
+    const SIGN_LARGE_OR_EQUAL = ">=";
+    const SIGN_LESS = "<";
+    const SIGN_LESS_OR_EQUAL = "<=";
+
+    const BETWEEN = "between";
+    const IN = "in";
+    const NOT_IN = "not in";
+
+    const LIKE = "like";
+    const L_LIKE = "l-like";
+    const R_LIKE = "r-like";
+
+    const EQUAL = "equal";
+    const NOT = "not";
+    const DIFFER = "differ";
+
+    const LARGE = "large";
+    const LARGE_OR_EQUAL = "large-equal";
+    const LESS = "less";
+    const LESS_OR_EQUAL = "less-equal";
+
+
+    const LIST = [
+        self::SIGN_EQUAL=>["message"=>"等しい", ],
+        self::SIGN_NOT=>["message"=>"異なる", ],
+        self::SIGN_DIFFER=>["message"=>"異なる", ],
+        self::SIGN_LARGE=>["message"=>"大きい", ],
+        self::SIGN_LARGE_OR_EQUAL=>["message"=>"以上", ],
+        self::SIGN_LESS=>["message"=>"小さい", ],
+        self::SIGN_LESS_OR_EQUAL=>["message"=>"以下", ],
+
+
+        self::BETWEEN=>["message"=>"指定範囲内", ],
+        self::IN=>["message"=>"指定一覧内", ],
+        self::NOT_IN=>["message"=>"指定一覧以外", ],
+
+        self::LIKE=>["message"=>"類似", ],
+        self::L_LIKE=>["message"=>"左寄り類似", ],
+        self::R_LIKE=>["message"=>"右寄り類似", ],
+
+        self::EQUAL=>["message"=>"等しい", ],
+        self::NOT=>["message"=>"異なる", ],
+        self::DIFFER=>["message"=>"異なる", ],
+        self::LARGER=>["message"=>"大きい", ],
+        self::LARGE_OR_EQUAL=>["message"=>"以上", ],
+        self::LESS=>["message"=>"小さい", ],
+        self::LESS_OR_EQUAL=>["message"=>"以下", ],
     ];
 
 
@@ -28,40 +76,45 @@ class CompareUtility
     {
         switch ($expression)
         {
-            case "between":
+            case self::BETWEEN:
                 return ($val >= $target_val[0]) && ($val <= $target_val[1]);
 
-            case "in":
+            case self::IN:
                 return in_array($val, $target_val, true);
-            case "not in":
+            case self::NOT_IN:
                 return ! in_array($val, $target_val, true);
 
-            case "like":
+            case self::LIKE:
                 return preg_match("/{$val}/", $target_val);
-            case "l-like":
+            case self::L_LIKE:
                 return preg_match("/^{$val}/", $target_val);
-            case "r-like":
+            case self::R_LIKE:
                 return preg_match("/{$val}$/", $target_val);
 
-            case "=":
-            case "equal":
+            case self::SIGN_EQUAL:
+            case self::EQUAL:
                 return ($val == $target_val);
-            case "!=":
-            case "<>":
-            case "not":
-            case "differ":
+
+            case self::SIGN_NOT:
+            case self::SIGN_DIFFER:
+            case self::NOT:
+            case self::DIFFER:
                 return !($val == $target_val);
-            case ">":
-            case "large":
+
+            case self::SIGN_LARGE:
+            case self::LARGE:
                 return $val > $target_val;
-            case ">=":
-            case "large-equal":
+
+            case self::SIGN_LARGE_OR_EQUAL:
+            case self::LARGE_OR_EQUAL:
                 return $val >= $target_val;
-            case "<":
-            case "less":
+
+            case self::SIGN_LESS:
+            case self::LESS:
                 return $val < $target_val;
-            case "<=":
-            case "less-equal":
+
+            case self::SIGN_LESS_OR_EQUAL:
+            case self::LESS_OR_EQUAL:
                 return $val <= $target_val;
 
             default:
@@ -103,7 +156,7 @@ class CompareUtility
             {
                 // 演算式
                 $expression = key($val);
-                if( in_array($expression, self::EXPRESSION) )
+                if( in_array($expression, array_keys(self::LIST)) )
                 {
                     if($this->compare($row[$key], $expression, $val[$expression]))
                     {

@@ -94,7 +94,7 @@ class Collection
 
         foreach ($rows as $row)
         {
-            if(compare()->isMatch($row, $condition))
+            if(express()->isMatch($row, $condition))
             {
                 $matches[] = $row;
                 $match_count ++;
@@ -109,11 +109,6 @@ class Collection
         return new static($matches);
     }
 
-
-    public function condition(array $rows, array $joins)
-    {
-
-    }
 
     // 二つの配列を結合する TODO
     public function mapping(array $rows, array $foreigns, array $joins, string $type=Model::HAS_MANY)

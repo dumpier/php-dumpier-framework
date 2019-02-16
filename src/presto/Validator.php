@@ -1,9 +1,10 @@
 <?php
-namespace Presto\Utilities;
+namespace Presto;
 
 use Presto\Traits\Singletonable;
+use Presto\Express;
 
-class ValidateUtility
+class Validator
 {
     use Singletonable;
 
@@ -23,21 +24,6 @@ class ValidateUtility
     const ZIP_CODE = "zip-code";
     const COUNTRY_CODE = "country-code";
 
-    const BETWEEN = "between";
-    const IN = "in";
-    const NOT_IN = "not in";
-    const LIKE = "like";
-    const L_LIKE = "l-like";
-    const R_LIKE = "r-like";
-    const EQUAL = "equal";
-    const DIFFER_1 = "not";
-    const DIFFER_2 = "differ";
-    const LARGE = "large";
-    const LARGE_OR_EQUAL = "large-equal";
-    const LESS = "less";
-    const LESS_OR_EQUAL = "less-equal";
-
-
     const LENGTH = "length";
     const LENGTH_MIN = "length-min";
     const LENGTH_MAX = "length-max";
@@ -49,10 +35,11 @@ class ValidateUtility
      * @var array
      */
     protected $providers = [
+        // 必須
+        self::REQUIRE=>["message"=>"必須", ],
+
         // 正規表現、例）regular:/aaaaa/
         self::REGULAR=>["message"=>"正規表現", ],
-
-        self::REQUIRE=>["message"=>"必須", ],
 
         self::INTEGER=>["message"=>"整数", ],
         self::DOUBLE=>["message"=>"小数", ],
@@ -66,27 +53,6 @@ class ValidateUtility
         self::TELEPHONE=>["message"=>"電話番号", ],
         self::ZIP_CODE=>["message"=>"郵便番号", ],
         self::COUNTRY_CODE=>["message"=>"国番号", ],
-
-        // 演算式
-        self::BETWEEN=>["message"=>"指定範囲内", ],
-        self::IN=>["message"=>"指定一覧内", ],
-        self::NOT_IN=>["message"=>"指定一覧以外", ],
-        self::LIKE=>["message"=>"類似", ],
-        self::L_LIKE=>["message"=>"左寄り類似", ],
-        self::R_LIKE=>["message"=>"右寄り類似", ],
-        self::EQUAL=>["message"=>"等しい", ],
-        self::DIFFER_1=>["message"=>"異なる", ],
-        self::DIFFER_2=>["message"=>"異なる", ],
-        self::LARGER=>["message"=>"大きい", ],
-        self::LARGE_OR_EQUAL=>["message"=>"以上", ],
-        self::LESS=>["message"=>"小さい", ],
-        self::LESS_OR_EQUAL=>["message"=>"以下", ],
-
-        // サイズ
-        self::LENGTH=>["message"=>"指定桁数", ],
-        self::LENGTH_MIN=>["message"=>"指定桁数以上", ],
-        self::LENGTH_MAX=>["message"=>"指定桁数未満", ],
-        self::LENGTH_BETWEEN=>["message"=>"指定桁数の間", ],
     ];
 
     public function provider(string $name, array $config)
@@ -184,16 +150,16 @@ class ValidateUtility
      * 振り分け
      * @param array $row
      * @param string $key
-     * @param string $rule
-     * @param mixed $rule_value
+     * @param string $case
+     * @param mixed $case_value
      * @param string $message
      * @return boolean
      */
-    public function switch($val,  string $rule, $rule_value=null, $message="")
+    public function switch($val,  string $case, $case_value=null, $message="")
     {
         $result = true;
 
-        if($rule===self::REQUIRE)
+        if($case===self::REQUIRE)
         {
             // 必須チェックの場合
             $result = $val !== null && $val !== "";
@@ -206,10 +172,10 @@ class ValidateUtility
         else
         {
             // その他のケース
-            $result = $this->case($val, $rule, $rule_value);
+            $result = $this->case($val, $case, $case_value);
         }
 
-        $message = empty($message) ? $this->getDefaultMessage($rule) : $message;
+        $message = empty($message) ? $this->getDefaultMessage($case) : $message;
         return [$result, $message];
     }
 
@@ -222,13 +188,18 @@ class ValidateUtility
      * @throws \Exception
      * @return boolean
      */
-    public function case($val,  $rule, $rule_value=null)
+    public function case($val,  $case, $case_value=null)
     {
-        switch ($rule)
+        if(in_array($case, Express::LIST))
+        {
+            return express()->compare($val, $case, $case_value);
+        }
+
+        switch ($case)
         {
             case self::REGULAR:
                 // 正規表現、例）regular:/aaaaa/
-                return preg_match($rule_value, $val) > 0;
+                return preg_match($case_value, $val) > 0;
 
             case self::INTEGER:
             case self::DOUBLE:
@@ -254,32 +225,16 @@ class ValidateUtility
                 return true; // TODO
 
             case self::LENGTH:
-                compare()->compare(strlen($val), self::EQUAL, $rule_value);
+                return express()->compare(strlen($val), self::EQUAL, $case_value);
             case self::LENGTH_MIN:
-                compare()->compare(strlen($val), self::LARGE_OR_EQUAL, $rule_value);
+                return express()->compare(strlen($val), self::LARGE_OR_EQUAL, $case_value);
             case self::LENGTH_MAX:
-                compare()->compare(strlen($val), self::LESS_OR_EQUAL, $rule_value);
+                return express()->compare(strlen($val), self::LESS_OR_EQUAL, $case_value);
             case self::LENGTH_BETWEEN:
-                return compare()->compare(strlen($val), self::BETWEEN, $rule_value);
-
-            case self::BETWEEN:
-            case self::IN:
-            case self::NOT_IN:
-            case self::LIKE:
-            case self::L_LIKE:
-            case self::R_LIKE:
-            case self::EQUAL:
-            case self::DIFFER_1:
-            case self::DIFFER_2:
-            case self::LARGE:
-            case self::LARGE_OR_EQUAL:
-            case self::LESS:
-            case self::LESS_OR_EQUAL:
-                // 演算式
-                return compare()->compare($val, $rule, $rule_value);
+                return express()->compare(strlen($val), self::BETWEEN, $case_value);
 
             default:
-                throw new \Exception("不明Validate[rule:{$rule}]");
+                throw new \Exception("不明Validate[rule:{$case}]");
         }
     }
 
