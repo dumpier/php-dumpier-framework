@@ -1,0 +1,15 @@
+@include('html/partials/header')
+@include('html/partials/css')
+@include('html/partials/js')
+
+<body>
+  @include('html/partials/nav')
+  <div class="container-fluid">
+      <div class='row thrones-padding thrones-content'>@content</div>
+  </div>
+
+  <div class="thrones-box thrones-padding thrones-footer">@include('html/partials/footer')</div>
+  @include('html/partials/modal')
+
+</body>
+</html>

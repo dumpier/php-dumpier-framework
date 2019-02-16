@@ -1,0 +1,23 @@
+<style type="text/css">
+.fa { margin-right: 5px; }
+* { font-size: 9pt; }
+
+body { background:#f9f9f9; counter-reset: row-counter; }
+
+table.table-counter thead tr, table.table-counter tbody tr { position: relative; }
+table.table-counter thead tr:before { position: relative; padding: 10px; display: block; bottom: 0; content: "#" }
+table.table-counter tbody tr:before { position: relative; padding: 10px; display: block; bottom: 0; counter-increment: row-counter; content: "#"counter(row-counter); }
+
+th, td { white-space: nowrap; }
+
+
+a.thrones-logo { padding: 0px 20px; font-weight: bold; }
+div.thrones-box { background: #fff; border: solid 1px #eee; box-shadow: 5px 5px 5px rgba(0,0,0,0.2); margin-bottom: 10px; }
+div.thrones-padding { padding:10px; }
+div.thrones-content { margin-bottom:120px; }
+div.thrones-footer { position: fixed; width:100vw; bottom:0px; margin-bottom:50px; }
+
+
+ul.pagination li { margin: 1px; }
+
+</style>

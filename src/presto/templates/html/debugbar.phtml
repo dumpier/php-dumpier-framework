@@ -1,0 +1,81 @@
+<style>
+#debugbar { position: fixed; z-index:2; bottom:0px; left: 0px; width:60px; background:#fafafa; border-top:solid 1px #ddd; }
+#debugbar.active { width:100%; }
+
+#debugbar div#debugbar-icon { position: relative; height:40px; line-height:40px; }
+#debugbar div#debugbar-icon ul { list-style: none; padding: 0px; }
+#debugbar div#debugbar-icon ul li { margin: 0px; padding: 0px; display: inline-block; }
+#debugbar div#debugbar-icon ul li a { text-transform: capitalize;}
+
+#debugbar div#debugbar-menus { display: none; position: absolute; left:10px; }
+#debugbar.active div#debugbar-menus { display: block; }
+
+#debugbar div#debugbar-body { display: none;  height:300px; background: #fff; padding:5px; border : solid 5px #eee; overflow: scroll; }
+
+.debugbar-data-wrap { display:none; position: relative; }
+.debugbar-data-popup { position: absolute; background:#fff; border: solid 3px #eee;padding:5px; }
+</style>
+
+<script>
+</script>
+
+<div id=debugbar class='active'>
+  <div id='debugbar-icon'>
+    <div style='position: absolute; right:10px;'>
+      <a id='debugbar-toggle' href='javascript:void(0);' onclick="$('div#debugbar-body').toggle();"><span class='fa fa-chevron-up'></span></a>
+      <a id='debugbar-close' href='javascript:void(0);' onclick="$('div#debugbar').toggleClass('active');"><span class='fa fa-times'></span></a>
+    </div>
+
+    <div id="debugbar-menus" class='active'> <!-- debugbar tab -->
+      <ul>
+        @foreach ( config('debugbar', 'items') as $type=>$config )
+          @if ( ! $config['enable'] ) @continue @endif
+          <li>
+            <a class='btn btn-sm btn-info' href='javascript:void(0);' onclick="$('div.debugbar-content').hide(); $('#debugbar-{{ $type }}').show(); $('#debugbar-body').show();">
+              <span class='{{ $config.css }}'></span>{{ $type }}
+              <span class="badge badge-pill badge-light">{@ $count = debugbar()->count($type) } @if ($count) {{ $count }} @endif</span>
+            </a>
+          </li>
+        @endforeach
+      </ul>
+    </div> <!-- debugbar tab -->
+  </div>
+
+  <div id='debugbar-body'> <!-- debugbar body -->
+    @foreach ( config('debugbar', 'items') as $type=>$config )
+      @if ( ! $config['enable'] ) @continue @endif
+      <div id="debugbar-{{ $type }}" class='debugbar-content'>
+        <h3 style='text-transform: uppercase;'>{{ $type }}</h3>
+
+        @if (! empty($logs[$type]) )
+        <div class='table-responsive-1'>
+          <table class='table table-hover table-striped'>
+            <tr>
+              <th>Total time</th><th>Execute time</th><th>Memory / Peak</th><th>Message</th><th>File</th>
+            </tr>
+
+            @foreach ($logs[$type] as $row)
+            <tr>
+              <td>{{ $row['time_total'] }}</td>
+              <td>{{ $row['time_execute'] }}</td>
+              <td>{{ $row['memory_usage'] }} / {{ $row['memory_usage_peak'] }}&nbsp;MB</td>
+              <td>
+                {{ $row['message'] }}
+                @if (!empty($row['data']))
+                  <a class='text-info' href='javascript: void(0);' onmouseover="$('div.debugbar-data-wrap').hide(); $(this).next('div.debugbar-data-wrap').show();" onmouseout="$(this).next('div.debugbar-data-wrap').hide();">view detail</a>
+                  <div class=debugbar-data-wrap><div class=debugbar-data-popup>{@ print_r($row['data']) }</div></div>
+                @endif
+              </td>
+              <td>{{ $row['file'] }}&nbsp;#{{ $row['line'] }}</td>
+            </tr>
+            @endforeach
+
+          </table>
+        </div>
+        @endif
+
+      </div>
+    @endforeach
+  </div> <!-- debugbar body -->
+
+</div>
