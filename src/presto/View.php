@@ -8,15 +8,18 @@ class View
 {
     use Singletonable;
 
-    const HTML = 'html';
-    const FILE = 'file';
-    const JSON = 'json';
-    const JSONP = 'jsonp';
+    const HTML = "html";
+    const STREAM = "stream";
+    const FILE = "file";
+    const JSON = "json";
+    const JSONP = "jsonp";
 
     const LIST = [
         self::HTML,
+        self::STREAM,
         self::FILE,
         self::JSON,
+        self::JSONP,
     ];
 
     protected $type = self::HTML;
@@ -56,31 +59,31 @@ class View
         switch ($this->type)
         {
             case self::JSON:
-                return  $this->renderToJson($contents);
+                return  $this->json($contents);
 
             case self::FILE:
-                return  $this->renderToFile($contents);
+                return  $this->file($contents);
 
             case self::HTML:
             default:
-                return  $this->renderToHtml($contents, $template, $layout);
+                return  $this->html($contents, $template, $layout);
         }
     }
 
 
-    private function renderToJson(array $contents=[])
+    protected function json(array $contents=[])
     {
 
     }
 
 
-    private function renderToFile(array $contents=[])
+    protected function file(array $contents=[])
     {
 
     }
 
 
-    private function renderToHtml(array $contents=[], string $template="", string $layout="")
+    protected function html(array $contents=[], string $template="", string $layout="")
     {
         if(!empty($contents["breadcrumbs"]))
         {
@@ -133,8 +136,6 @@ class View
     // テンプレートのロード
     private function loadTemplate(string $template_file, string $layout="")
     {
-        timelines("start load template.");
-
         // テンプレートを読み込む
         $phtml_template = file_get_contents( $template_file );
 
@@ -148,8 +149,6 @@ class View
 
         // 独自タグを変換する
         $phtml = template()->convert($phtml);
-
-        timelines("load template completed !");
 
         return $phtml;
     }
