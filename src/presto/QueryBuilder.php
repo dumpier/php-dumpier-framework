@@ -3,7 +3,7 @@ namespace Presto;
 
 use Presto\Traits\Singletonable;
 use Presto\Paginator;
-use Presto\Helpers\Paging;
+use Presto\Paging;
 
 class QueryBuilder
 {
