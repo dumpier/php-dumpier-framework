@@ -43,18 +43,18 @@ class Repository
 
     /**
      * 検索
-     * @param array $parameters
+     * @param array $parameter
      * @param int $recursion
      * @return array
      */
-    public function find(array $parameters=[], int $recursion=0)
+    public function find(array $parameter=[], int $recursion=0)
     {
         $connection = $this->model->getConnection();
         $table = $this->model->getTable();
 
-        $rows = database($connection)->select($table, $parameters);
+        $rows = database($connection)->select($table, $parameter);
 
-        if( empty($recursion) && empty($parameters["recursion"]))
+        if( empty($recursion) && empty($parameter["recursion"]))
         {
             return $rows;
         }
@@ -73,24 +73,24 @@ class Repository
     public function findByPk(int $primary_key, int $recursion=0)
     {
         $primary_key_name = $this->model->getPrimaryKey();
-        $parameters = [];
-        $parameters["condition"][$primary_key_name] = $primary_key;
-        $parameters["limit"] = 1;
+        $parameter = [];
+        $parameter["condition"][$primary_key_name] = $primary_key;
+        $parameter["limit"] = 1;
 
-        return $this->find($parameters, $recursion);
+        return $this->find($parameter, $recursion);
     }
 
 
     /**
      * 先頭の1個を取得
-     * @param array $parameters
+     * @param array $parameter
      * @param int $recursion
      * @return array|mixed
      */
-    public function findFirst(array $parameters=[], int $recursion=0)
+    public function findFirst(array $parameter=[], int $recursion=0)
     {
-        $parameters["limit"] = 1;
-        return $this->find($parameters, $recursion);
+        $parameter["limit"] = 1;
+        return $this->find($parameter, $recursion);
     }
 
 }

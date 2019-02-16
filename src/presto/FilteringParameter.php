@@ -3,7 +3,7 @@ namespace Presto;
 
 use Presto\Traits\Accessible;
 
-class QueryParameter
+class FilteringParameter
 {
     use Accessible;
 
@@ -13,7 +13,7 @@ class QueryParameter
     protected $order = [];
     protected $group = [];
 
-    /** @var Condition */
+    /** @var FilteringCondition */
     protected $condition;
 
 

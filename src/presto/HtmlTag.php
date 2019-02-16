@@ -34,7 +34,7 @@ class HtmlTag
     }
 
 
-    public function table(array $rows, array $header=[], array $parameters=[])
+    public function table(array $rows, array $header=[], array $parameter=[])
     {
         if(empty($rows))
         {
@@ -46,7 +46,7 @@ class HtmlTag
         $header = empty($header) ? array_keys($rows[0]) : $header;
 
         // 出力項目
-        $fields = empty($parameters["fields"]) ? $header : $parameters["fields"];
+        $fields = empty($parameter["fields"]) ? $header : $parameter["fields"];
 
         echo "<div class='table-responsive'>";
         echo "<table class='table table-counter table-hover table-striped'>";
@@ -68,11 +68,11 @@ class HtmlTag
             {
                 echo "<td>";
 
-                if($field == arrayer()->get($parameters, "links.key"))
+                if($field == arrayer()->get($parameter, "links.key"))
                 {
-                    $url = arrayer()->get($parameters, "links.url") . $row[$field];
-                    $prefix = arrayer()->get($parameters, "links.prefix");
-                    $attributes = arrayer()->get($parameters, "links.attributes");
+                    $url = arrayer()->get($parameter, "links.url") . $row[$field];
+                    $prefix = arrayer()->get($parameter, "links.prefix");
+                    $attributes = arrayer()->get($parameter, "links.attributes");
 
                     echo "<a href='{$url}' {$attributes}>{$prefix}";
                     $this->echo($row[$field]);

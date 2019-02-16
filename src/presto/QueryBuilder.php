@@ -45,20 +45,20 @@ class QueryBuilder
      * 検索
      * TODO テーブル名のSQL INJECTION対応
      * @param string $table
-     * @param array $parameters
+     * @param array $parameter
      * @return array|mixed
      */
-    public function select(string $table, array $parameters=[])
+    public function select(string $table, array $parameter=[])
     {
-        list($where, $binds) = $this->where($parameters);
+        list($where, $binds) = $this->where($parameter);
 
-        $fields = empty($parameters["fields"]) ? "*" : implode(",", $parameters["fields"]);
+        $fields = empty($parameter["fields"]) ? "*" : implode(",", $parameter["fields"]);
 
-        $offset = empty($parameters["offset"]) ? 0 : $parameters["offset"];
-        $limit = empty($parameters["limit"]) ? 0 : $parameters["limit"];
+        $offset = empty($parameter["offset"]) ? 0 : $parameter["offset"];
+        $limit = empty($parameter["limit"]) ? 0 : $parameter["limit"];
         $sql_offset = empty($limit) ? "" : " LIMIT {$offset}, {$limit}";
 
-        $sql_orderby = empty($parameters["order"]) ? "" : "ORDER BY " . implode(",", $parameters["order"]);
+        $sql_orderby = empty($parameter["order"]) ? "" : "ORDER BY " . implode(",", $parameter["order"]);
 
         $sql = "SELECT {$fields} FROM `{$table}` {$where} {$sql_orderby} {$sql_offset}";
 
@@ -69,18 +69,18 @@ class QueryBuilder
     /**
      * ページング
      * @param string $table
-     * @param array $parameters
+     * @param array $parameter
      * @return \Presto\Paginator
      */
-    public function paging(string $table, array $parameters=[])
+    public function paging(string $table, array $parameter=[])
     {
         $page = input("page", 1);
-        $count = $this->count($table, $parameters);
+        $count = $this->count($table, $parameter);
 
         list($start, ) = paging()->getStartEndRowNumber($count, $page);
-        $parameters["offset"] = $start;
-        $parameters["limit"] = Paging::LIMIT_COUNT;
-        $rows = $this->select($table, $parameters);
+        $parameter["offset"] = $start;
+        $parameter["limit"] = Paging::LIMIT_COUNT;
+        $rows = $this->select($table, $parameter);
 
         return new Paginator($rows, $count, $page);
     }
@@ -89,13 +89,13 @@ class QueryBuilder
     /**
      * カウント
      * @param string $table
-     * @param array $parameters
+     * @param array $parameter
      * @return int
      */
-    public function count(string $table, array $parameters=[])
+    public function count(string $table, array $parameter=[])
     {
-        list($where, $binds) = $this->where($parameters);
-        $field = empty($parameters["count_field"]) ? "*" : $parameters["count_field"];
+        list($where, $binds) = $this->where($parameter);
+        $field = empty($parameter["count_field"]) ? "*" : $parameter["count_field"];
 
         $sql = "SELECT COUNT({$field}) AS `count` FROM `{$table}` {$where}";
 
@@ -107,25 +107,25 @@ class QueryBuilder
     /**
      * 合計
      * @param string $table
-     * @param array $parameters
+     * @param array $parameter
      * @throws \Exception
      * @return array|mixed
      */
-    public function sum(string $table, array $parameters=[])
+    public function sum(string $table, array $parameter=[])
     {
-        if(empty($parameters["fields"]))
+        if(empty($parameter["fields"]))
         {
             throw new \Exception("合計する項目を指定してください");
         }
 
         $sum_fields = "";
-        foreach ($parameters["fields"] as $field)
+        foreach ($parameter["fields"] as $field)
         {
             $sum_fields .= ", SUM(`{$field}`) AS `{$field}`";
         }
         $sum_fields = ltrim($sum_fields, ",");
 
-        list($where, $binds) = $this->where($parameters);
+        list($where, $binds) = $this->where($parameter);
         $sql = "SELECT {$sum_fields} FROM `{$table}` {$where}";
 
         return $this->querySelect($sql, $binds, 1);
@@ -302,9 +302,9 @@ class QueryBuilder
     }
 
     // condition配列からWHEREとBINDの取得
-    private function where(array $parameters=[])
+    private function where(array $parameter=[])
     {
-        return empty($parameters["condition"]) ? ["",[]] : where($parameters["condition"]);
+        return empty($parameter["condition"]) ? ["",[]] : where($parameter["condition"]);
     }
 
     // database.configの取得

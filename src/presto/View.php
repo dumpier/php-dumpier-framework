@@ -174,7 +174,7 @@ class View
             return path("app/views/{$template}.phtml");
         }
 
-        list($controller, $action, $parameters) = routing()->getRouting();
+        list($controller, $action, $parameter) = routing()->getRouting();
         $template = strtolower($controller) . DIRECTORY_SEPARATOR . strtolower($action);
 
         $template = str_replace("app\\http\\controllers\\", "", $template);

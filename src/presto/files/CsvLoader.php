@@ -52,46 +52,46 @@ class CsvLoader
     }
 
     // 検索
-    public function find(string $csvfile, array $parameters=[])
+    public function find(string $csvfile, array $parameter=[])
     {
         // 全CSVデータを取得
         $rows = $this->getBody($csvfile);
 
-        if(empty($parameters["condition"]))
+        if(empty($parameter["condition"]))
         {
             return $rows;
         }
 
-        return collection($rows)->get($parameters["condition"]);
+        return collection($rows)->get($parameter["condition"]);
     }
 
 
     // 先頭の１個を取得
-    public function findFirst(string $csvfile, array $parameters=[])
+    public function findFirst(string $csvfile, array $parameter=[])
     {
         $rows = $this->getBody($csvfile);
 
-        if(empty($parameters["condition"]))
+        if(empty($parameter["condition"]))
         {
             return empty($rows[0]) ? [] : $rows[0];
         }
 
-        return collection($rows)->first($parameters["condition"]);
+        return collection($rows)->first($parameter["condition"]);
     }
 
 
     // 最後の１個を取得
-    public function findLast(string $csvfile, array $parameters=[])
+    public function findLast(string $csvfile, array $parameter=[])
     {
         $rows = $this->getBody($csvfile);
 
-        if(empty($parameters["condition"]))
+        if(empty($parameter["condition"]))
         {
             $last = end($rows);
             return empty($last) ? [] : $last;
         }
 
-        return collection($rows)->last($parameters["condition"]);
+        return collection($rows)->last($parameter["condition"]);
     }
 
 
@@ -99,11 +99,11 @@ class CsvLoader
      *  ページング
      * @param string $csvfile
      * @param int $page
-     * @param array $parameters
+     * @param array $parameter
      */
-    public function paging(string $csvfile, int $page=1, array $parameters=[])
+    public function paging(string $csvfile, int $page=1, array $parameter=[])
     {
-        $rows = $this->find($csvfile, $parameters);
+        $rows = $this->find($csvfile, $parameter);
 
         list($rows, $count) = paging()->paging($rows, $page);
         $fields = $this->getFields($csvfile);

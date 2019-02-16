@@ -40,9 +40,9 @@ class Routing
         $controller = $this->routings[$uri]['controller'];
         $action = empty($this->routings[$uri]['action']) ? 'index' : $this->routings[$uri]['action'];
         // TODO
-        $parameters = empty($this->routings[$uri]['parameters']) ? [] : $this->routings[$uri]['parameters'];
+        $parameter = empty($this->routings[$uri]['parameters']) ? [] : $this->routings[$uri]['parameters'];
 
-        return [$controller, $action, $parameters];
+        return [$controller, $action, $parameter];
     }
 
 
@@ -65,9 +65,9 @@ class Routing
         $action = empty($array) ? "index" : array_shift($array);
 
         // パラメータ
-        $parameters = empty($array) ? [] : $array;
+        $parameter = empty($array) ? [] : $array;
 
-        return [$controller, $action, $parameters];
+        return [$controller, $action, $parameter];
     }
 
 

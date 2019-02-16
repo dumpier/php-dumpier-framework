@@ -18,14 +18,14 @@ class QueryToWhere
             return "";
         }
 
-        list($where, $binds) = $this->toWhereString($condition);
-        $where = "WHERE " . $this->toCleanWhereString($where);
+        list($where, $binds) = $this->where($condition);
+        $where = "WHERE " . $this->clean($where);
 
         return [$where, $binds];
     }
 
 
-    private function toWhereString(array $condition=[], array $binds=[])
+    private function where(array $condition=[], array $binds=[])
     {
         $where = "";
 
@@ -39,7 +39,7 @@ class QueryToWhere
             // 数字の場合は、グルーピング条件
             if(is_numeric($key))
             {
-                list($sub_where, $binds) = $this->toWhereString($val, $binds);
+                list($sub_where, $binds) = $this->where($val, $binds);
                 $where .= " AND ( {$sub_where} )";
                 continue;
             }
@@ -47,7 +47,7 @@ class QueryToWhere
             // ORグループの場合
             if('or' === strtolower($key))
             {
-                list($sub_where, $binds) = $this->toOrWhereString($val, $binds);
+                list($sub_where, $binds) = $this->orWhere($val, $binds);
                 $where .= " AND {$sub_where} ";
                 continue;
             }
@@ -59,13 +59,13 @@ class QueryToWhere
                 if( expression()->is($expression) )
                 {
                     // in, not in, >, >=, <, <=, <>, !=
-                    list($sub_where, $binds) = $this->toExpression($key, $expression, $val[$expression], $binds);
+                    list($sub_where, $binds) = $this->expression($key, $expression, $val[$expression], $binds);
                     $where .= " AND {$sub_where}";
                     continue;
                 }
 
                 // 配列の再帰処理
-                list($sub_where, $binds) = $this->toWhereString($val, $binds);
+                list($sub_where, $binds) = $this->where($val, $binds);
                 $where .= $sub_where;
                 continue;
             }
@@ -85,7 +85,7 @@ class QueryToWhere
     }
 
 
-    private function toCleanWhereString(string $where)
+    private function clean(string $where)
     {
         $where = preg_replace("/^ *AND /", "", $where);
         $where = preg_replace("/ {2,}/", " ", $where);
@@ -97,7 +97,7 @@ class QueryToWhere
     }
 
 
-    private function toOrWhereString(array $condition, array $binds=[])
+    private function orWhere(array $condition, array $binds=[])
     {
         $where = "";
 
@@ -105,7 +105,7 @@ class QueryToWhere
         {
             if(is_numeric($key))
             {
-                list($sub_where, $binds) = $this->toWhereString($val, $binds);
+                list($sub_where, $binds) = $this->where($val, $binds);
                 $where .= " OR ( {$sub_where} )";
                 continue;
             }
@@ -115,12 +115,12 @@ class QueryToWhere
                 if( expression()->is($val[0]) )
                 {
                     // in, not in, >, >=, <, <=, <>, !=
-                    list($sub_where, $binds) = $this->toExpression($key, $val[0], $val[1], $binds);
+                    list($sub_where, $binds) = $this->expression($key, $val[0], $val[1], $binds);
                     $where .= " OR {$sub_where}";
                     continue;
                 }
 
-                list($sub_where, $binds) = $this->toWhereString($condition, $binds);
+                list($sub_where, $binds) = $this->where($condition, $binds);
 
                 $where .= $sub_where;
                 continue;
@@ -136,35 +136,47 @@ class QueryToWhere
     }
 
 
-    private function toExpression(string $key, $expression, $val, array $binds)
+    private function expression(string $key, $expression, $val, array $binds)
     {
         switch ($expression)
         {
-            case "in":
+            case Expression::SIGN_EQUAL:
+            case Expression::SIGN_DIFFER:
+            case Expression::SIGN_LARGE:
+            case Expression::SIGN_LARGE_OR_EQUAL:
+            case Expression::SIGN_LESS:
+            case Expression::SIGN_LESS_OR_EQUAL:
+                $binds[] = $val;
+                $where = "`{$key}` {$expression} ? ";
+                break;
+
+            case Expression::BETWEEN:
+                $binds[] = "'" . implode("','", $val) . "'";
+                $where = "`{$key}` BETWEEN ( ? AND ? )";
+                break;
+
+            case Expression::IN:
                 // TODO bind
                 $binds[] = "'" . implode("','", $val) . "'";
                 $where = "`{$key}` IN ( ? )";
                 break;
-            case "!=":
-            case "<>":
-            case ">":
-            case ">=":
-            case "<":
-            case "<=":
-                $binds[] = $val;
-                $where = "`{$key}` {$expression} ? ";
+            case Expression::NOT_IN:
+                // TODO bind
+                $binds[] = "'" . implode("','", $val) . "'";
+                $where = "`{$key}` NOT IN ( ? )";
                 break;
-            case "like":
+
+            case Expression::LIKE:
                 $binds[] = $val;
-                $where = "`{$key}` {$expression} %?% ";
+                $where = "`{$key}` LIKE %?% ";
                 break;
-            case "l-like":
+            case Expression::L_LIKE:
                 $binds[] = $val;
-                $where = "`{$key}` {$expression} %? ";
+                $where = "`{$key}` LIKE %? ";
                 break;
-            case "r-like":
+            case Expression::R_LIKE:
                 $binds[] = $val;
-                $where = "`{$key}` {$expression} ?% ";
+                $where = "`{$key}` LIKE ?% ";
                 break;
 
             default:

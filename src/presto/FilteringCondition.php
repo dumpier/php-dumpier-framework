@@ -1,7 +1,7 @@
 <?php
 namespace Presto;
 
-class Condition
+class FilteringCondition
 {
     /** @var array */
     protected $condition;
