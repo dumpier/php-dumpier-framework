@@ -7,13 +7,13 @@ class Paginator
 {
     protected $limit = Paging::LIMIT_COUNT;
     protected $page = 0;
-    protected $count = 0;
+    protected $total_count = 0;
     protected $rows = [];
 
-    public function __construct(array $rows, int $count, int $page=1, int $limit=Paging::LIMIT_COUNT)
+    public function __construct(array $rows, int $total_count, int $page=1, int $limit=Paging::LIMIT_COUNT)
     {
         $this->rows = $rows;
-        $this->count = $count;
+        $this->total_count = $total_count;
         $this->page = $page;
         $this->limit = $limit;
     }
@@ -46,15 +46,20 @@ class Paginator
     {
         if(null === $input)
         {
-            return $this->count;
+            return $this->total_count;
         }
 
-        $this->count = $count;
+        $this->total_count = $input;
         return $this;
     }
 
     public function rows(array $input=null)
     {
+        if(null === $input)
+        {
+            return $this->rows;
+        }
+
         $this->rows = $input;
         return $this;
     }

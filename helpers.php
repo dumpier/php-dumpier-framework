@@ -1,10 +1,11 @@
 <?php
 if(! function_exists('arrayer')) { /** @return \Presto\Arrayer */ function arrayer() { return \Presto\Arrayer::getInstance(); }}
+if(! function_exists('collection')) { /** @return \Presto\Collection */ function collection(array $rows=[]) { return new \Presto\Collection($rows); }}
+if(! function_exists('paginator')) { /** @return \Presto\Paginator */ function paginator(array $rows=[], int $total_count=0, int $page=1, int $limit=Paging::LIMIT_COUNT) { return new \Presto\Paginator($rows, $total_count, $page, $limit); }}
 if(! function_exists('stringer')) { /** @return \Presto\Stringer */ function stringer() { return \Presto\Stringer::getInstance(); }}
 if(! function_exists('pregular')) { /** @return \Presto\Pregular */ function pregular() { return \Presto\Pregular::getInstance(); }}
 if(! function_exists('expression')) { /** @return \Presto\Expression */ function expression() { return \Presto\Expression::getInstance(); }}
 if(! function_exists('validator')) { /** @return \Presto\Validator */ function validator() { return \Presto\Validator::getInstance(); }}
-if(! function_exists('collection')) { /** @return \Presto\Collection */ function collection(array $rows=[]) { return new \Presto\Collection($rows); }}
 
 
 // helpers
@@ -13,6 +14,7 @@ if(! function_exists('paging')) { /** @return \Presto\Helpers\Paging */ function
 // breadcrumb
 if(! function_exists('breadcrumb')) { /** @return \Presto\Helpers\Breadcrumb */ function breadcrumb(array $breadcrumbs=[]) { return \Presto\Helpers\Breadcrumb::getInstance()->adds($breadcrumbs); }}
 
+// app
 if(! function_exists('app')){
     function app(string $class, ...$parameters) {
         if(class_exists($class)) { return empty($parameters[0]) ? new $class() : new $class($parameters[0]); }
@@ -23,18 +25,21 @@ if(! function_exists('app')){
 
 // path
 if(! function_exists('path')) {
-    function path(string $sub=null) {
-        $path = (dirname(dirname(dirname(dirname(__FILE__)))));
-        if($sub) { $path .= DIRECTORY_SEPARATOR.$sub; }
-        return stringer()->cleanDirectorySeparator($path);
+    function path(string $path="") {
+        $root = (dirname(dirname(dirname(dirname(__FILE__)))));
+        $root .= empty($path) ? $root : DIRECTORY_SEPARATOR.$path;
+
+        return stringer()->cleanDirectorySeparator($root);
     }
 }
+if(! function_exists('app_path')) { function app_path() { return path('app'); } }
 if(! function_exists('class_path')) { function class_path() { return path('app/classes'); } }
+if(! function_exists('controller_path')) { function controller_path() { return path('app/classes/http/controllers'); } }
 if(! function_exists('service_path')) { function service_path() { return path('app/classes/services'); } }
 if(! function_exists('repository_path')) { function repository_path() { return path('app/classes/models/repositories'); } }
+if(! function_exists('storage_path')) { function storage_path() { return path('storages'); } }
 
 
-if(! function_exists('config')) { function config(string $filename, string $key="") { return \Presto\Files\ConfigLoader::getInstance()->get($filename, $key); }}
 if(! function_exists('routing')) { /** @return \Presto\Http\Routing */ function routing(string $uri=null) { return \Presto\Http\Routing::getInstance(); }}
 if(! function_exists('request')){ /** @return \Presto\Http\Request */ function request() { return \Presto\Http\Request::getInstance(); }}
 if(! function_exists('response')){ /** @return \Presto\Http\Response */ function response(string $uri=null) { return \Presto\Http\Response::getInstance(); }}
@@ -55,6 +60,8 @@ if(! function_exists('html')) { /** @return \Presto\Helpers\Html\HtmlTag */ func
 
 
 // files
+// config
+if(! function_exists('config')) { function config(string $filename, string $key="") { return \Presto\Files\ConfigLoader::getInstance()->get($filename, $key); }}
 // directory
 if(! function_exists('directory')) { /** @return \Presto\Files\DirectoryLoader */ function directory() { return \Presto\Files\DirectoryLoader::getInstance(); }}
 // csv
