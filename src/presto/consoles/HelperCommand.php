@@ -1,7 +1,7 @@
 <?php
 namespace Presto\Consoles;
 
-class HelpersCommand extends \Presto\Consoles\Command
+class HelperCommand extends \Presto\Consoles\Command
 {
     protected $description = "helpers.php ヘルパーの作成";
 
