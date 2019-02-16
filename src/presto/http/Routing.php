@@ -52,7 +52,7 @@ class Routing
         foreach ($array as $string)
         {
             array_shift($array);
-            $controller_name .= str()->toPascal($string);
+            $controller_name .= stringer()->toPascal($string);
 
             if( class_exists($controller_name . "Controller") )
             {

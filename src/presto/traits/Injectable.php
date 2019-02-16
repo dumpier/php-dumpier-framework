@@ -9,7 +9,7 @@ trait Injectable
 {
     public function __get(string $property)
     {
-        $name = str()->toPascal($property);
+        $name = stringer()->toPascal($property);
 
         if(preg_match("/Service$/", $name))
         {

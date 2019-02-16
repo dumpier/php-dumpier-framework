@@ -1,10 +1,10 @@
 <?php
-namespace Presto\Utilities;
+namespace Presto;
 
 
 use Presto\Traits\Singletonable;
 
-class StringUtility
+class Stringer
 {
     use Singletonable;
 

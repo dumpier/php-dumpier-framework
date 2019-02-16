@@ -179,7 +179,7 @@ class View
 
         $template = str_replace("app\\http\\controllers\\", "", $template);
         $template = str_replace("controller", "", $template);
-        $template = str()->cleanDirectorySeparator($template);
+        $template = stringer()->cleanDirectorySeparator($template);
         $template = path("app/views/html/pages/{$template}.phtml");
 
         if(! file_exists($template))

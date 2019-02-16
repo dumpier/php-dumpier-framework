@@ -75,7 +75,7 @@ EOF;
     {
         $classname = str_replace(class_path(), "", str_replace(".php", "", $path));
         $classname = str_replace("/", "\\", $classname);
-        $classname = "\\App".str()->toPascal($classname);
+        $classname = "\\App".stringer()->toPascal($classname);
 
         return $classname;
     }
@@ -83,7 +83,7 @@ EOF;
     // 変数名
     private function getPropertyNameByClass(string $class)
     {
-        $name = str()->toCamel(preg_replace("/^.+\\\\/", "", $class));
+        $name = stringer()->toCamel(preg_replace("/^.+\\\\/", "", $class));
         return str_replace("Repository", "", $name);
     }
 }

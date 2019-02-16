@@ -1,10 +1,10 @@
 <?php
 // utilities
-if(! function_exists('str')) { /** @return \Presto\Utilities\StringUtility */ function str() { return \Presto\Utilities\StringUtility::getInstance(); }}
 if(! function_exists('arr')) { /** @return \Presto\Utilities\ArrayUtility */ function arr() { return \Presto\Utilities\ArrayUtility::getInstance(); }}
 if(! function_exists('preg')) { /** @return \Presto\Utilities\PregUtility */ function preg() { return \Presto\Utilities\PregUtility::getInstance(); }}
 
 
+if(! function_exists('stringer')) { /** @return \Presto\Stringer */ function stringer() { return \Presto\Stringer::getInstance(); }}
 if(! function_exists('expression')) { /** @return \Presto\Expression */ function expression() { return \Presto\Expression::getInstance(); }}
 if(! function_exists('validator')) { /** @return \Presto\Validator */ function validator() { return \Presto\Validator::getInstance(); }}
 if(! function_exists('collection')) { /** @return \Presto\Collection */ function collection(array $rows=[]) { return new \Presto\Collection($rows); }}
@@ -28,7 +28,7 @@ if(! function_exists('path')) {
     function path(string $sub=null) {
         $path = (dirname(dirname(dirname(dirname(__FILE__)))));
         if($sub) { $path .= DIRECTORY_SEPARATOR.$sub; }
-        return str()->cleanDirectorySeparator($path);
+        return stringer()->cleanDirectorySeparator($path);
     }
 }
 if(! function_exists('class_path')) { function class_path() { return path('app/classes'); } }

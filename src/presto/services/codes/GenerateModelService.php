@@ -174,8 +174,8 @@ class GenerateModelService extends \Presto\Service
 
     private function getPHPDocInfo(Table $table)
     {
-        $dbname = str()->toPascal($table->connection);
-        $classname = str()->toPascal($table->name)."DocTrait";
+        $dbname = stringer()->toPascal($table->connection);
+        $classname = stringer()->toPascal($table->name)."DocTrait";
         $namespace = "App\\Models\\Templates\\Docs\\{$dbname}";
         $file = "Templates/Docs/{$dbname}/{$classname}.php";
 
@@ -184,8 +184,8 @@ class GenerateModelService extends \Presto\Service
 
     private function getPropertyInfo(Table $table)
     {
-        $dbname = str()->toPascal($table->connection);
-        $classname = str()->toPascal($table->name)."Property";
+        $dbname = stringer()->toPascal($table->connection);
+        $classname = stringer()->toPascal($table->name)."Property";
         $namespace = "App\\Models\\Templates\\Properties\\{$dbname}";
         $file = "Templates/Properties/{$dbname}/{$classname}.php";
 
@@ -194,8 +194,8 @@ class GenerateModelService extends \Presto\Service
 
     private function getDaoInfo(Table $table)
     {
-        $dbname = str()->toPascal($table->connection);
-        $classname = str()->toPascal($table->name)."Model";
+        $dbname = stringer()->toPascal($table->connection);
+        $classname = stringer()->toPascal($table->name)."Model";
         $namespace = "App\\Models\\Daos\\{$dbname}";
         $file = "Daos/{$dbname}/{$classname}.php";
 
@@ -204,8 +204,8 @@ class GenerateModelService extends \Presto\Service
 
     private function getRepositoryInfo(Table $table)
     {
-        $dbname = str()->toPascal($table->connection);
-        $classname = str()->toPascal($table->name)."Repository";
+        $dbname = stringer()->toPascal($table->connection);
+        $classname = stringer()->toPascal($table->name)."Repository";
         $namespace = "App\\Models\\Repositories\\{$dbname}";
         $file = "Repositories/{$dbname}/{$classname}.php";
 
