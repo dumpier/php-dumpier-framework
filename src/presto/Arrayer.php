@@ -1,9 +1,9 @@
 <?php
-namespace Presto\Utilities;
+namespace Presto;
 
 use Presto\Traits\Singletonable;
 
-class ArrayUtility
+class Arrayer
 {
     use Singletonable;
 

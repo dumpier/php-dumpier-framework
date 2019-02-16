@@ -27,7 +27,7 @@ class ArgvInput
 
         if(is_array($request[$name]))
         {
-            return arr()->clean($request[$name]);
+            return arrayer()->clean($request[$name]);
         }
 
         return empty($request[$name]) ? $default : $request[$name];

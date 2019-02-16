@@ -41,7 +41,7 @@ class TemplateTag
     public function includes(string $phtml)
     {
         // includeタグ一覧
-        $includes = preg()->all("/@include\(.+?\)/", $phtml);
+        $includes = pregular()->all("/@include\(.+?\)/", $phtml);
 
         foreach ($includes as $include)
         {
@@ -72,7 +72,7 @@ class TemplateTag
     public function variables(string $phtml)
     {
         // 例）{{ $xxx.yyy }}
-        $variables = preg()->all("/\{\{ *\\$.+? *\}\} */", $phtml);
+        $variables = pregular()->all("/\{\{ *\\$.+? *\}\} */", $phtml);
 
         foreach ($variables as $variable)
         {
@@ -100,7 +100,7 @@ class TemplateTag
     public function callables(string $phtml)
     {
         // 関数の呼び出し一覧 例）{@ debug() }
-        $variables = preg()->all("/\{@ *.+? *\( *.* *\) *\}/", $phtml);
+        $variables = pregular()->all("/\{@ *.+? *\( *.* *\) *\}/", $phtml);
 
         foreach ($variables as $variable)
         {
@@ -152,7 +152,7 @@ class TemplateTag
     // 独自タグをPHP構文に変換
     public function syntax(string $phtml, string $pattern, string $replace)
     {
-        foreach (preg()->all($pattern, $phtml) as $matche)
+        foreach (pregular()->all($pattern, $phtml) as $matche)
         {
             $phtml = str_replace($matche, preg_replace($pattern, $replace, $matche), $phtml);
         }

@@ -1,9 +1,9 @@
 <?php
-namespace Presto\Utilities;
+namespace Presto;
 
 use Presto\Traits\Singletonable;
 
-class PregUtility
+class Pregular
 {
     use Singletonable;
 

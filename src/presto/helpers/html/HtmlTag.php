@@ -41,11 +41,11 @@ class HtmlTag
             {
                 echo "<td>";
 
-                if($field == arr()->get($parameters, "links.key"))
+                if($field == arrayer()->get($parameters, "links.key"))
                 {
-                    $url = arr()->get($parameters, "links.url") . $row[$field];
-                    $prefix = arr()->get($parameters, "links.prefix");
-                    $attributes = arr()->get($parameters, "links.attributes");
+                    $url = arrayer()->get($parameters, "links.url") . $row[$field];
+                    $prefix = arrayer()->get($parameters, "links.prefix");
+                    $attributes = arrayer()->get($parameters, "links.attributes");
 
                     echo "<a href='{$url}' {$attributes}>{$prefix}";
                     $this->echo($row[$field]);
@@ -71,7 +71,7 @@ class HtmlTag
     {
         if(is_array($val))
         {
-            $string = arr()->toTreeString($val);
+            $string = arrayer()->toTreeString($val);
             if(empty($string))
             {
                 return ;

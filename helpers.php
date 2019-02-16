@@ -1,13 +1,11 @@
 <?php
-// utilities
-if(! function_exists('arr')) { /** @return \Presto\Utilities\ArrayUtility */ function arr() { return \Presto\Utilities\ArrayUtility::getInstance(); }}
-if(! function_exists('preg')) { /** @return \Presto\Utilities\PregUtility */ function preg() { return \Presto\Utilities\PregUtility::getInstance(); }}
-
-
+if(! function_exists('arrayer')) { /** @return \Presto\Arrayer */ function arrayer() { return \Presto\Arrayer::getInstance(); }}
 if(! function_exists('stringer')) { /** @return \Presto\Stringer */ function stringer() { return \Presto\Stringer::getInstance(); }}
+if(! function_exists('pregular')) { /** @return \Presto\Pregular */ function pregular() { return \Presto\Pregular::getInstance(); }}
 if(! function_exists('expression')) { /** @return \Presto\Expression */ function expression() { return \Presto\Expression::getInstance(); }}
 if(! function_exists('validator')) { /** @return \Presto\Validator */ function validator() { return \Presto\Validator::getInstance(); }}
 if(! function_exists('collection')) { /** @return \Presto\Collection */ function collection(array $rows=[]) { return new \Presto\Collection($rows); }}
+
 
 // helpers
 // paging

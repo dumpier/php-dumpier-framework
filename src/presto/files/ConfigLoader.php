@@ -27,7 +27,7 @@ class ConfigLoader
             return null;
         }
 
-        return arr()->get($configs, $key);
+        return arrayer()->get($configs, $key);
     }
 
 

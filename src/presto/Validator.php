@@ -132,7 +132,7 @@ class Validator
 
             // TODO TODO TODO TODO TODO TODO TODO
             // TODO カンマーとバーティカルバーで配列に分割
-            $cases = preg()->all("//", $case_string);
+            $cases = pregular()->all("//", $case_string);
 
             // TODO TODO TODO TODO TODO TODO TODO
             foreach ($cases as $case)
