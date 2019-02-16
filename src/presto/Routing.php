@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Http;
+namespace Presto;
 
 use Presto\Traits\Singletonable;
 
@@ -29,13 +29,15 @@ class Routing
 
     public function getUri()
     {
-        return preg_replace("/\?.*/", "", $_SERVER['REQUEST_URI']);
+        // ベースURI
+        $uri = preg_replace("/^" . preg_quote(baseurl()) . "/", "", $_SERVER['REQUEST_URI']);
+        $uri = preg_replace("/\?.*/", "", $uri);
+        return $uri;
     }
 
 
 
     /**
-     *
      * @example namespace/controller/action/...parameters
      *
      */

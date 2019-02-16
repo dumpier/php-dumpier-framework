@@ -6,7 +6,12 @@ if(! function_exists('stringer')) { /** @return \Presto\Stringer */ function str
 if(! function_exists('pregular')) { /** @return \Presto\Pregular */ function pregular() { return \Presto\Pregular::getInstance(); }}
 if(! function_exists('expression')) { /** @return \Presto\Expression */ function expression() { return \Presto\Expression::getInstance(); }}
 if(! function_exists('validator')) { /** @return \Presto\Validator */ function validator() { return \Presto\Validator::getInstance(); }}
+if(! function_exists('routing')) { /** @return \Presto\Routing */ function routing(string $uri=null) { return \Presto\Routing::getInstance(); }}
+if(! function_exists('request')){ /** @return \Presto\Request */ function request() { return \Presto\Request::getInstance(); }}
+if(! function_exists('response')){ /** @return \Presto\Response */ function response(string $uri=null) { return \Presto\Response::getInstance(); }}
 
+// baseurl
+if(! function_exists('baseurl')){ /** @return string */ function baseurl() { return config("app", "baseurl"); }}
 
 // helpers
 // paging
@@ -40,9 +45,7 @@ if(! function_exists('repository_path')) { function repository_path() { return p
 if(! function_exists('storage_path')) { function storage_path() { return path('storages'); } }
 
 
-if(! function_exists('routing')) { /** @return \Presto\Http\Routing */ function routing(string $uri=null) { return \Presto\Http\Routing::getInstance(); }}
-if(! function_exists('request')){ /** @return \Presto\Http\Request */ function request() { return \Presto\Http\Request::getInstance(); }}
-if(! function_exists('response')){ /** @return \Presto\Http\Response */ function response(string $uri=null) { return \Presto\Http\Response::getInstance(); }}
+
 if(! function_exists('view')) { /** @return \Presto\Mvc\View */ function view(string $path=null) { return \Presto\Mvc\View::getInstance(); }}
 if(! function_exists('handler')) { /** @return \App\Exceptions\Handler */ function handler() { return \App\Exceptions\Handler::getInstance(); }}
 if(! function_exists('input')) {
