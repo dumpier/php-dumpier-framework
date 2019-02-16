@@ -10,14 +10,19 @@ if(! function_exists('routing')) { /** @return \Presto\Routing */ function routi
 if(! function_exists('request')){ /** @return \Presto\Request */ function request() { return \Presto\Request::getInstance(); }}
 if(! function_exists('response')){ /** @return \Presto\Response */ function response(string $uri=null) { return \Presto\Response::getInstance(); }}
 
+
+// view
+if(! function_exists('view')) { /** @return \Presto\View */ function view(string $path=null) { return \Presto\View::getInstance(); }}
+// template engine
+if(! function_exists('template')) { /** @return \Presto\TemplateEngine */ function template() { return \Presto\TemplateEngine::getInstance(); }}
+if(! function_exists('html')) { /** @return \Presto\HtmlTag */ function html() { return \Presto\HtmlTag::getInstance(); }}
+// paging
+if(! function_exists('paging')) { /** @return \Presto\Paging */ function paging() { return \Presto\Paging::getInstance(); }}
+// breadcrumb
+if(! function_exists('breadcrumb')) { /** @return \Presto\Breadcrumb */ function breadcrumb(array $breadcrumbs=[]) { return \Presto\Breadcrumb::getInstance()->adds($breadcrumbs); }}
 // baseurl
 if(! function_exists('baseurl')){ /** @return string */ function baseurl() { return config("app", "baseurl"); }}
 
-// helpers
-// paging
-if(! function_exists('paging')) { /** @return \Presto\Helpers\Paging */ function paging() { return \Presto\Helpers\Paging::getInstance(); }}
-// breadcrumb
-if(! function_exists('breadcrumb')) { /** @return \Presto\Helpers\Breadcrumb */ function breadcrumb(array $breadcrumbs=[]) { return \Presto\Helpers\Breadcrumb::getInstance()->adds($breadcrumbs); }}
 
 // app
 if(! function_exists('app')){
@@ -45,8 +50,6 @@ if(! function_exists('repository_path')) { function repository_path() { return p
 if(! function_exists('storage_path')) { function storage_path() { return path('storages'); } }
 
 
-
-if(! function_exists('view')) { /** @return \Presto\Mvc\View */ function view(string $path=null) { return \Presto\Mvc\View::getInstance(); }}
 if(! function_exists('handler')) { /** @return \App\Exceptions\Handler */ function handler() { return \App\Exceptions\Handler::getInstance(); }}
 if(! function_exists('input')) {
     /** @return \Presto\Consoles\ArgvInput|mixed */
@@ -57,40 +60,29 @@ if(! function_exists('input')) {
 }
 
 
-// tags
-if(! function_exists('template')) { /** @return \Presto\Helpers\Templates\TemplateTag */ function template() { return \Presto\Helpers\Templates\TemplateTag::getInstance(); }}
-if(! function_exists('html')) { /** @return \Presto\Helpers\Html\HtmlTag */ function html() { return \Presto\Helpers\Html\HtmlTag::getInstance(); }}
-
-
 // files
-// config
 if(! function_exists('config')) { function config(string $filename, string $key="") { return \Presto\Files\ConfigLoader::getInstance()->get($filename, $key); }}
-// directory
 if(! function_exists('directory')) { /** @return \Presto\Files\DirectoryLoader */ function directory() { return \Presto\Files\DirectoryLoader::getInstance(); }}
-// csv
 if(! function_exists('csv')) { /** @return \Presto\Files\CsvLoader */ function csv() { return \Presto\Files\CsvLoader::getInstance(); }}
 
 
 // debugbar
-if(! function_exists('debugbar')) { /** @return \Presto\Debugbar\Debugbar */ function debugbar() { return \Presto\Debugbar\Debugbar::getInstance(); }}
-if(! function_exists('timelines')) { function timelines( string $msg="", array $data=[] ) { return \Presto\Debugbar\Debugbar::getInstance()->timelines($msg, $data); }}
-if(! function_exists('messages')) { function messages( string $msg="", array $data=[] ) { return \Presto\Debugbar\Debugbar::getInstance()->messages($msg, $data); }}
+if(! function_exists('debugbar')) { /** @return \Presto\Debugbar */ function debugbar() { return \Presto\Debugbar::getInstance(); }}
+if(! function_exists('timelines')) { function timelines( string $msg="", array $data=[] ) { return \Presto\Debugbar::getInstance()->timelines($msg, $data); }}
+if(! function_exists('messages')) { function messages( string $msg="", array $data=[] ) { return \Presto\Debugbar::getInstance()->messages($msg, $data); }}
 
 
 // database
-if(! function_exists('where')) { /** @return mixed */ function where(array $conditions=[]) { return \Presto\Databases\ArrayToWhere::getInstance()->convert( $conditions ); }}
+if(! function_exists('where')) { /** @return mixed */ function where(array $conditions=[]) { return \Presto\QueryToWhere::getInstance()->convert( $conditions ); }}
 if(! function_exists('database')) {
-    /** @return \Presto\Databases\QueryBuilder */
+    /** @return \Presto\QueryBuilder */
     function database(string $name="", string $database="") {
         if(empty($name) && empty($database))
         {
-            return \Presto\Databases\QueryBuilder::getInstance();
+            return \Presto\QueryBuilder::getInstance();
         }
-        return \Presto\Databases\QueryBuilder::getInstance()->connect($name, $database);
+        return \Presto\QueryBuilder::getInstance()->connect($name, $database);
     }
 }
-if(! function_exists('select')) { /** @return mixed */ function select(string $query, array $binds=[], $name=null) { return \Presto\Databases\QueryBuilder::getInstance()->select($query, $binds, $name); }}
-
-
-
+if(! function_exists('select')) { /** @return mixed */ function select(string $query, array $binds=[], $name=null) { return \Presto\QueryBuilder::getInstance()->select($query, $binds, $name); }}
 

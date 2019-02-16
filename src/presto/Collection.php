@@ -1,7 +1,7 @@
 <?php
 namespace Presto;
 
-use Presto\Mvc\Model\Model;
+use Presto\Model;
 
 class Collection
 {

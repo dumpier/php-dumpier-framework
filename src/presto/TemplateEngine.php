@@ -1,9 +1,9 @@
 <?php
-namespace Presto\Helpers\Templates;
+namespace Presto;
 
 use Presto\Traits\Singletonable;
 
-class TemplateTag
+class TemplateEngine
 {
     use Singletonable;
 

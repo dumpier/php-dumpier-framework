@@ -1,10 +1,10 @@
 <?php
-namespace Presto\Mvc\Model;
+namespace Presto\Model;
 
-use Presto\Mvc\Model\Manages\RelationManage;
-use Presto\Mvc\Model\Manages\Relation;
-use Presto\Mvc\Model\Manages\SliceManage;
-use Presto\Mvc\Model\Manages\ScopeManage;
+use Presto\Model\Manages\RelationManage;
+use Presto\Model\Manages\Relation;
+use Presto\Model\Manages\SliceManage;
+use Presto\Model\Manages\ScopeManage;
 
 /**
  * @property array $slices
@@ -13,13 +13,13 @@ use Presto\Mvc\Model\Manages\ScopeManage;
  */
 trait RepositoryRelationTrait
 {
-    /** @var \Presto\Mvc\Model\Manages\RelationManage */
+    /** @var \Presto\Model\Manages\RelationManage */
     protected  $relationManage;
 
-    /** @var \Presto\Mvc\Model\Manages\SliceManage */
+    /** @var \Presto\Model\Manages\SliceManage */
     protected  $sliceManage;
 
-    /** @var \Presto\Mvc\Model\Manages\ScopeManage */
+    /** @var \Presto\Model\Manages\ScopeManage */
     protected  $scopeManage;
 
 
@@ -53,6 +53,8 @@ trait RepositoryRelationTrait
     /**
      * 指定リレーションのロード
      * @param array $rows
+     *
+     *
      * @param Relation $relation
      * @return array|mixed
      */

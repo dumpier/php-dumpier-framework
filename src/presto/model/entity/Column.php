@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Mvc\Model\Entity;
+namespace Presto\Model\Entity;
 
 
 class Column

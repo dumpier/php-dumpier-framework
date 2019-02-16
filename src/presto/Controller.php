@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Mvc;
+namespace Presto;
 
 use Presto\Traits\Injectable;
 
@@ -28,7 +28,7 @@ class Controller
      * コンテンツを設定
      * @param string $name
      * @param mixed $data
-     * @return \Presto\Mvc\Controller
+     * @return \Presto\Controller
      */
     public function setContent(string $name, $data)
     {

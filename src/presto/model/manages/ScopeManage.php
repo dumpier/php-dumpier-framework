@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Mvc\Model\Manages;
+namespace Presto\Model\Manages;
 
 
 /**

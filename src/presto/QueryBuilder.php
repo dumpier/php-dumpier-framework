@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Databases;
+namespace Presto;
 
 use Presto\Traits\Singletonable;
 use Presto\Paginator;

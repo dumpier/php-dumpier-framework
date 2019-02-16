@@ -1,7 +1,8 @@
 <?php
-namespace Presto\Mvc\Model;
+namespace Presto\Model;
 
 use Presto\Traits\Singletonable;
+use Presto\Model\RepositoryRelationTrait;
 
 class Repository
 {

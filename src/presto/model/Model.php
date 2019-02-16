@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Mvc\Model;
+namespace Presto\Model;
 
 
 class Model
@@ -75,7 +75,7 @@ class Model
      * 新しいレコードをINSERTする
      * @param array $row
      * @throws \Exception
-     * @return \Presto\Mvc\Model\Model
+     * @return \Presto\Model\Model
      */
     public function create(array $row=[])
     {

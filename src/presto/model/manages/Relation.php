@@ -1,7 +1,7 @@
 <?php
-namespace Presto\Mvc\Model\Manages;
+namespace Presto\Model\Manages;
 
-use Presto\Mvc\Model\Repository;
+use Presto\Model\Repository;
 
 class Relation
 {

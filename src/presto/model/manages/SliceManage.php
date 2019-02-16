@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Mvc\Model\Manages;
+namespace Presto\Model\Manages;
 
 /**
  * TODO xxx_1~nのような項目でJOINする場合、シンプルに記述できるようにしたい

@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Mvc\Model\Manages;
+namespace Presto\Model\Manages;
 
 class RelationManage
 {
@@ -34,7 +34,7 @@ class RelationManage
      * リレーション定義の追加
      * @param string $alias
      * @param array $relation
-     * @return \Presto\Mvc\Model\Manages\RelationManage
+     * @return \Presto\Model\Manages\RelationManage
      */
     public function add(string $alias, array $relation)
     {
@@ -45,7 +45,7 @@ class RelationManage
 
     /**
      * リレーション定義一覧の取得
-     * @return \Presto\Mvc\Model\Manages\Relation[]
+     * @return \Presto\Model\Manages\Relation[]
      */
     public function all()
     {
@@ -56,7 +56,7 @@ class RelationManage
     /**
      * 指定リレーション定義の取得
      * @param string $alias
-     * @return \Presto\Mvc\Model\Manages\Relation
+     * @return \Presto\Model\Manages\Relation
      */
     public function get(string $alias)
     {

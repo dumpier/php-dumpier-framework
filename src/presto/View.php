@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Mvc;
+namespace Presto;
 
 use Presto\Traits\Singletonable;
 

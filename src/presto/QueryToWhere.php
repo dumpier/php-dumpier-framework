@@ -1,9 +1,9 @@
 <?php
-namespace Presto\Databases;
+namespace Presto;
 
 use Presto\Traits\Singletonable;
 
-class ArrayToWhere
+class QueryToWhere
 {
     use Singletonable;
 

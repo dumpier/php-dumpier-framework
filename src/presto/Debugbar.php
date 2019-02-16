@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Debugbar;
+namespace Presto;
 
 use Presto\Traits\Singletonable;
 
