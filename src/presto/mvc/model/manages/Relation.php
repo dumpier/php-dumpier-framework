@@ -63,6 +63,6 @@ class Relation
             return true;
         }
 
-        return express()->isMatch($row, $this->where);
+        return expression()->isMatch($row, $this->where);
     }
 }

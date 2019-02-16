@@ -57,7 +57,7 @@ class ArrayToWhere
             if(is_array($val))
             {
                 $expression = key($val);
-                if(in_array($expression, CompareUtility::EXPRESSION))
+                if( expression()->is($expression) )
                 {
                     // in, not in, >, >=, <, <=, <>, !=
                     list($sub_where, $binds) = $this->toExpression($key, $expression, $val[$expression], $binds);
@@ -113,7 +113,7 @@ class ArrayToWhere
 
             if(is_array($val))
             {
-                if(in_array($val[0], CompareUtility::EXPRESSION))
+                if( expression()->is($val[0]) )
                 {
                     // in, not in, >, >=, <, <=, <>, !=
                     list($sub_where, $binds) = $this->toExpression($key, $val[0], $val[1], $binds);

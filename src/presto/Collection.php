@@ -94,7 +94,7 @@ class Collection
 
         foreach ($rows as $row)
         {
-            if(express()->isMatch($row, $condition))
+            if(expression()->isMatch($row, $condition))
             {
                 $matches[] = $row;
                 $match_count ++;

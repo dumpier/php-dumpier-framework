@@ -5,7 +5,7 @@ if(! function_exists('arr')) { /** @return \Presto\Utilities\ArrayUtility */ fun
 if(! function_exists('preg')) { /** @return \Presto\Utilities\PregUtility */ function preg() { return \Presto\Utilities\PregUtility::getInstance(); }}
 
 
-if(! function_exists('express')) { /** @return \Presto\Express */ function express() { return \Presto\Express::getInstance(); }}
+if(! function_exists('expression')) { /** @return \Presto\Expression */ function expression() { return \Presto\Expression::getInstance(); }}
 if(! function_exists('validator')) { /** @return \Presto\Validator */ function validator() { return \Presto\Validator::getInstance(); }}
 if(! function_exists('collection')) { /** @return \Presto\Collection */ function collection(array $rows=[]) { return new \Presto\Collection($rows); }}
 

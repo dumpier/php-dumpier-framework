@@ -3,7 +3,7 @@ namespace Presto;
 
 use Presto\Traits\Singletonable;
 
-class Express
+class Expression
 {
     use Singletonable;
 
@@ -62,6 +62,22 @@ class Express
         self::LESS=>["message"=>"小さい", ],
         self::LESS_OR_EQUAL=>["message"=>"以下", ],
     ];
+
+
+    /**
+     * 有効な演算表現であるか
+     * @param string $expression
+     * @return boolean
+     */
+    public function is(string $expression)
+    {
+        if(in_array($expression, array_keys(self::LIST), TRUE))
+        {
+            return true;
+        }
+
+        false;
+    }
 
 
     /**

@@ -190,9 +190,9 @@ class Validator
      */
     public function case($val,  $case, $case_value=null)
     {
-        if(in_array($case, Express::LIST))
+        if( expression()->is($case) )
         {
-            return express()->compare($val, $case, $case_value);
+            return expression()->compare($val, $case, $case_value);
         }
 
         switch ($case)
@@ -225,13 +225,13 @@ class Validator
                 return true; // TODO
 
             case self::LENGTH:
-                return express()->compare(strlen($val), self::EQUAL, $case_value);
+                return expression()->compare(strlen($val), self::EQUAL, $case_value);
             case self::LENGTH_MIN:
-                return express()->compare(strlen($val), self::LARGE_OR_EQUAL, $case_value);
+                return expression()->compare(strlen($val), self::LARGE_OR_EQUAL, $case_value);
             case self::LENGTH_MAX:
-                return express()->compare(strlen($val), self::LESS_OR_EQUAL, $case_value);
+                return expression()->compare(strlen($val), self::LESS_OR_EQUAL, $case_value);
             case self::LENGTH_BETWEEN:
-                return express()->compare(strlen($val), self::BETWEEN, $case_value);
+                return expression()->compare(strlen($val), self::BETWEEN, $case_value);
 
             default:
                 throw new \Exception("不明Validate[rule:{$case}]");
