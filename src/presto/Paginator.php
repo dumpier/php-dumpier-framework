@@ -1,7 +1,7 @@
 <?php
 namespace Presto;
 
-use Presto\Helpers\Paging;
+use Presto\Paging;
 
 class Paginator
 {
