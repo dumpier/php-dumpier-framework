@@ -1,7 +1,7 @@
 <?php
 if(! function_exists('arrayer')) { /** @return \Presto\Arrayer */ function arrayer() { return \Presto\Arrayer::getInstance(); }}
 if(! function_exists('collection')) { /** @return \Presto\Collection */ function collection(array $rows=[]) { return new \Presto\Collection($rows); }}
-if(! function_exists('paginator')) { /** @return \Presto\Paginator */ function paginator(array $rows=[], int $total_count=0, int $page=1, int $limit=Paging::LIMIT_COUNT) { return new \Presto\Paginator($rows, $total_count, $page, $limit); }}
+if(! function_exists('paginator')) { /** @return \Presto\Paginator */ function paginator(array $rows=[], int $total_count=0, int $page=1, int $limit=\Presto\Paging::LIMIT_COUNT) { return new \Presto\Paginator($rows, $total_count, $page, $limit); }}
 if(! function_exists('stringer')) { /** @return \Presto\Stringer */ function stringer() { return \Presto\Stringer::getInstance(); }}
 if(! function_exists('pregular')) { /** @return \Presto\Pregular */ function pregular() { return \Presto\Pregular::getInstance(); }}
 if(! function_exists('expression')) { /** @return \Presto\Expression */ function expression() { return \Presto\Expression::getInstance(); }}
@@ -9,7 +9,7 @@ if(! function_exists('validator')) { /** @return \Presto\Validator */ function v
 if(! function_exists('routing')) { /** @return \Presto\Routing */ function routing() { return \Presto\Routing::getInstance(); }}
 if(! function_exists('response')){ /** @return \Presto\Response */ function response(string $uri=null) { return \Presto\Response::getInstance(); }}
 if(! function_exists('request')){ /** @return \Presto\Request */ function request() { return \Presto\Request::getInstance(); }}
-if(! function_exists('input')) { /** @return mixed */ function input(string $name="", $default=null) { \Presto\Request::getInstance()->input($name, $default); } }
+if(! function_exists('input')) { /** @return mixed */ function input(string $name="", $default=null) { return \Presto\Request::getInstance()->input($name, $default); } }
 
 
 // view
