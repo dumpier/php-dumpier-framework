@@ -20,7 +20,7 @@ class FacadeCommand extends \Presto\Consoles\Command
         $data = <<<EOF
 <?php
 {$phpcomment}
-class Controller extends \Presto\Mvc\Controller {}
+class Controller extends \Presto\Controller {}
 
 {$phpcomment}
 class Service extends \Presto\Service {}
