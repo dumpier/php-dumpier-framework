@@ -1,11 +1,11 @@
 <?php
 namespace Presto;
 
-use Presto\Traits\Properties;
+use Presto\Traits\Accessible;
 
 class QueryParameter
 {
-    use Properties;
+    use Accessible;
 
     protected $page = 1;
     protected $offset = 0;

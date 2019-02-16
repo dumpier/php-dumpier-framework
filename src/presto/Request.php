@@ -32,6 +32,19 @@ class Request
 
 
     /**
+     * URIの取得
+     */
+    public function uri()
+    {
+        // ベースURLを除く
+        $uri = preg_replace("/^" . preg_quote(baseurl()) . "/", "", $_SERVER['REQUEST_URI']);
+        $uri = preg_replace("/\?.*/", "", $uri);
+
+        return $uri;
+    }
+
+
+    /**
      * Ajax判定
      * @return boolean
      */
@@ -39,6 +52,7 @@ class Request
     {
         return $this->is_ajax;
     }
+
 
     /**
      * コマンドラインかの判定

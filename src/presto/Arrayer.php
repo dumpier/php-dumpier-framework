@@ -8,35 +8,6 @@ class Arrayer
 {
     use Singletonable;
 
-
-    public function toTreeString(array $array, int $recursion=0)
-    {
-        if(empty($array))
-        {
-            return "";
-        }
-
-        $string = "";
-        $string .= "<ul>";
-
-        foreach ($array as $key=>$val)
-        {
-            if(is_array($val))
-            {
-                $string .= "<li>{$key} : ";
-                $string .= $this->toTreeString($val, $recursion+1);
-                $string .= "</li>";
-                continue;
-            }
-
-            $string .="<li>{$key} : {$val}</li>";
-        }
-
-        $string .= "</ul>";
-        return $string;
-    }
-
-
     public function get(array $array, $path, $separator = '.')
     {
         $keys = explode($separator, trim($path));
@@ -74,7 +45,8 @@ class Arrayer
         $current = &$array;
         $parent = &$array;
 
-        foreach ($keys as $i => $key) {
+        foreach ($keys as $i => $key)
+        {
             if (!array_key_exists($key, $current))
             {
                 return;
@@ -113,6 +85,64 @@ class Arrayer
         return $depth;
     }
 
+
+    public function getKeys(array $array, array $condition=[])
+    {
+        // 検索条件に該当したCSVの行番号一覧
+        $target_keys = [];
+
+        foreach ($condition as $field=>$val)
+        {
+            // 条件に該当したCSVの行番号一覧
+            $keys = array_keys(array_column($array, $field), $val);
+
+            // AND条件で行番号を絞る
+            if(empty($target_keys))
+            {
+                $target_keys = $keys;
+            }
+            else
+            {
+                $target_keys = array_intersect($target_keys, $keys);
+            }
+        }
+
+        return $target_keys;
+    }
+
+
+    /**
+     * 二つの配列を結合する TODO TODO TODO TODO
+     * @param array $rows
+     * @param array $foreigns
+     * @param array $joins
+     * @param string $type
+     * @return array
+     */
+    public function mapping(array $rows, array $foreigns, array $joins, string $type=Model::HAS_MANY)
+    {
+        foreach ($rows as $no=>$row)
+        {
+            foreach ($joins as $foreign_name=>$mappings)
+            {
+                $keys = array_keys($mappings);
+                $values = array_map(function($key)use ($row){ return $row[$key]; }, $keys);
+                $foreign_keys = array_values($mappings);
+                $condition = array_combine($foreign_keys, $values);
+
+                $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? collection($foreigns)->get($condition) : collection($foreigns)->first($condition);
+            }
+        }
+
+        return $rows;
+    }
+
+
+    /**
+     * 無効な入力をなくす
+     * @param array $array
+     * @return mixed|array
+     */
     public function clean(array $array)
     {
         foreach ($array as $key=>$val)
@@ -149,50 +179,6 @@ class Arrayer
         }
 
         return false;
-    }
-
-    public function getKeys(array $array, array $condition=[])
-    {
-        // 検索条件に該当したCSVの行番号一覧
-        $target_keys = [];
-
-        foreach ($condition as $field=>$val)
-        {
-            // 条件に該当したCSVの行番号一覧
-            $keys = array_keys(array_column($array, $field), $val);
-
-            // AND条件で行番号を絞る
-            if(empty($target_keys))
-            {
-                $target_keys = $keys;
-            }
-            else
-            {
-                $target_keys = array_intersect($target_keys, $keys);
-            }
-        }
-
-        return $target_keys;
-    }
-
-
-    // 二つの配列を結合する TODO TODO TODO TODO
-    public function mapping(array $rows, array $foreigns, array $joins, string $type=Model::HAS_MANY)
-    {
-        foreach ($rows as $no=>$row)
-        {
-            foreach ($joins as $foreign_name=>$mappings)
-            {
-                $keys = array_keys($mappings);
-                $values = array_map(function($key)use ($row){ return $row[$key]; }, $keys);
-                $foreign_keys = array_values($mappings);
-                $condition = array_combine($foreign_keys, $values);
-
-                $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? collection($foreigns)->get($condition) : collection($foreigns)->first($condition);
-            }
-        }
-
-        return $rows;
     }
 
 }

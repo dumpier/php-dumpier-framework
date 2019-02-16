@@ -6,7 +6,7 @@ if(! function_exists('stringer')) { /** @return \Presto\Stringer */ function str
 if(! function_exists('pregular')) { /** @return \Presto\Pregular */ function pregular() { return \Presto\Pregular::getInstance(); }}
 if(! function_exists('expression')) { /** @return \Presto\Expression */ function expression() { return \Presto\Expression::getInstance(); }}
 if(! function_exists('validator')) { /** @return \Presto\Validator */ function validator() { return \Presto\Validator::getInstance(); }}
-if(! function_exists('routing')) { /** @return \Presto\Routing */ function routing(string $uri=null) { return \Presto\Routing::getInstance(); }}
+if(! function_exists('routing')) { /** @return \Presto\Routing */ function routing() { return \Presto\Routing::getInstance(); }}
 if(! function_exists('response')){ /** @return \Presto\Response */ function response(string $uri=null) { return \Presto\Response::getInstance(); }}
 if(! function_exists('request')){ /** @return \Presto\Request */ function request() { return \Presto\Request::getInstance(); }}
 if(! function_exists('input')) { /** @return mixed */ function input(string $name="", $default=null) { \Presto\Request::getInstance()->input($name, $default); } }

@@ -2,17 +2,36 @@
 namespace Presto;
 
 use Presto\Traits\Singletonable;
+use Presto\Traits\Accessible;
 
 class Routing
 {
     use Singletonable;
+    use Accessible;
 
-    public $routings;
+    protected $routings;
 
-    public function getRouting(string $uri=null)
+    /**
+     * ルーティング定義の設定、取得
+     * @param array $input
+     * @return \Presto\Routing
+     */
+    public function routings(array $input)
     {
-        $uri = $uri ?? $this->getUri();
+        return $this->accessor("routings", $input);
+    }
 
+
+    /**
+     * ルーティングの取得
+     * @param string $uri
+     * @return string[]|array[]
+     */
+    public function get(string $uri=null)
+    {
+        $uri = $uri ?? request()->uri();
+
+        // 未定義の場合、自動で取得
         if(empty($this->routings[$uri]))
         {
             return $this->default();
@@ -27,28 +46,38 @@ class Routing
     }
 
 
-    public function getUri()
-    {
-        // ベースURI
-        $uri = preg_replace("/^" . preg_quote(baseurl()) . "/", "", $_SERVER['REQUEST_URI']);
-        $uri = preg_replace("/\?.*/", "", $uri);
-        return $uri;
-    }
-
-
-
     /**
+     * ルーティングの定義がない場合のデフォルトルーティング
      * @example namespace/controller/action/...parameters
      *
      */
     public function default()
     {
-        $controller_name = "\\App\Http\\Controllers\\";
-        $controller = "";
-        $action = "";
-        $parameters = [];
+        list($controller, $uri, $array) = $this->controller();
 
-        $uri = trim($this->getUri(), "/");
+        if(empty($controller))
+        {
+            // コントローラーが見つからなかったらエラー
+            throw new \Exception("Page not found[{$uri}]",404);
+        }
+
+        // action
+        $action = empty($array) ? "index" : array_shift($array);
+
+        // パラメータ
+        $parameters = empty($array) ? [] : $array;
+
+        return [$controller, $action, $parameters];
+    }
+
+
+    // コントローラークラスの取得
+    private function controller()
+    {
+        $controller = "";
+        $controller_name = "\\App\Http\\Controllers\\";
+
+        $uri = trim(request()->uri(), "/");
         $array = explode("/", $uri);
 
         foreach ($array as $string)
@@ -65,18 +94,6 @@ class Routing
             $controller_name .= "\\";
         }
 
-        if(empty($controller))
-        {
-            // コントローラーが見つからなかったらエラー
-            throw new \Exception("Page not found[{$uri}]",404);
-        }
-
-        // action
-        $action = empty($array) ? "index" : array_shift($array);
-
-        // パラメータ
-        $parameters = empty($array) ? [] : $array;
-
-        return [$controller, $action, $parameters];
+        return [$controller, $uri, $array];
     }
 }

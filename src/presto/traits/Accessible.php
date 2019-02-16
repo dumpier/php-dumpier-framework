@@ -1,7 +1,7 @@
 <?php
 namespace Presto\Traits;
 
-trait Properties
+trait Accessible
 {
     protected function accessor(string $property, $input=null)
     {
@@ -26,22 +26,5 @@ trait Properties
         $this->{$property} = $input;
     }
 
-
-    public function toArray()
-    {
-        return (array)$this;
-    }
-
-
-    public function toJson()
-    {
-        return json_encode($this->toArray(), JSON_UNESCAPED_UNICODE);
-    }
-
-
-    public function toString()
-    {
-
-    }
 
 }

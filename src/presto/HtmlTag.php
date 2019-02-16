@@ -7,6 +7,33 @@ class HtmlTag
 {
     use Singletonable;
 
+    public function tree(array $array, int $recursion=0)
+    {
+        if(empty($array))
+        {
+            return "";
+        }
+
+        $string = "<ul>";
+
+        foreach ($array as $key=>$val)
+        {
+            if(is_array($val))
+            {
+                $string .= "<li>{$key} : ";
+                $string .= $this->toTreeString($val, $recursion+1);
+                $string .= "</li>";
+                continue;
+            }
+
+            $string .="<li>{$key} : {$val}</li>";
+        }
+
+        $string .= "</ul>";
+        return $string;
+    }
+
+
     public function table(array $rows, array $header=[], array $parameters=[])
     {
         if(empty($rows))
