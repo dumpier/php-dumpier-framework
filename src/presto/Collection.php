@@ -1,8 +1,6 @@
 <?php
 namespace Presto;
 
-use Presto\Model;
-
 class Collection
 {
     /** @var array */

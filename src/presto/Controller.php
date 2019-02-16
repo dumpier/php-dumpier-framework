@@ -11,7 +11,7 @@ class Controller
     public $layout = "";
 
     /** Viewタイプ */
-    public $view_type = View::TYPE_HTML;
+    public $view_type = View::HTML;
 
     /** テンプレート */
     public $template = "";

@@ -1,8 +1,6 @@
 <?php
 namespace Presto;
 
-use Presto\Paging;
-
 class Paginator
 {
     protected $limit = Paging::LIMIT_COUNT;

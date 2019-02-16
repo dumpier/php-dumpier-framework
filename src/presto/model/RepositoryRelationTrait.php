@@ -64,7 +64,7 @@ trait RepositoryRelationTrait
         $cond = $this->foreignCondition($rows, $relation);
 
         // 子テーブルの検索
-        $foreigns = $relation->getRepository()->find(["conditions"=>$cond], $recursion);
+        $foreigns = $relation->getRepository()->find(["condition"=>$cond], $recursion);
 
         // 子テーブルを親に代入
         $rows = arrayer()->mapping($rows, $foreigns, $relation->join, $relation->type);

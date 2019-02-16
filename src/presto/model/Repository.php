@@ -74,7 +74,7 @@ class Repository
     {
         $primary_key_name = $this->model->getPrimaryKey();
         $parameters = [];
-        $parameters["conditions"][$primary_key_name] = $primary_key;
+        $parameters["condition"][$primary_key_name] = $primary_key;
         $parameters["limit"] = 1;
 
         return $this->find($parameters, $recursion);

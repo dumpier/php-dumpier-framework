@@ -151,12 +151,12 @@ class Arrayer
         return false;
     }
 
-    public function getKeys(array $array, array $conditions=[])
+    public function getKeys(array $array, array $condition=[])
     {
         // 検索条件に該当したCSVの行番号一覧
         $target_keys = [];
 
-        foreach ($conditions as $field=>$val)
+        foreach ($condition as $field=>$val)
         {
             // 条件に該当したCSVの行番号一覧
             $keys = array_keys(array_column($array, $field), $val);

@@ -1,9 +1,9 @@
 <?php
 namespace Presto\Consoles;
 
-class FacadeCommand extends \Presto\Consoles\Command
+class HelpersCommand extends \Presto\Consoles\Command
 {
-    protected $description = "facade.php ヘルパーの作成";
+    protected $description = "helpers.php ヘルパーの作成";
 
     public function handler()
     {
@@ -15,7 +15,7 @@ class FacadeCommand extends \Presto\Consoles\Command
         // サービスとリポジトリ一覧
         $phpcomment = "/**" . PHP_EOL . $service_comment ." *".PHP_EOL. $repository_comment . " */";
 
-        $filename = path("facade.php");
+        $filename = path("helpers.php");
 
         $data = <<<EOF
 <?php

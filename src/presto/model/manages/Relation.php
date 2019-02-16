@@ -11,7 +11,7 @@ class Relation
     public $type;
     public $where;
     public $join;
-    public $conditions;
+    public $condition;
 
 
     public function __construct(string $alias, array $relation)
@@ -27,7 +27,7 @@ class Relation
 
         $this->join = $relation["join"];
         $this->where = empty($relation["where"]) ? [] : $relation["where"];
-        $this->conditions = empty($relation["conditions"]) ? [] : $relation["conditions"];
+        $this->condition = empty($relation["condition"]) ? [] : $relation["condition"];
     }
 
 

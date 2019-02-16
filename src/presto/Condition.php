@@ -4,11 +4,11 @@ namespace Presto;
 class Condition
 {
     /** @var array */
-    protected $conditions;
+    protected $condition;
 
 
-    public function __construct(array $conditions)
+    public function __construct(array $condition)
     {
-        $this->conditions = $conditions;
+        $this->condition = $condition;
     }
 }

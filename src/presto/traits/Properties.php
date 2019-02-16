@@ -3,15 +3,27 @@ namespace Presto\Traits;
 
 trait Properties
 {
-    public function get(string $name="")
+    protected function accessor(string $property, $input=null)
     {
+        if($input)
+        {
+            $this->{$property} = $input;
+            return $this;
+        }
 
+        return $this->{$property};
     }
 
 
-    public function set(string $name, $value)
+    public function get(string $property="")
     {
+        return $this->{$property};
+    }
 
+
+    public function set(string $property, $input)
+    {
+        $this->{$property} = $input;
     }
 
 

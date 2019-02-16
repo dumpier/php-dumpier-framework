@@ -9,32 +9,32 @@ class QueryToWhere
 
     /**
      * 配列をSQL条件式に変換する
-     * @param array $conditions
+     * @param array $condition
      */
-    public function convert(array $conditions=[])
+    public function convert(array $condition=[])
     {
-        if(empty($conditions))
+        if(empty($condition))
         {
             return "";
         }
 
-        list($where, $binds) = $this->toWhereString($conditions);
+        list($where, $binds) = $this->toWhereString($condition);
         $where = "WHERE " . $this->toCleanWhereString($where);
 
         return [$where, $binds];
     }
 
 
-    private function toWhereString(array $conditions=[], array $binds=[])
+    private function toWhereString(array $condition=[], array $binds=[])
     {
         $where = "";
 
-        if(empty($conditions))
+        if(empty($condition))
         {
             return ["", []];
         }
 
-        foreach ($conditions as $key=>$val)
+        foreach ($condition as $key=>$val)
         {
             // 数字の場合は、グルーピング条件
             if(is_numeric($key))
@@ -97,11 +97,11 @@ class QueryToWhere
     }
 
 
-    private function toOrWhereString(array $conditions, array $binds=[])
+    private function toOrWhereString(array $condition, array $binds=[])
     {
         $where = "";
 
-        foreach ( $conditions as $key=>$val )
+        foreach ( $condition as $key=>$val )
         {
             if(is_numeric($key))
             {
@@ -120,7 +120,7 @@ class QueryToWhere
                     continue;
                 }
 
-                list($sub_where, $binds) = $this->toWhereString($conditions, $binds);
+                list($sub_where, $binds) = $this->toWhereString($condition, $binds);
 
                 $where .= $sub_where;
                 continue;

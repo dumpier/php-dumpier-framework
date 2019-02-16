@@ -7,6 +7,12 @@ namespace Presto\Traits;
  */
 trait Injectable
 {
+    // TODO ServicesとRepositories以外も追加可能にする
+    protected $injections = [
+        "services",
+        "repositories",
+    ];
+
     public function __get(string $property)
     {
         $name = stringer()->toPascal($property);

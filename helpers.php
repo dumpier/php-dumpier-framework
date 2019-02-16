@@ -7,20 +7,17 @@ if(! function_exists('pregular')) { /** @return \Presto\Pregular */ function pre
 if(! function_exists('expression')) { /** @return \Presto\Expression */ function expression() { return \Presto\Expression::getInstance(); }}
 if(! function_exists('validator')) { /** @return \Presto\Validator */ function validator() { return \Presto\Validator::getInstance(); }}
 if(! function_exists('routing')) { /** @return \Presto\Routing */ function routing(string $uri=null) { return \Presto\Routing::getInstance(); }}
-if(! function_exists('request')){ /** @return \Presto\Request */ function request() { return \Presto\Request::getInstance(); }}
 if(! function_exists('response')){ /** @return \Presto\Response */ function response(string $uri=null) { return \Presto\Response::getInstance(); }}
+if(! function_exists('request')){ /** @return \Presto\Request */ function request() { return \Presto\Request::getInstance(); }}
+if(! function_exists('input')) { /** @return mixed */ function input(string $name="", $default=null) { \Presto\Request::getInstance()->input($name, $default); } }
 
 
 // view
 if(! function_exists('view')) { /** @return \Presto\View */ function view(string $path=null) { return \Presto\View::getInstance(); }}
-// template engine
 if(! function_exists('template')) { /** @return \Presto\TemplateEngine */ function template() { return \Presto\TemplateEngine::getInstance(); }}
 if(! function_exists('html')) { /** @return \Presto\HtmlTag */ function html() { return \Presto\HtmlTag::getInstance(); }}
-// paging
 if(! function_exists('paging')) { /** @return \Presto\Paging */ function paging() { return \Presto\Paging::getInstance(); }}
-// breadcrumb
 if(! function_exists('breadcrumb')) { /** @return \Presto\Breadcrumb */ function breadcrumb(array $breadcrumbs=[]) { return \Presto\Breadcrumb::getInstance()->adds($breadcrumbs); }}
-// baseurl
 if(! function_exists('baseurl')){ /** @return string */ function baseurl() { return config("app", "baseurl"); }}
 
 
@@ -47,17 +44,11 @@ if(! function_exists('class_path')) { function class_path() { return path('app/c
 if(! function_exists('controller_path')) { function controller_path() { return path('app/classes/http/controllers'); } }
 if(! function_exists('service_path')) { function service_path() { return path('app/classes/services'); } }
 if(! function_exists('repository_path')) { function repository_path() { return path('app/classes/models/repositories'); } }
+if(! function_exists('view_path')) { function view_path() { return path('app/views'); } }
 if(! function_exists('storage_path')) { function storage_path() { return path('storages'); } }
 
 
 if(! function_exists('handler')) { /** @return \App\Exceptions\Handler */ function handler() { return \App\Exceptions\Handler::getInstance(); }}
-if(! function_exists('input')) {
-    /** @return \Presto\Consoles\ArgvInput|mixed */
-    function input(string $name, $default=null) {
-        $instance = \Presto\Consoles\ArgvInput::getInstance();
-        return empty($name) ? $instance : $instance->value($name, $default);
-    }
-}
 
 
 // files

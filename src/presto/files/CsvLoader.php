@@ -48,7 +48,7 @@ class CsvLoader
     // -------------------------------------------------------
     public function findById(string $csvfile, int $id)
     {
-        return $this->findFirst($csvfile, ['conditions'=>['id'=>$id]]);
+        return $this->findFirst($csvfile, ["condition"=>['id'=>$id]]);
     }
 
     // 検索
@@ -57,12 +57,12 @@ class CsvLoader
         // 全CSVデータを取得
         $rows = $this->getBody($csvfile);
 
-        if(empty($parameters["conditions"]))
+        if(empty($parameters["condition"]))
         {
             return $rows;
         }
 
-        return collection($rows)->get($parameters["conditions"]);
+        return collection($rows)->get($parameters["condition"]);
     }
 
 
@@ -71,12 +71,12 @@ class CsvLoader
     {
         $rows = $this->getBody($csvfile);
 
-        if(empty($parameters["conditions"]))
+        if(empty($parameters["condition"]))
         {
             return empty($rows[0]) ? [] : $rows[0];
         }
 
-        return collection($rows)->first($parameters["conditions"]);
+        return collection($rows)->first($parameters["condition"]);
     }
 
 
@@ -85,13 +85,13 @@ class CsvLoader
     {
         $rows = $this->getBody($csvfile);
 
-        if(empty($parameters["conditions"]))
+        if(empty($parameters["condition"]))
         {
             $last = end($rows);
             return empty($last) ? [] : $last;
         }
 
-        return collection($rows)->last($parameters["conditions"]);
+        return collection($rows)->last($parameters["condition"]);
     }
 
 

@@ -58,7 +58,9 @@ class QueryBuilder
         $limit = empty($parameters["limit"]) ? 0 : $parameters["limit"];
         $sql_offset = empty($limit) ? "" : " LIMIT {$offset}, {$limit}";
 
-        $sql = "SELECT {$fields} FROM `{$table}` {$where} {$sql_offset}";
+        $sql_orderby = empty($parameters["order"]) ? "" : "ORDER BY " . implode(",", $parameters["order"]);
+
+        $sql = "SELECT {$fields} FROM `{$table}` {$where} {$sql_orderby} {$sql_offset}";
 
         return $this->querySelect($sql, $binds);
     }
@@ -299,10 +301,10 @@ class QueryBuilder
         return $this;
     }
 
-    // conditions配列からWHEREとBINDの取得
+    // condition配列からWHEREとBINDの取得
     private function where(array $parameters=[])
     {
-        return empty($parameters["conditions"]) ? ["",[]] : where($parameters["conditions"]);
+        return empty($parameters["condition"]) ? ["",[]] : where($parameters["condition"]);
     }
 
     // database.configの取得

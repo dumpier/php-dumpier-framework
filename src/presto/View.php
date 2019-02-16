@@ -8,18 +8,18 @@ class View
 {
     use Singletonable;
 
-    const TYPE_HTML = 'html';
-    const TYPE_FILE = 'file';
-    const TYPE_JSON = 'json';
-    const TYPE_JSONP = 'jsonp';
+    const HTML = 'html';
+    const FILE = 'file';
+    const JSON = 'json';
+    const JSONP = 'jsonp';
 
-    const TYPE_LIST = [
-        self::TYPE_HTML,
-        self::TYPE_FILE,
-        self::TYPE_JSON,
+    const LIST = [
+        self::HTML,
+        self::FILE,
+        self::JSON,
     ];
 
-    protected $type = self::TYPE_HTML;
+    protected $type = self::HTML;
     protected $layout = NULL;
 
     // テンプレートの指定
@@ -30,7 +30,7 @@ class View
 
 
     // viewタイプの指定
-    public function type(string $view_type=self::TYPE_HTML)
+    public function type(string $view_type=self::HTML)
     {
         $this->type = $view_type;
         return $this;
@@ -55,13 +55,13 @@ class View
 
         switch ($this->type)
         {
-            case self::TYPE_JSON:
+            case self::JSON:
                 return  $this->renderToJson($contents);
 
-            case self::TYPE_FILE:
+            case self::FILE:
                 return  $this->renderToFile($contents);
 
-            case self::TYPE_HTML:
+            case self::HTML:
             default:
                 return  $this->renderToHtml($contents, $template, $layout);
         }

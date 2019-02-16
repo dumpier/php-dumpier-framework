@@ -57,7 +57,7 @@ class Expression
         self::EQUAL=>["message"=>"等しい", ],
         self::NOT=>["message"=>"異なる", ],
         self::DIFFER=>["message"=>"異なる", ],
-        self::LARGER=>["message"=>"大きい", ],
+        self::LARGE=>["message"=>"大きい", ],
         self::LARGE_OR_EQUAL=>["message"=>"以上", ],
         self::LESS=>["message"=>"小さい", ],
         self::LESS_OR_EQUAL=>["message"=>"以下", ],
@@ -142,13 +142,13 @@ class Expression
     /**
      * 指定条件に該当するデータであるか
      * @param array $row
-     * @param array $conditions
+     * @param array $condition
      * @param bool $isOr
      * @return boolean
      */
-    public function isMatch(array $row, array $conditions, bool $isOr=FALSE)
+    public function isMatch(array $row, array $condition, bool $isOr=FALSE)
     {
-        foreach ($conditions as $key=>$val)
+        foreach ($condition as $key=>$val)
         {
             // グループ化した条件
             if(is_numeric($key))
@@ -182,7 +182,7 @@ class Expression
                     if ($isOr) continue; return false;
                 }
 
-                throw new \Exception("不明条件," . json_encode($conditions));
+                throw new \Exception("不明条件," . json_encode($condition));
             }
 
             // プリミティブな比較
