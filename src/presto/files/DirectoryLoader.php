@@ -2,7 +2,7 @@
 namespace Presto\Files;
 
 use Presto\Traits\Singletonable;
-use Presto\Exceptions\PrestoException;
+use Presto\CatchaleException;
 
 class DirectoryLoader
 {
@@ -104,7 +104,7 @@ class DirectoryLoader
             return true;
         }
 
-        throw new PrestoException("Is not directory !\n{$path}");
+        throw new CatchaleException("Is not directory !\n{$path}");
     }
 
     public function checkIsFile(string $path)
@@ -114,6 +114,6 @@ class DirectoryLoader
             return true;
         }
 
-        throw new PrestoException("Is not file !\n{$root_path}");
+        throw new CatchaleException("Is not file !\n{$root_path}");
     }
 }

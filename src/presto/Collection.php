@@ -109,25 +109,4 @@ class Collection
         return new static($matches);
     }
 
-
-    // 二つの配列を結合する TODO
-    public function mapping(array $rows, array $foreigns, array $joins, string $type=Model::HAS_MANY)
-    {
-        foreach ($rows as $no=>$row)
-        {
-            foreach ($joins as $foreign_name=>$mappings)
-            {
-                $keys = array_keys($mappings);
-                $values = array_map(function($key)use ($row){ return $row[$key]; }, $keys);
-                $foreign_keys = array_values($mappings);
-                $condition = array_combine($foreign_keys, $values);
-
-                $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? collection($foreigns)->get($condition) : collection($foreigns)->first($condition);
-            }
-        }
-
-        return $rows;
-    }
-
-
 }
