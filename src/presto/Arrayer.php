@@ -115,11 +115,11 @@ class Arrayer
      * 二つの配列を結合する TODO TODO TODO TODO
      * @param array $rows
      * @param array $foreigns
-     * @param array $joins
+     * @param array $joins JOIN Condition
      * @param string $type
      * @return array
      */
-    public function mapping(array $rows, array $foreigns, array $joins, string $type=Model::HAS_MANY)
+    public function mapping(array $rows, array $childrens, array $joins, string $type=Model::HAS_MANY)
     {
         foreach ($rows as $no=>$row)
         {
@@ -128,9 +128,10 @@ class Arrayer
                 $keys = array_keys($mappings);
                 $values = array_map(function($key)use ($row){ return $row[$key]; }, $keys);
                 $foreign_keys = array_values($mappings);
+
                 $condition = array_combine($foreign_keys, $values);
 
-                $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? collection($foreigns)->get($condition) : collection($foreigns)->first($condition);
+                $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? collection($childrens)->get($condition) : collection($childrens)->first($condition);
             }
         }
 

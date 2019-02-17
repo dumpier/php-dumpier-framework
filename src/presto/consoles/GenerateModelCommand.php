@@ -1,12 +1,12 @@
 <?php
 namespace Presto\Consoles;
 
-use Presto\Mvc\Model\Entity\Table;
-use Presto\Services\Codes\GenerateModelService;
+use Presto\Model\Entity\Table;
+use Presto\Services\GenerateModelService;
 
 
 /**
- * @property \Presto\Services\Codes\GenerateModelService $generateModelService
+ * @property \Presto\Services\GenerateModelService $generateModelService
  *
  *
  */

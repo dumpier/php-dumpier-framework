@@ -1,5 +1,5 @@
 <?php
-namespace Presto\Services\Codes;
+namespace Presto\Services;
 
 use Presto\Model\Entity\Table;
 

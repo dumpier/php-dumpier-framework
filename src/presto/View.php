@@ -24,10 +24,12 @@ class View
 
     protected $type = self::HTML;
     protected $layout = NULL;
+    protected $template = "";
 
     // テンプレートの指定
-    public function path(string $path=NULL)
+    public function template(string $template)
     {
+        $this->template = $template;
         return $this;
     }
 
@@ -52,7 +54,7 @@ class View
      * @param array $contents
      * @return string|mixed
      */
-    public function render(array $contents=[], string $template="", string $layout="")
+    public function render(array $contents=[])
     {
         timelines("rendering start !");
 
@@ -83,22 +85,20 @@ class View
     }
 
 
-    protected function html(array $contents=[], string $template="", string $layout="")
+    protected function html(array $contents=[])
     {
         if(!empty($contents["breadcrumbs"]))
         {
             breadcrumb()->adds($contents["breadcrumbs"]);
         }
 
-        $template_file = $this->getDefaultHtmlTemplate($template);
-
         if( config('cache', 'views.enable') )
         {
-            list($phtml, $cache_file) =  $this->loadCache($template_file, $layout);
+            list($phtml, $cache_file) =  $this->loadCache();
         }
         else
         {
-            $phtml =  $this->loadTemplate($template_file, $layout);
+            $phtml =  $this->loadTemplate();
         }
 
         // コントローラーから渡されたパラメータ
@@ -108,7 +108,7 @@ class View
 
 
     // キャッシュのロード
-    private function loadCache(string $template_file, string $layout="")
+    private function loadCache()
     {
         $prefix = str_replace("/", ".", str_replace(path("app/views/"), "", trim($template_file,".phtml")));
         $checksum = md5_file($template_file);
@@ -134,13 +134,13 @@ class View
     }
 
     // テンプレートのロード
-    private function loadTemplate(string $template_file, string $layout="")
+    private function loadTemplate()
     {
         // テンプレートを読み込む
         $phtml_template = file_get_contents( $template_file );
 
         // レイアウトを読み込む
-        $layout = empty($layout) ? $this->getLayout() : path("app/views/{$layout}.phtml");
+        $layout = empty($layout) ? $this->getLayout() : $this->framework($layout);
 
         $phtml_layout = file_get_contents( $layout );
 
@@ -158,7 +158,7 @@ class View
     {
         if($this->layout)
         {
-            return path("app/views/{$this->layout}.phtml");
+            return $this->framework("app/views/{$this->layout}.phtml");
         }
 
         return path('app/views/html/layouts/html.phtml');
@@ -170,15 +170,17 @@ class View
     {
         if(!empty($template))
         {
-            return path("app/views/{$template}.phtml");
+            return $this->framework($template);
         }
 
+        // テンプレートが未指定の場合
         list($controller, $action, $parameter) = routing()->get();
         $template = strtolower($controller) . DIRECTORY_SEPARATOR . strtolower($action);
 
         $template = str_replace("app\\http\\controllers\\", "", $template);
         $template = str_replace("controller", "", $template);
         $template = stringer()->cleanDirectorySeparator($template);
+
         $template = path("app/views/html/pages/{$template}.phtml");
 
         if(! file_exists($template))
@@ -190,5 +192,15 @@ class View
     }
 
 
+    private function framework(string $template)
+    {
+        $path = framework_path("templates/{$template}.phtml");
+        if(file_exists($path))
+        {
+            return $path;
+        }
+
+        return path("app/views/{$template}.phtml");
+    }
 
 }

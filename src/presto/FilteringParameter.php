@@ -7,11 +7,26 @@ class FilteringParameter
 {
     use Accessible;
 
+    /** @var integer ページ番号 */
     protected $page = 1;
+
+    /** @var integer OFFSET */
     protected $offset = 0;
+
+    /** @var integer LIMIT */
     protected $limit = Paging::LIMIT_COUNT;
+
+    /** @var array 並び替え */
     protected $order = [];
+
+    /** @var array グルーピング条件 */
     protected $group = [];
+
+    /** @var array 抽出項目一覧 */
+    protected $fields = [];
+
+    /** @var array COUNT()する項目名 */
+    protected $count_field = "*";
 
     /** @var FilteringCondition */
     protected $condition;
@@ -40,6 +55,16 @@ class FilteringParameter
     public function group(array $input=[])
     {
         return $this->accessor("group", $input);
+    }
+
+    public function fields(array $input=[])
+    {
+        return $this->accessor("fields", $input);
+    }
+
+    public function count_filed(string $input)
+    {
+        return $this->accessor("count_filed", $input);
     }
 
     public function condition(array $input=[])

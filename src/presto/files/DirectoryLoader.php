@@ -8,7 +8,12 @@ class DirectoryLoader
 {
     use Singletonable;
 
-    // ツリー形式で取得
+    /**
+     * ツリー形式で取得 TODO
+     * @param string $path
+     * @param string $chain
+     * @return array
+     */
     public function tree(string $path, string $chain="")
     {
         if(! $this->isDirectory($path))
@@ -41,7 +46,11 @@ class DirectoryLoader
         return $tree;
     }
 
-    // フォルダとファイル一覧の取得
+    /**
+     * フォルダとファイル一覧の取得
+     * @param string $path
+     * @return [][]
+     */
     public function list(string $path)
     {
         $this->checkIsDirectory($path);
@@ -67,6 +76,12 @@ class DirectoryLoader
         return [$directories, $files];
     }
 
+
+    /**
+     * フォルダであるか
+     * @param string $path
+     * @return boolean
+     */
     public function isDirectory(string $path)
     {
         if(! file_exists($path))
@@ -82,6 +97,12 @@ class DirectoryLoader
         return false;
     }
 
+
+    /**
+     * ファイルであるか
+     * @param string $path
+     * @return boolean
+     */
     public function isFile(string $path)
     {
         if(! file_exists($path))

@@ -23,4 +23,11 @@ class Response
     {
 
     }
+
+
+    public function redirect(string $url)
+    {
+        header("Location: http://www.example.com/", TRUE, 301);
+        exit;
+    }
 }

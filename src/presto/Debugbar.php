@@ -36,10 +36,26 @@ class Debugbar
     }
 
 
+    /**
+     * レンダリング
+     * @param string $template
+     * @param string $layout
+     */
+    public function render(string $template="", string $layout="")
+    {
+        echo view()->layout("html/layouts/empty")->path("html/pages/debugbar")->render($this->all());
+    }
+
+
+    /**
+     * 全部取得
+     * @return array[]
+     */
     public function all()
     {
         return ['logs'=>$this->logs];
     }
+
 
     /**
      * ログ件数の取得

@@ -7,11 +7,11 @@ trait Accessible
     {
         if($input)
         {
-            $this->{$property} = $input;
+            $this->set($property, $input);
             return $this;
         }
 
-        return $this->{$property};
+        return $this->get($property);
     }
 
 

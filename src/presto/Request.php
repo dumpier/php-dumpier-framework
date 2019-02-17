@@ -36,12 +36,15 @@ class Request
      */
     public function uri()
     {
-        // ベースURLを除く
-        $uri = preg_replace("/^" . preg_quote(baseurl()) . "/", "", $_SERVER['REQUEST_URI']);
+        // ベースURIを除く
+        $uri = preg_replace("/^" . preg_quote(baseuri()) . "/", "", $_SERVER['REQUEST_URI']);
         $uri = preg_replace("/\?.*/", "", $uri);
 
         return $uri;
     }
+
+
+
 
 
     /**

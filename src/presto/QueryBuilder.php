@@ -2,8 +2,6 @@
 namespace Presto;
 
 use Presto\Traits\Singletonable;
-use Presto\Paginator;
-use Presto\Paging;
 
 class QueryBuilder
 {
@@ -12,7 +10,7 @@ class QueryBuilder
     protected $driver = "mysql";
 
     /** @var array|\mysqli */
-    protected $conns = [];
+    protected $connections = [];
 
     /** @var string 現在接続中 */
     protected $current_conn ="";
@@ -269,9 +267,9 @@ class QueryBuilder
         list($name, $database, $config) = $this->config($name, $database);
 
         // 接続がある場合
-        if( ! empty($this->conns[$name][$database]) )
+        if( ! empty($this->connections[$name][$database]) )
         {
-            return $this->conns[$name][$database];
+            return $this->connections[$name][$database];
         }
 
         // 新しい接続
@@ -288,9 +286,9 @@ class QueryBuilder
 
         $this->current_conn = $name;
         $this->current_database = $database;
-        $this->conns[$name][$database] = $conn;
+        $this->connections[$name][$database] = $conn;
 
-        return $this->conns[$name][$database];
+        return $this->connections[$name][$database];
     }
 
 
