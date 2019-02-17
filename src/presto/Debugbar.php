@@ -43,7 +43,7 @@ class Debugbar
      */
     public function render(string $template="", string $layout="")
     {
-        echo view()->layout("html/layouts/empty")->path("html/pages/debugbar")->render($this->all());
+        echo view()->layout("html/layouts/empty")->template("html/pages/debugbar")->render($this->all());
     }
 
 

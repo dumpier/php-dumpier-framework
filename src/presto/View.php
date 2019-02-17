@@ -3,7 +3,6 @@ namespace Presto;
 
 use Presto\Traits\Singletonable;
 
-// TODO Responseに移動 2019-1-6
 class View
 {
     use Singletonable;
@@ -26,13 +25,19 @@ class View
     protected $layout = NULL;
     protected $template = "";
 
+    // レイアウトの指定
+    public function layout(string $layout)
+    {
+        $this->layout = $layout;
+        return $this;
+    }
+
     // テンプレートの指定
     public function template(string $template)
     {
         $this->template = $template;
         return $this;
     }
-
 
     // viewタイプの指定
     public function type(string $view_type=self::HTML)
@@ -42,11 +47,6 @@ class View
     }
 
 
-    public function layout(string $layout)
-    {
-        $this->layout = $layout;
-        return $this;
-    }
 
 
     /**
@@ -68,7 +68,7 @@ class View
 
             case self::HTML:
             default:
-                return  $this->html($contents, $template, $layout);
+                return  $this->html($contents);
         }
     }
 
@@ -94,7 +94,7 @@ class View
 
         if( config('cache', 'views.enable') )
         {
-            list($phtml, $cache_file) =  $this->loadCache();
+            $phtml =  $this->loadCache();
         }
         else
         {
@@ -103,15 +103,21 @@ class View
 
         // コントローラーから渡されたパラメータ
         extract($contents);
-        include($cache_file);
+        eval("?>" . $phtml);
+        // include($cache_file);
     }
 
 
-    // キャッシュのロード
-    private function loadCache()
+    /**
+     * キャッシュのロード
+     */
+    protected function loadCache()
     {
+        $template_file = $this->getTemplate();
+
         $prefix = str_replace("/", ".", str_replace(path("app/views/"), "", trim($template_file,".phtml")));
         $checksum = md5_file($template_file);
+        // TODO とりあえずファイル名を固定にする
         $checksum = 1;
 
         // キャッシュファイル名
@@ -124,23 +130,29 @@ class View
         else
         {
             // テンプレートをロードする
-            $phtml = $this->loadTemplate($template_file, $layout);
+            $phtml = $this->loadTemplate($template_file);
 
             // キャッシュファイルを作成する
             file_put_contents($cache_file, $phtml);
         }
 
-        return [$phtml, $cache_file];
+        return $phtml;
     }
 
-    // テンプレートのロード
-    private function loadTemplate()
+    /**
+     * テンプレートのロード
+     * @param string $template_file
+     * @return string
+     */
+    protected  function loadTemplate()
     {
+        $template_file = $this->getTemplate();
+
         // テンプレートを読み込む
         $phtml_template = file_get_contents( $template_file );
 
         // レイアウトを読み込む
-        $layout = empty($layout) ? $this->getLayout() : $this->framework($layout);
+        $layout = $this->getLayout();
 
         $phtml_layout = file_get_contents( $layout );
 
@@ -154,23 +166,23 @@ class View
     }
 
 
-    private function getLayout()
+    protected function getLayout()
     {
         if($this->layout)
         {
-            return $this->framework("app/views/{$this->layout}.phtml");
+            return $this->getPath($this->layout);
         }
 
-        return path('app/views/html/layouts/html.phtml');
+        return framework_path('templates/views/html/layouts/html.phtml');
     }
 
 
-    // テンプレートファイルの取得
-    private function getDefaultHtmlTemplate(string $template="")
+    protected function getTemplate()
     {
-        if(!empty($template))
+        // 指定した場合
+        if($this->template)
         {
-            return $this->framework($template);
+            return $this->getPath($this->template);
         }
 
         // テンプレートが未指定の場合
@@ -181,7 +193,7 @@ class View
         $template = str_replace("controller", "", $template);
         $template = stringer()->cleanDirectorySeparator($template);
 
-        $template = path("app/views/html/pages/{$template}.phtml");
+        $template = $this->getPath("html/pages/{$template}");
 
         if(! file_exists($template))
         {
@@ -192,15 +204,22 @@ class View
     }
 
 
-    private function framework(string $template)
+    /**
+     * app/viewsとframework/templates下からViewファイルを探す
+     * @param string $template
+     * @return string
+     */
+    private function getPath(string $template)
     {
-        $path = framework_path("templates/{$template}.phtml");
+        $path = path("app/views/{$template}.phtml");
+
         if(file_exists($path))
         {
             return $path;
         }
 
-        return path("app/views/{$template}.phtml");
+        return framework_path("templates/{$template}.phtml");
     }
+
 
 }

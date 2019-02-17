@@ -54,6 +54,6 @@ class Controller
         // Viewテンプレート
         $template = $template ?? $this->template;
 
-        return view()->type($this->view_type)->layout($this->layout)->path($template)->render($contents);
+        return view()->type($this->view_type)->layout($this->layout)->template($template)->render($contents);
     }
 }
