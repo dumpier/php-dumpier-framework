@@ -13,12 +13,27 @@ class Request
     /** @var array 入力パラメータ一覧 */
     protected $inputs;
 
+    public function __construct()
+    {
+        if( php_sapi_name() == 'cli' )
+        {
+            $this->is_cli = true;
+            $this->inputs = $_SERVER["argv"];
+        }
+        else
+        {
+            // ajax
+            $this->is_ajax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')) ? true : false;
+            $this->inputs = $_REQUEST;
+        }
+    }
+
 
     /**
      * 入力値の取得
      * @param string $name
      * @param mixed $default_value
-     * @return mixed|string
+     * @return mixed
      */
     public function input(string $name="", $default_value=null)
     {
@@ -44,9 +59,6 @@ class Request
     }
 
 
-
-
-
     /**
      * Ajax判定
      * @return boolean
@@ -65,21 +77,5 @@ class Request
         return $this->is_cli;
     }
 
-
-    // 初期化処理
-    protected function init()
-    {
-        if( php_sapi_name() == 'cli' )
-        {
-            $this->is_cli = true;
-            $this->inputs = $_SERVER["argv"];
-        }
-        else
-        {
-            // ajax
-            $this->is_ajax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')) ? true : false;
-            $this->inputs = $_REQUEST;
-        }
-    }
 
 }

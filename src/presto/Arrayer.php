@@ -39,6 +39,7 @@ class Arrayer
         $current = $value;
     }
 
+
     public function unset(array &$array, $path, $separator = '.')
     {
         $keys = explode($separator, $path);

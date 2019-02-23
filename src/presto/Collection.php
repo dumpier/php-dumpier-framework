@@ -1,13 +1,17 @@
 <?php
 namespace Presto;
 
+use Presto\Traits\Instanceable;
+
 class Collection
 {
+    use Instanceable;
+
     /** @var array */
-    private $rows;
+    protected $rows;
 
     /** @var int */
-    private $count;
+    protected $count;
 
 
     public function __construct(array $rows=[])

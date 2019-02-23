@@ -27,7 +27,7 @@ class Debugbar
     private $time_current;
     private $logs = [];
 
-    protected function init()
+    public function __construct()
     {
         $time = microtime(true);
         $this->time_start = $time;
@@ -43,7 +43,7 @@ class Debugbar
      */
     public function render(string $template="", string $layout="")
     {
-        echo view()->layout("html/layouts/empty")->template("html/pages/debugbar")->render($this->all());
+        echo view()->layout("html/layouts/empty")->template("html/partials/debugbar")->render($this->all());
     }
 
 
@@ -80,7 +80,7 @@ class Debugbar
      */
     public function messages(string $msg="", array $data=[])
     {
-        $this->recording(self::TYPE_MESSAGES, $msg, $data);
+        $this->logging(self::TYPE_MESSAGES, $msg, $data);
     }
 
     /**
@@ -90,7 +90,7 @@ class Debugbar
      */
     public function timelines(string $msg="", array $data=[])
     {
-        $this->recording(self::TYPE_TIMELINES, $msg, $data);
+        $this->logging(self::TYPE_TIMELINES, $msg, $data);
     }
 
     /**
@@ -100,7 +100,7 @@ class Debugbar
      */
     public function exceptions(string $msg="", array $data=[])
     {
-        $this->recording(self::TYPE_EXCEPTIONS, $msg, $data);
+        $this->logging(self::TYPE_EXCEPTIONS, $msg, $data);
     }
 
     /**
@@ -110,15 +110,22 @@ class Debugbar
      */
     public function queries(string $msg="", array $data=[])
     {
-        $this->recording(self::TYPE_QUERIES, $msg, $data);
+        $this->logging(self::TYPE_QUERIES, $msg, $data);
     }
 
     public function timerstart()
     {
-        $this->recording(0);
+        $this->logging("");
     }
 
-    public function recording(string $type, string $msg="", array $data=[])
+
+    /**
+     * 記録
+     * @param string $type
+     * @param string $msg
+     * @param array $data
+     */
+    protected function logging(string $type, string $msg="", array $data=[])
     {
         $this->time_current = microtime(true);
 
