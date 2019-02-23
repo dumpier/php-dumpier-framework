@@ -25,7 +25,7 @@ if(! function_exists("host")){ /** @return string */ function domain() { return 
 if(! function_exists("protocol")){ /** @return string */ function protocol() { return $_SERVER["SERVER_PROTOCOL"]; }}
 
 // app
-if(! function_exists("app")){ /** @return object */ function app(string $class, ...$parameters) { if(class_exists($class)) { return \ReflectionClass($class, ...$parameters); } throw new Exception("クラス参照エラー[{$class}]"); }}
+if(! function_exists("app")){ /** @return object */ function app(string $class, ...$parameters) { if(class_exists($class)) { return new $class(...$parameters); } throw new Exception("クラス参照エラー[{$class}]"); }}
 
 
 // path
