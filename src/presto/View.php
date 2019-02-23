@@ -30,14 +30,19 @@ class View
     // レイアウトの指定
     public function layout(string $layout)
     {
-        return $this->accessor("layout");
+        $this->layout = $layout;
+        return $this;
+        return $this->accessor("layout", $layout);
     }
 
     // テンプレートの指定
     public function template(string $template)
     {
-        return $this->accessor("template");
+        $this->template = $template;
+        return $this;
+        return $this->accessor("template", $template);
     }
+
 
     // viewタイプの指定
     public function type(string $view_type=self::HTML)
