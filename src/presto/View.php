@@ -2,10 +2,12 @@
 namespace Presto;
 
 use Presto\Traits\Singletonable;
+use Presto\Traits\Accessible;
 
 class View
 {
-    use Singletonable;
+    use Singletonable, Accessible;
+
 
     const HTML = "html";
     const STREAM = "stream";
@@ -28,15 +30,13 @@ class View
     // レイアウトの指定
     public function layout(string $layout)
     {
-        $this->layout = $layout;
-        return $this;
+        return $this->accessor("layout");
     }
 
     // テンプレートの指定
     public function template(string $template)
     {
-        $this->template = $template;
-        return $this;
+        return $this->accessor("template");
     }
 
     // viewタイプの指定
@@ -45,8 +45,6 @@ class View
         $this->type = $view_type;
         return $this;
     }
-
-
 
 
     /**

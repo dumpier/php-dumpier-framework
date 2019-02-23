@@ -76,12 +76,20 @@ class Collection
     }
 
 
+    // TODO
     public function columns(...$names)
     {
 
     }
 
 
+    /**
+     * WHERE
+     * @param string $name
+     * @param mixed $expression
+     * @param mixed ...$value
+     * @return \Presto\Collection
+     */
     public function where(string $name, $expression, ...$value)
     {
         $rows = array_filter($this->rows, function($row) use ($name, $expression, $value) { return expression()->compare($row[$name], $expression, ...$value); });
@@ -100,6 +108,7 @@ class Collection
     {
         $rows = [];
         $count = 0;
+        $limit = empty($condition["limit"]) ? 0 : $condition["limit"];
 
         foreach ($this->rows as $row)
         {
