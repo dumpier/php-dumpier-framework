@@ -18,7 +18,7 @@ if(! function_exists("view")) { /** @return \Presto\View */ function view(string
 if(! function_exists("template")) { /** @return \Presto\TemplateEngine */ function template() { return \Presto\TemplateEngine::instance(); }}
 if(! function_exists("html")) { /** @return \Presto\HtmlTag */ function html() { return \Presto\HtmlTag::instance(); }}
 if(! function_exists("paging")) { /** @return \Presto\Paging */ function paging() { return \Presto\Paging::instance(); }}
-if(! function_exists("breadcrumb")) { /** @return \Presto\Breadcrumb */ function breadcrumb(array $breadcrumbs=[]) { return \Presto\Breadcrumb::instance()->adds($breadcrumbs); }}
+if(! function_exists("breadcrumb")) { /** @return \Presto\Breadcrumb */ function breadcrumb(array $rows=[]) { return \Presto\Breadcrumb::instance()->adds($rows); }}
 
 if(! function_exists("baseuri")){ /** @return string */ function baseuri() { return config("app", "baseuri"); }}
 if(! function_exists("host")){ /** @return string */ function domain() { return $_SERVER['HTTP_HOST']; }}

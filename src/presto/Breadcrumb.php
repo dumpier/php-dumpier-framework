@@ -7,20 +7,25 @@ class Breadcrumb
 {
     use Singletonable;
 
-    protected $breadcrumbs = [];
+    protected $breadcrumb = [];
 
-    public function adds(array $breadcrumbs=[])
+    public function all()
     {
-        foreach ($breadcrumbs as $bread)
+        return $this->breadcrumb;
+    }
+
+    public function adds(array $rows=[])
+    {
+        foreach ($rows as $row)
         {
-            if(empty($bread["title"]))
+            if(empty($row["name"]))
             {
                 throw new \Exception("Breadcrumb設定エラー");
             }
 
-            $url = empty($bread["url"]) ? "" : $bread["url"];
-            $this->breadcrumbs[] = [
-                "title"=>$bread["title"],
+            $url = empty($row["url"]) ? "" : $row["url"];
+            $this->breadcrumb[] = [
+                "name"=>$row["name"],
                 "url"=>$url,
             ];
         }
@@ -28,28 +33,25 @@ class Breadcrumb
         return $this;
     }
 
+
     public function add(string $title, string $url="")
     {
-        $this->breadcrumbs[] = [
-            "title"=>$title,
+        $this->breadcrumb[] = [
+            "name"=>$title,
             "url"=>$url,
         ];
 
         return $this;
     }
 
-    public function all()
-    {
-        return $this->breadcrumbs;
-    }
 
     public function show()
     {
         echo "<ol class='breadcrumb'>";
 
-        foreach ($this->breadcrumbs as $bread)
+        foreach ($this->breadcrumb as $bread)
         {
-            echo "<li class='breadcrumb-item'><a href='{$bread["url"]}'>Home</a></li>";
+            echo "<li class='breadcrumb-item'><a href='{$bread["url"]}'>{$bread["name"]}</a></li>";
         }
 
         echo "</ol>";

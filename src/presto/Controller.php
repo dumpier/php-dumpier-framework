@@ -21,8 +21,16 @@ class Controller
     public $contents = [];
 
     /** ぱんくず */
-    protected $breadcrumbs = [];
+    protected static $breadcrumb = [];
 
+    public function __construct()
+    {
+        // ぱんくずの継承
+        if( get_parent_class() && property_exists(parent, "breadcrumb") && !empty(parent::$breadcrumb))
+        {
+            self::$breadcrumb = property_exists($this, "breadcrumb") ? array_merge(parent::$breadcrumb, self::$breadcrumb) : parent::$breadcrumb;
+        }
+    }
 
     /**
      * コンテンツを設定
@@ -49,7 +57,7 @@ class Controller
         $contents = array_merge($this->contents, $contents);
 
         // ぱんくずを追加
-        $contents["breadcrumbs"] = $this->breadcrumbs;
+        $contents["breadcrumb"] = static::$breadcrumb;
 
         // Viewテンプレート
         $template = $template ?? $this->template;
