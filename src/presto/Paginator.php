@@ -1,12 +1,17 @@
 <?php
 namespace Presto;
 
+use Presto\Traits\Instanceable;
+
 class Paginator
 {
+    use Instanceable;
+
     protected $limit = Paging::LIMIT_COUNT;
     protected $page = 0;
     protected $total_count = 0;
     protected $rows = [];
+
 
     public function __construct(array $rows, int $total_count, int $page=1, int $limit=Paging::LIMIT_COUNT)
     {

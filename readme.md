@@ -1,6 +1,6 @@
 # PHP Presto Framework
 ```
-軽い、速い、シンプル、開発効率がいいを目指す。
+軽い、速い、簡潔、開発効率がいいを目指す。
 最速のPHPフレームワークを目指す。
 ```
 <img src=https://i.imgur.com/fpeJwF8.png>
@@ -22,7 +22,7 @@ $condition["A"]["in"] = [1,2,3,4,6];
 $condition["or"]["B"]["in"] = [1,2];
 $condition["or"]["C"] = 31;
 
-collection($rows)->where($condition);
+collection($rows)->condition($condition);
 
 // 配列の結合
 $condition = [];
@@ -57,9 +57,9 @@ $condition_2["or"]["B"]["in"] = [1,2];
 $condition_2["or"]["C"] = 31;
 
 // 指定条件でフィルターリングする
-collection($rows)->where($condition);
-collection($rows)->where($condition_1);
-collection($rows)->where($condition_2);
+collection($rows)->condition($condition);
+collection($rows)->condition($condition_1);
+collection($rows)->condition($condition_2);
 ```
 
 ```

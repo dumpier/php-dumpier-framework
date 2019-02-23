@@ -32,26 +32,14 @@ class Collection
 
 
     /**
-     * 指定条件で一覧の取得
-     * @param array $condition
-     * @return array
-     */
-    public function get(array $condition)
-    {
-        return $this->where($condition)->all();
-    }
-
-
-    /**
      * 指定条件で先頭の1個を取得
      * @param array $condition
      * @return array|mixed
      */
     public function first(array $condition)
     {
-        $result = $this->where($condition, 1)->all();
-
-        return empty($result[0]) ? [] : $result[0];
+        $rows = $this->condition($condition, 1)->all();
+        return array_shift($rows);
     }
 
 
@@ -62,9 +50,7 @@ class Collection
      */
     public function last(array $condition)
     {
-        $result = $this->where($condition, 1, SORT_DESC)->all();
-
-        return empty($result[0]) ? [] : $result[0];
+        return end($this->rows);
     }
 
 
@@ -75,40 +61,88 @@ class Collection
      */
     public function count(array $condition)
     {
-        return $this->where($condition)->count;
+        return $this->condition($condition)->count;
+    }
+
+
+    /**
+     * 指定項目の抽出
+     * @param string $property
+     * @return \Presto\Collection
+     */
+    public function column(string $name)
+    {
+        return new static(array_column($this->rows, $name));
+    }
+
+
+    public function columns(...$names)
+    {
+
+    }
+
+
+    public function where(string $name, $expression, ...$value)
+    {
+        $rows = array_filter($this->rows, function($row) use ($name, $expression, $value) { return expression()->compare($row[$name], $expression, ...$value); });
+        return new static($rows);
     }
 
 
     /**
      * 条件で一覧を絞る
      * @param array $condition
-     * @param int $count
+     * @param int $limit
      * @param int $sort
      * @return \Presto\Collection
      */
-    public function where(array $condition, int $count=0, int $sort=SORT_ASC)
+    public function condition(array $condition)
     {
-        $matches = [];
-        $match_count = 0;
+        $rows = [];
+        $count = 0;
 
-        // ソートする
-        $rows = $sort==SORT_ASC ? $this->rows : array_reverse($this->rows);
-
-        foreach ($rows as $row)
+        foreach ($this->rows as $row)
         {
             if(expression()->isMatch($row, $condition))
             {
-                $matches[] = $row;
-                $match_count ++;
+                $rows[] = $row;
+                $count ++;
 
-                if($count && $match_count >= $count )
+                if($limit && $count >= $limit )
                 {
                     break;
                 }
             }
         }
 
-        return new static($matches);
+        return new static($rows);
+    }
+
+
+    /**
+     * 分割
+     * @return \Presto\Collection
+     */
+    public function slice(int $limit, int $offset=0)
+    {
+        $rows = array_slice(array_values($this->rows), $offset, $limit);
+
+        return new static($rows);
+    }
+
+    /**
+     * 並び替え
+     * @param string $property
+     * @param int $sort
+     * @return \Presto\Collection
+     */
+    public function sort(string $property, int $sort=SORT_ASC)
+    {
+        $properties = array_column($this->rows, $property);
+
+        $rows = array_multisort($properties, $sort, $this->rows);
+
+        return new static($rows);
     }
 
 }
