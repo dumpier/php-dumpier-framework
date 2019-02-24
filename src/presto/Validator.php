@@ -144,15 +144,13 @@ class Validator
 
 
 
-
     /**
-     * 振り分け
-     * @param array $row
-     * @param string $key
+     * ケースの振り分け
+     * @param mixed $val
      * @param string $case
      * @param mixed $case_value
      * @param string $message
-     * @return boolean
+     * @return boolean[]|string[]
      */
     public function switch($val,  string $case, $case_value=null, $message="")
     {
@@ -243,11 +241,11 @@ class Validator
      * @param string $rule_name
      * @return string|string
      */
-    public function getDefaultMessage(string $rule_name)
+    private function getDefaultMessage(string $rule_name)
     {
         if(empty($this->providers[$rule_name]["message"]))
         {
-            return "";
+            return "入力エラー";
         }
 
         return $this->providers[$rule_name]["message"];

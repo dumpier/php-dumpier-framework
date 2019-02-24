@@ -23,13 +23,16 @@ class Controller
     /** ぱんくず */
     protected static $breadcrumb = [];
 
-    public function __construct()
+
+    /**
+     * テンプレートの指定
+     * @param string $template
+     * @return \Presto\Controller
+     */
+    public function template(string $template)
     {
-        // ぱんくずの継承
-        if( get_parent_class() && property_exists(parent, "breadcrumb") && !empty(parent::$breadcrumb))
-        {
-            self::$breadcrumb = property_exists($this, "breadcrumb") ? array_merge(parent::$breadcrumb, self::$breadcrumb) : parent::$breadcrumb;
-        }
+        $this->template = $template;
+        return $this;
     }
 
     /**
@@ -38,7 +41,7 @@ class Controller
      * @param mixed $data
      * @return \Presto\Controller
      */
-    public function setContent(string $name, $data)
+    public function content(string $name, $data)
     {
         $this->contents[$name] = $data;
         return $this;
@@ -47,11 +50,10 @@ class Controller
 
     /**
      * レスポンスの生成
-     * @param string $template
      * @param array $contents
      * @return string|mixed
      */
-    public function response(string $template=null, array $contents=[])
+    public function response(array $contents=[])
     {
         // コンテンツをマージ
         $contents = array_merge($this->contents, $contents);
@@ -59,9 +61,6 @@ class Controller
         // ぱんくずを追加
         $contents["breadcrumb"] = static::$breadcrumb;
 
-        // Viewテンプレート
-        $template = $template ?? $this->template;
-
-        return view()->type($this->view_type)->layout($this->layout)->template($template)->render($contents);
+        return view()->type($this->view_type)->layout($this->layout)->template($this->template)->render($contents);
     }
 }

@@ -77,7 +77,7 @@ class Collection
 
 
     /**
-     * 指定項目の抽出
+     * 指定項目の抽出 TODO 改良
      * @param string ...$names
      * @return \Presto\Collection
      */
@@ -85,13 +85,16 @@ class Collection
     {
         $rows = [];
 
-        foreach ($this->rows as $key=>$row)
+        $columns = array_keys($this->rows);
+
+        foreach ($this->rows as $key=>$val)
         {
-            foreach ($row as $column=>$val)
+            $row = [];
+            foreach ($columns as $column)
             {
-                if(! in_array($column, $names))
+                if(in_array($column, $names))
                 {
-                    unset($row[$column]);
+                    $row[$column] = $val[$column];
                 }
             }
 
