@@ -125,7 +125,7 @@ class View
             return $this->getHtmlPath($this->layout);
         }
 
-        return framework_path('templates/views/html/layouts/html.phtml');
+        return framework_path('templates/html/layouts/html.phtml');
     }
 
 
@@ -168,7 +168,7 @@ class View
      */
     private function getHtmlPath(string $template)
     {
-        if(file_exists($path = path("app/views/{$template}.phtml")))
+        if(file_exists($path = path("app/templates/{$template}.phtml")))
         {
             return $path;
         }
