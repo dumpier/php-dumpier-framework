@@ -36,7 +36,7 @@ class ConfigLoader
         // キャッシュがある場合
         if(empty($this->configs[$filename]))
         {
-            $config_path = path("app/config/{$filename}.php");
+            $config_path = path("config/{$filename}.php");
 
             if( ! file_exists( $config_path ) )
             {

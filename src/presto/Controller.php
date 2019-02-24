@@ -21,8 +21,19 @@ class Controller
     public $contents = [];
 
     /** ぱんくず */
-    protected $breadcrumbs = [];
+    protected static $breadcrumb = [];
 
+
+    /**
+     * テンプレートの指定
+     * @param string $template
+     * @return \Presto\Controller
+     */
+    public function template(string $template)
+    {
+        $this->template = $template;
+        return $this;
+    }
 
     /**
      * コンテンツを設定
@@ -30,7 +41,7 @@ class Controller
      * @param mixed $data
      * @return \Presto\Controller
      */
-    public function setContent(string $name, $data)
+    public function content(string $name, $data)
     {
         $this->contents[$name] = $data;
         return $this;
@@ -39,21 +50,17 @@ class Controller
 
     /**
      * レスポンスの生成
-     * @param string $template
      * @param array $contents
      * @return string|mixed
      */
-    public function response(string $template=null, array $contents=[])
+    public function response(array $contents=[])
     {
         // コンテンツをマージ
         $contents = array_merge($this->contents, $contents);
 
         // ぱんくずを追加
-        $contents["breadcrumbs"] = $this->breadcrumbs;
+        $contents["breadcrumb"] = static::$breadcrumb;
 
-        // Viewテンプレート
-        $template = $template ?? $this->template;
-
-        return view()->type($this->view_type)->layout($this->layout)->template($template)->render($contents);
+        return view()->type($this->view_type)->layout($this->layout)->template($this->template)->render($contents);
     }
 }
