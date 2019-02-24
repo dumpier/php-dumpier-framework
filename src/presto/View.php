@@ -162,13 +162,13 @@ class View
 
 
     /**
-     * app/viewsとframework/templates下からViewファイルを探す
+     * app/templatesとframework/templates下からViewファイルを探す
      * @param string $template
      * @return string
      */
     private function getHtmlPath(string $template)
     {
-        if(file_exists($path = path("app/templates/{$template}.phtml")))
+        if(file_exists($path = template_path("{$template}.phtml")))
         {
             return $path;
         }
