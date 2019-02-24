@@ -76,10 +76,29 @@ class Collection
     }
 
 
-    // TODO
+    /**
+     * 指定項目の抽出
+     * @param string ...$names
+     * @return \Presto\Collection
+     */
     public function columns(...$names)
     {
+        $rows = [];
 
+        foreach ($this->rows as $key=>$row)
+        {
+            foreach ($row as $column=>$val)
+            {
+                if(! in_array($column, $names))
+                {
+                    unset($row[$column]);
+                }
+            }
+
+            $rows[$key] = $row;
+        }
+
+        return new static($rows);
     }
 
 
@@ -129,7 +148,7 @@ class Collection
 
 
     /**
-     * 分割
+     * 配列の一部を展開する
      * @return \Presto\Collection
      */
     public function slice(int $limit, int $offset=0)
@@ -138,6 +157,19 @@ class Collection
 
         return new static($rows);
     }
+
+
+    /**
+     * 配列を指定サイズで再分割する
+     * @param int $size
+     * @param bool $preserve
+     * @return \Presto\Collection
+     */
+    public function chunk(int $size, bool $preserve=false)
+    {
+        return new static(array_chunk($this->rows, $size, $preserve));
+    }
+
 
     /**
      * 並び替え

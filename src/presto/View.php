@@ -44,6 +44,7 @@ class View
     public function layout(string $layout)
     {
         $this->layout = $layout;
+        $this->type = self::HTML;
         return $this;
     }
 
@@ -117,7 +118,7 @@ class View
      * レイアウトの取得
      * @return string
      */
-    protected function getHtmlLayout()
+    public function getHtmlLayout()
     {
         if($this->layout)
         {
@@ -133,7 +134,7 @@ class View
      * @throws \Exception
      * @return string
      */
-    protected function getHtmlTemplate()
+    public function getHtmlTemplate()
     {
         // 指定した場合
         if($this->template)
