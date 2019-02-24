@@ -36,8 +36,10 @@ if(! function_exists("class_path")) { function class_path(string $path="") { ret
 if(! function_exists("controller_path")) { function controller_path(string $path="") { return path("app/classes/http/controllers/{$path}"); } }
 if(! function_exists("service_path")) { function service_path(string $path="") { return path("app/classes/services/{$path}"); } }
 if(! function_exists("repository_path")) { function repository_path(string $path="") { return path("app/classes/models/repositories/{$path}"); } }
-if(! function_exists("view_path")) { function view_path(string $path="") { return path("app/views/{$path}"); } }
+if(! function_exists("template_path")) { function template_path(string $path="") { return path("app/templates/{$path}"); } }
 if(! function_exists("storage_path")) { function storage_path(string $path="") { return path("storages/{$path}"); } }
+if(! function_exists("cache_path")) { function cache_path(string $path="") { return path("storages/cache/{$path}"); } }
+if(! function_exists("cache_template_path")) { function cache_template_path(string $path="") { return path("storages/cache/templates/{$path}"); } }
 
 
 if(! function_exists("handler")) { /** @return \App\Exceptions\Handler */ function handler() { return \App\Exceptions\Handler::instance(); }}

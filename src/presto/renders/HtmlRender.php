@@ -14,7 +14,7 @@ class HtmlRender
             breadcrumb()->adds($contents["breadcrumb"]);
         }
 
-        if( config('cache', 'views.enable') )
+        if( config('cache', 'templates.enable') )
         {
             // テンプレートキャッシュのロード
             $phtml =  $this->loadCache();
@@ -39,13 +39,13 @@ class HtmlRender
     {
         $template_file = view()->getHtmlTemplate();
 
-        $prefix = str_replace("/", ".", str_replace(path("app/views/"), "", trim($template_file,".phtml")));
+        $prefix = str_replace("/", ".", str_replace(template_path(), "", trim($template_file,".phtml")));
         $checksum = md5_file($template_file);
         // TODO とりあえずファイル名を固定にする
         $checksum = 1;
 
         // キャッシュファイル名
-        $cache_file =  path("storages/cache/views/{$prefix}.{$checksum}.phtml");
+        $cache_file =  cache_template_path("{$prefix}.{$checksum}.phtml");
 
         if( file_exists($cache_file) && false )
         {

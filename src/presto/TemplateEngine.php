@@ -47,7 +47,7 @@ class TemplateEngine
         {
             // includeするパーツを探す
             $file = preg_replace("/@include\( *'(.+)' *\)/", "$1", $include);
-            $file = path("app/views/{$file}.phtml");
+            $file = template_path("{$file}.phtml");
 
             if(! file_exists($file))
             {
