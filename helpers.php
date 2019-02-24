@@ -31,8 +31,10 @@ if(! function_exists("app")){ /** @return object */ function app(string $class, 
 // path
 if(! function_exists("path")) { function path(string $path="") { return stringer()->cleanDirectorySeparator(dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . $path); }}
 if(! function_exists("framework_path")) { function framework_path(string $path="") { return stringer()->cleanDirectorySeparator(__DIR__ . DIRECTORY_SEPARATOR . $path); }}
+if(! function_exists("config_path")) { function config_path(string $path="") { return path("config/{$path}"); } }
 if(! function_exists("app_path")) { function app_path(string $path="") { return path("app/{$path}"); } }
 if(! function_exists("class_path")) { function class_path(string $path="") { return path("app/classes/{$path}"); } }
+if(! function_exists("resource_path")) { function resource_path(string $path="") { return path("app/resources/{$path}"); } }
 if(! function_exists("controller_path")) { function controller_path(string $path="") { return path("app/classes/http/controllers/{$path}"); } }
 if(! function_exists("service_path")) { function service_path(string $path="") { return path("app/classes/services/{$path}"); } }
 if(! function_exists("repository_path")) { function repository_path(string $path="") { return path("app/classes/models/repositories/{$path}"); } }

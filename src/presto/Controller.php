@@ -23,6 +23,15 @@ class Controller
     /** ぱんくず */
     protected static $breadcrumb = [];
 
+    /**
+     * ぱんくずの追加
+     * @param string $name
+     * @param string $url
+     */
+    public function breadcrumb(string $name, string $url="")
+    {
+        static::$breadcrumb[] = ["name"=>$name, "url"=>$url];
+    }
 
     /**
      * テンプレートの指定
