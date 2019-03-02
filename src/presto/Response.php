@@ -25,9 +25,9 @@ class Response
     }
 
 
-    public function redirect(string $url)
+    public function redirect(string $url, int $code=302)
     {
-        header("Location: http://www.example.com/", TRUE, 301);
+        header("Location: $url", TRUE, $code);
         exit;
     }
 }

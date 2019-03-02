@@ -46,29 +46,34 @@ class DirectoryLoader
         return $tree;
     }
 
+
     /**
      * フォルダとファイル一覧の取得
+     * @param string $base
      * @param string $path
      * @return [][]
      */
-    public function list(string $path)
+    public function list(string $base, string $path="")
     {
-        $this->checkIsDirectory($path);
+        $full_path = "{$base}{$path}";
+        $path = empty($path) ? $base : $path;
+
+        $this->checkIsDirectory($full_path);
 
         $directories = [];
         $files = [];
 
-        foreach (glob("{$path}/*") as $sub_path)
+        foreach (glob("{$full_path}/*") as $sub_path)
         {
             if($this->isDirectory($sub_path))
             {
-                $directories[] = $sub_path;
+                $directories[] = str_replace($base, "", $sub_path);
                 continue;
             }
 
             if($this->isFile($sub_path))
             {
-                $files[] = $sub_path;
+                $files[] = str_replace($base, "", $sub_path);
                 continue;
             }
         }
