@@ -1,17 +1,46 @@
 # PHP Presto Framework
 ```
-軽い、速い、簡潔、開発効率がいいを目指す。
-最速のPHPフレームワークを目指す。
+軽い、速い、簡潔を目指す。
 ```
 <img src=https://i.imgur.com/fpeJwF8.png>
 
-##
+## Validate
+```
+validator()->eval()
+validator()->case()
+validator()->rule()
+validator()->validate()
+validator()->validates()
+
+// 例）半角英数で、かつ長さが5～10間であるか
+validator()->eval("input string", "alpha|numeric,length(5,10)");
+
+// 例）数字OR文字列で、かつ長さが5～10間であるか
+validator()->eval("100", "numeric,between(100,200)|between(10100,10200)");
+
+// 例）複数条件を結合したチェック
+validator()->case("100", [ "require",
+                            "or"=>[
+                                "numeric,between(100,200)|between(10100,10200)"=>"100-200 or 10100-10200間の数字を入力してください",
+                                "alpha,length(10,20)"=>"10~20桁以内の半角英文字",
+                            ],
+                        ]);
+
+
+// 入力チェック
+validator()->validate($input, $validate);
+// 一括チェック
+validator()->validates(array $inputs, array $validates);
+
+```
+
+## Database
 ```
 // DB検索
 $parameters = [];
-$parameters["conditions"]["last_login"][">="] = "2019-02-11";
-$parameters["conditions"]["or"]["level"]["in"] = [10,11,12];
-$parameters["conditions"]["or"]["rank"]["between"] = [3,4];
+$parameters["condition"]["last_login"][">="] = "2019-02-11";
+$parameters["condition"]["or"]["level"]["in"] = [10,11,12];
+$parameters["condition"]["or"]["rank"]["between"] = [3,4];
 
 $players = dataabse("shard_01")->table("player")->paging($parameters);
 
@@ -130,7 +159,7 @@ class PlayerDeckRepository extends Repository
             ],
             
              // 外部テーブルが満たすべき条件
-            'conditions'=>[
+            'condition'=>[
                 ["player_id"=>"player_id"],
             ],
 
@@ -143,6 +172,6 @@ class PlayerDeckRepository extends Repository
 ```
 // リポジトリのfind()で$recursion=1を渡すと下位リレーションをロードしてくれる
 $parameters = [];
-$parameters["conditions"]["player_id"] = 1;
+$parameters["condition"]["player_id"] = 1;
 $this->playerDeck->find($parameters, $recursion=1);
 ```

@@ -149,7 +149,7 @@ class Arrayer
     {
         foreach ($array as $key=>$val)
         {
-            if($this->isClearTarget($val))
+            if($this->isNotTarget($val))
             {
                 unset ($array[$key]);
                 continue;
@@ -158,7 +158,7 @@ class Arrayer
             if(is_array($val))
             {
                 $clean = $this->clean($val);
-                if($this->isClearTarget($clean))
+                if($this->isNotTarget($clean))
                 {
                     unset ($array[$key]);
                 }
@@ -173,7 +173,7 @@ class Arrayer
     }
 
 
-    private function isClearTarget($val)
+    private function isNotTarget($val)
     {
         if($val==="" || $val===null || $val===[])
         {

@@ -82,13 +82,13 @@ class Expression
 
     /**
      * 比較演算
-     * @param mixed $val
+     * @param mixed $input
      * @param string $expression
      * @param mixed $targets
      * @throws \Exception
      * @return boolean
      */
-    public function compare($val, $expression, ...$targets)
+    public function compare($input, $expression, ...$targets)
     {
         if($targets===null)
         {
@@ -99,48 +99,48 @@ class Expression
         switch ($expression)
         {
             case self::BETWEEN:
-                return ($val >= array_shift($targets)) && ($val <= array_shift($targets));
+                return ($input >= array_shift($targets)) && ($input <= array_shift($targets));
 
             case self::IN:
-                return in_array($val, $targets, true);
+                return in_array($input, $targets, true);
             case self::NOT_IN:
-                return ! in_array($val, $targets, true);
+                return ! in_array($input, $targets, true);
 
             case self::LIKE:
-                return preg_match("/{$val}/", $targets);
+                return preg_match("/{$input}/", $targets);
             case self::L_LIKE:
-                return preg_match("/^{$val}/", $targets);
+                return preg_match("/^{$input}/", $targets);
             case self::R_LIKE:
-                return preg_match("/{$val}$/", $targets);
+                return preg_match("/{$input}$/", $targets);
 
             case self::SIGN_EQUAL:
             case self::EQUAL:
-                return ($val == $targets);
+                return ($input == $targets);
 
             case self::SIGN_NOT:
             case self::SIGN_DIFFER:
             case self::NOT:
             case self::DIFFER:
-                return !($val == $targets);
+                return !($input == $targets);
 
             case self::SIGN_LARGE:
             case self::LARGE:
-                return $val > $targets;
+                return $input > $targets;
 
             case self::SIGN_LARGE_OR_EQUAL:
             case self::LARGE_OR_EQUAL:
-                return $val >= $targets;
+                return $input >= $targets;
 
             case self::SIGN_LESS:
             case self::LESS:
-                return $val < $targets;
+                return $input < $targets;
 
             case self::SIGN_LESS_OR_EQUAL:
             case self::LESS_OR_EQUAL:
-                return $val <= $targets;
+                return $input <= $targets;
 
             default:
-                throw new \Exception("不明比較演算式:{$expression}, [val:{$val}][target:]" . json_encode($targets));
+                throw new \Exception("不明比較演算式:{$expression}, [val:{$input}][target:]" . json_encode($targets));
         }
     }
 
