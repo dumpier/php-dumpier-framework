@@ -9,10 +9,15 @@ class Validator
 
     const REGULAR = "regular";
     const REQUIRE = "require";
+    const LENGTH = "length";
+    const SIZE = "size";
 
+    const NUMERIC = "numeric";
     const INTEGER = "integer";
     const DOUBLE = "double";
     const ALPHA = "alpha";
+    const STRING = "string";
+
     const SIGN = "sign";
 
     const EMAIL = "email";
@@ -23,26 +28,26 @@ class Validator
     const ZIP_CODE = "zip-code";
     const COUNTRY_CODE = "country-code";
 
-    const LENGTH = "length";
-    const LENGTH_MIN = "length-min";
-    const LENGTH_MAX = "length-max";
-    const LENGTH_BETWEEN = "length-between";
+
 
     /**
      * サポートするルール一覧
-     * TODO 外部から取り込めるようにする、ルール毎に呼び出し関数とデフォルトメッセージを用意する
      * @var array
      */
     protected $providers = [
         // 必須
         self::REQUIRE=>["message"=>"必須", ],
-
         // 正規表現、例）regular:/aaaaa/
         self::REGULAR=>["message"=>"正規表現", ],
 
+        self::LENGTH =>["message"=>"文字数", ],
+        self::SIZE =>["message"=>"サイズ", ],
+
+        self::NUMERIC=>["message"=>"数字", ],
         self::INTEGER=>["message"=>"整数", ],
         self::DOUBLE=>["message"=>"小数", ],
         self::ALPHA=>["message"=>"半角英文字", ],
+        self::STRING=>["message"=>"文字列???", ],
         self::SIGN=>["message"=>"符号", ],
 
         self::EMAIL=>["message"=>"Email", ],
@@ -114,10 +119,21 @@ class Validator
         return [$result, $messages];
     }
 
-    // TODO TODO TODO TODO TODO TODO TODO
-    public function validate($val, array $rule)
+
+    /**
+     * ケースに振り分ける
+     * @param mixed $input
+     * @param array $cases
+     *      - 'require'
+     *      - 'require,integer'
+     *      -
+     *          'require, integer',
+     *          'between(1,5)'=>'1から5の間'
+     *
+     */
+    public function switch($input, array $cases)
     {
-        foreach ($rule as $somekey=>$someting)
+        foreach ($cases as $somekey=>$someting)
         {
             if(is_numeric($somekey))
             {
@@ -143,25 +159,39 @@ class Validator
     }
 
 
-
     /**
      * ケースの振り分け
-     * @param mixed $val
-     * @param string $case
-     * @param mixed $case_value
+     * @param mixed $input
+     * @param string $case_string
+     *      - require <=> 必須
+     *      - require,numeric <=> 必須 and 数字
+     *      - require,numeric,between(1~100) <=> 必須 and 数字 and 1~100の間
+     *      - require|numeric <=> 必須 or 数字
+     *      - require,numeric|alpha  <=> 必須 and (数字 or 英文字)
+     *      - require,numeric|alpha,length(3~5)  <=> 必須 and (数字 or 英文字) and 文字数が3~5間
+     *      - require,numeric,large(5)  <=> 必須 and 数字 and 5以上
+     * @param mixed $expectations
      * @param string $message
      * @return boolean[]|string[]
      */
-    public function switch($val,  string $case, $case_value=null, $message="")
+    public function case($input, string $case_string, $expectations=null, $message="")
     {
+        if(preg_match("/,/", $case_string))
+        {
+
+        }
+
+
+
+
         $result = true;
 
         if($case===self::REQUIRE)
         {
             // 必須チェックの場合
-            $result = $val !== null && $val !== "";
+            $result = $input !== null && $input !== "";
         }
-        elseif($val==null || $val=="")
+        elseif($input==null || $input=="")
         {
             // 必須チェック以外の場合、入力がなければチェックを通す
             $result = true;
@@ -169,7 +199,7 @@ class Validator
         else
         {
             // その他のケース
-            $result = $this->case($val, $case, $case_value);
+            $result = $this->eval($input, $case, $expectations);
         }
 
         $message = empty($message) ? $this->getDefaultMessage($case) : $message;
@@ -177,78 +207,130 @@ class Validator
     }
 
 
+
+    public function cases()
+    {
+
+    }
+
+    public function case($input, string $case_expression, string $message)
+    {
+        $result = true;
+
+        if(preg_match(",", $case_string))
+        {
+            $cases = explode(",", $case_expression);
+
+            foreach ($cases as $case)
+            {
+                $result = $this->evalAnd($input, $case);
+            }
+        }
+
+        if(preg_match("|", $case_string))
+        {
+            $cases = explode(",", $case_expression);
+
+        }
+    }
+
+
+    private function evalAnd($input, string $case)
+    {
+
+    }
+
+    private function evalOr()
+    {
+
+    }
+
+
+    private function evalCase($input, string $case_expression)
+    {
+
+
+        return $this->eval($input, $case, $expectations);
+    }
+
+
     /**
-     * 各種チェックケース
-     * @param mixed $val
-     * @param mixed $rule
-     * @param mixed $rule_value
+     * 各種ケースの評価
+     * @param mixed $input
+     * @param string $case
+     * @param mixed ...$expectations
      * @throws \Exception
      * @return boolean
      */
-    public function case($val,  $case, $case_value=null)
+    public function eval($input, string $case, ...$expectations)
     {
-        if( expression()->is($case) )
+        // 必須チェックの場合
+        if($case===self::REQUIRE)
         {
-            return expression()->compare($val, $case, $case_value);
+            return $input !== null && $input !== "";
         }
 
+        // 比較演算の場合
+        if( expression()->is($case) )
+        {
+            return expression()->compare($input, $case, $expectations);
+        }
+
+        // その他
         switch ($case)
         {
             case self::REGULAR:
                 // 正規表現、例）regular:/aaaaa/
-                return preg_match($case_value, $val) > 0;
+                return preg_match($expectations, $input) > 0;
 
+            case self::NUMERIC:
             case self::INTEGER:
             case self::DOUBLE:
-                return is_numeric($val);
+                return is_numeric($input);
 
             case self::ALPHA:
-                return preg_match("/[a-zA-Z]/", $val) > 0;
+                return preg_match("/[a-zA-Z]/", $input) > 0;
             case self::SIGN:
-                return preg_match("/".preg_quote("\"!#$%&'()-=^~\|@{}[];:<>,./?\_")."/", $val) > 0;
+                return preg_match("/".preg_quote("\"!#$%&'()-=^~\|@{}[];:<>,./?\_")."/", $input) > 0;
 
             case self::EMAIL:
-                return preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $val) > 0;
+                return preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $input) > 0;
             case self::URL:
-                return preg_match('/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i', $val) > 0;
+                return preg_match('/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i', $input) > 0;
             case self::DOMAIN:
-                return preg_match('/^([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+)/i', $val) > 0;
+                return preg_match('/^([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+)/i', $input) > 0;
 
             case self::ZIP_CODE:
-                return preg_match("/^[0-9]{3}-[0-9]{4}$/", $val) > 0;
+                return preg_match("/^[0-9]{3}-[0-9]{4}$/", $input) > 0;
             case self::TELEPHONE:
                 return true; // TODO
             case self::COUNTRY_CODE:
                 return true; // TODO
 
             case self::LENGTH:
-                return expression()->compare(strlen($val), self::EQUAL, $case_value);
-            case self::LENGTH_MIN:
-                return expression()->compare(strlen($val), self::LARGE_OR_EQUAL, $case_value);
-            case self::LENGTH_MAX:
-                return expression()->compare(strlen($val), self::LESS_OR_EQUAL, $case_value);
-            case self::LENGTH_BETWEEN:
-                return expression()->compare(strlen($val), self::BETWEEN, $case_value);
+                $length_min = empty($expectations[0]) ? 0 : $expectations[0];
+                $length_max = empty($expectations[1]) ? 999999999 : $expectations[1];
+                return expression()->compare(strlen($input), self::BETWEEN, $length_min, $length_max);
 
             default:
-                throw new \Exception("不明Validate[rule:{$case}]");
+                throw new \Exception("不明Validate[case:{$case}]");
         }
     }
 
 
     /**
      * 指定ルールのデフォルトメッセージを返す
-     * @param string $rule_name
+     * @param string $case_name
      * @return string|string
      */
-    private function getDefaultMessage(string $rule_name)
+    private function getDefaultMessage(string $case_name)
     {
-        if(empty($this->providers[$rule_name]["message"]))
+        if(empty($this->providers[$case_name]["message"]))
         {
             return "入力エラー";
         }
 
-        return $this->providers[$rule_name]["message"];
+        return $this->providers[$case_name]["message"];
     }
 
 
