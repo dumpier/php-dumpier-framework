@@ -54,11 +54,11 @@ class Stringer
     /**
      * フォルダ区切りコードの整理
      * @param string $path
-     * @return mixed
+     * @return string
      */
     public function cleanDirectorySeparator(string $path)
     {
-        return preg_replace("/(\\\|\/){1,}/", DIRECTORY_SEPARATOR, $path);
+        return (string)preg_replace("/(\\\|\/){1,}/", DIRECTORY_SEPARATOR, $path);
     }
 
 

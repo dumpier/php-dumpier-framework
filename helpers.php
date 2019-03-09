@@ -38,21 +38,21 @@ if(! function_exists("app")){ /** @return object */ function app(string $class, 
 
 
 // path
-if(! function_exists("path")) { function path(string $path="") { return stringer()->cleanDirectorySeparator(dirname(dirname(dirname(__DIR__))) . "/{$path}"); }}
-// if(! function_exists("path")) { function path(string $path="") { return stringer()->cleanDirectorySeparator(dirname(__DIR__) . "/php-presto-app/{$path}"); }}
+if(! function_exists("path")) { /** @return string */ function path(string $path="") { return stringer()->cleanDirectorySeparator(dirname(dirname(dirname(__DIR__))) . "/{$path}"); }}
+// if(! function_exists("path")) { /** @return string */ function path(string $path="") { return stringer()->cleanDirectorySeparator(dirname(__DIR__) . "/php-presto-app/{$path}"); }}
 
-if(! function_exists("framework_path")) { function framework_path(string $path="") { return stringer()->cleanDirectorySeparator(__DIR__ . DIRECTORY_SEPARATOR . $path); }}
-if(! function_exists("config_path")) { function config_path(string $path="") { return path("config/{$path}"); } }
-if(! function_exists("app_path")) { function app_path(string $path="") { return path("app/{$path}"); } }
-if(! function_exists("class_path")) { function class_path(string $path="") { return path("app/classes/{$path}"); } }
-if(! function_exists("resource_path")) { function resource_path(string $path="") { return path("app/resources/{$path}"); } }
-if(! function_exists("controller_path")) { function controller_path(string $path="") { return path("app/classes/http/controllers/{$path}"); } }
-if(! function_exists("service_path")) { function service_path(string $path="") { return path("app/classes/services/{$path}"); } }
-if(! function_exists("repository_path")) { function repository_path(string $path="") { return path("app/classes/models/repositories/{$path}"); } }
-if(! function_exists("template_path")) { function template_path(string $path="") { return path("app/templates/{$path}"); } }
-if(! function_exists("storage_path")) { function storage_path(string $path="") { return path("storages/{$path}"); } }
-if(! function_exists("cache_path")) { function cache_path(string $path="") { return path("storages/cache/{$path}"); } }
-if(! function_exists("cache_template_path")) { function cache_template_path(string $path="") { return path("storages/cache/templates/{$path}"); } }
+if(! function_exists("framework_path")) { /** @return string */ function framework_path(string $path="") { return stringer()->cleanDirectorySeparator(__DIR__ . DIRECTORY_SEPARATOR . $path); }}
+if(! function_exists("config_path")) { /** @return string */ function config_path(string $path="") { return path("config/{$path}"); } }
+if(! function_exists("app_path")) { /** @return string */ function app_path(string $path="") { return path("app/{$path}"); } }
+if(! function_exists("class_path")) { /** @return string */ function class_path(string $path="") { return path("app/classes/{$path}"); } }
+if(! function_exists("resource_path")) { /** @return string */ function resource_path(string $path="") { return path("app/resources/{$path}"); } }
+if(! function_exists("controller_path")) { /** @return string */ function controller_path(string $path="") { return path("app/classes/http/controllers/{$path}"); } }
+if(! function_exists("service_path")) { /** @return string */ function service_path(string $path="") { return path("app/classes/services/{$path}"); } }
+if(! function_exists("repository_path")) { /** @return string */ function repository_path(string $path="") { return path("app/classes/models/repositories/{$path}"); } }
+if(! function_exists("template_path")) { /** @return string */ function template_path(string $path="") { return path("app/templates/{$path}"); } }
+if(! function_exists("storage_path")) { /** @return string */ function storage_path(string $path="") { return path("storages/{$path}"); } }
+if(! function_exists("cache_path")) { /** @return string */ function cache_path(string $path="") { return path("storages/cache/{$path}"); } }
+if(! function_exists("cache_template_path")) { /** @return string */ function cache_template_path(string $path="") { return path("storages/cache/templates/{$path}"); } }
 
 
 if(! function_exists("handler")) { /** @return \App\Exceptions\Handler */ function handler() { return \App\Exceptions\Handler::instance(); }}
