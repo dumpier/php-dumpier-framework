@@ -1,7 +1,7 @@
 <?php
 namespace Presto\Services;
 
-use Presto\Model\Entity\Table;
+use Presto\Databases\Model\Entity\Table;
 
 class GenerateModelService extends \Presto\Service
 {

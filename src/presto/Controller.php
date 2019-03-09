@@ -2,6 +2,7 @@
 namespace Presto;
 
 use Presto\Traits\Injectable;
+use Presto\Views\View;
 
 class Controller
 {
