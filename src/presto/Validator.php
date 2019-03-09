@@ -68,34 +68,8 @@ class Validator
 
     /**
      *
-     * @param array $rules
-     *      // rules =>[key=>rule,,,]
-     *      $rules = [
-     *          // rule=>[key=>case,case,case]
-     *          "is_valid"=>"require,bool,equal(true)",
-     *          // rule=>[...]
-     *          "price"=>[
-     *              // case=>message
-     *              "require"=>"is required!",
-     *              // case|case=>message
-     *              "double|integer"=>"is require numeric !",
-     *              // case
-     *              "between(1,100)",
-     *          ],
-     *
-     *          // rules=>[rule, rule]
-     *          "or"=>[
-     *              "item_type"=>"require,integer,length(6)",
-     *              "item_id"=>"require,integer",
-     *          ],
-     *      ];
-     * @param array $row
-     * @param bool $isOr
-     * @return []
-     *
-     * TODO TODO TODO TODO TODO TODO TODO TODO 未完成
      */
-    public function validates(array $rules, array $row, bool $isOr=false)
+    public function validate(array $inputs, array $rules, bool $isOr=false)
     {
         $messages = [];
 
@@ -122,72 +96,47 @@ class Validator
 
 
     /**
-     * ケースに振り分ける
-     * @param mixed $input
+     * ケースの振り分け
+     * @param mixed $value
      * @param array $cases
-     *      - 'require'
-     *      - 'require,integer'
-     *      -
-     *          'require, integer',
-     *          'between(1,5)'=>'1から5の間'
-     *
+     * @param string $message
+     * @return boolean[]|string[]
      */
-    public function switch($input, array $cases)
+    public function cases($value, array $cases)
     {
-        foreach ($cases as $somekey=>$someting)
+        $result = true;
+        $messages = [];
+
+        foreach ($cases as $case=>$messages)
         {
-            if(is_numeric($somekey))
+            if(! $this->case($value, $case))
             {
-                $case_string = $someting;
-                $message = "";
-            }
-            else
-            {
-                $case_string = $somekey;
-                $message = $someting;
-            }
-
-            // TODO TODO TODO TODO TODO TODO TODO
-            // TODO カンマーとバーティカルバーで配列に分割
-            $cases = pregular()->all("//", $case_string);
-
-            // TODO TODO TODO TODO TODO TODO TODO
-            foreach ($cases as $case)
-            {
-
+                $messages[] = $this->getDefaultMessage($case_name);
+                $result = false;
             }
         }
+
+        return [$result, $messages];
     }
 
 
     /**
-     * ケースの振り分け
-     * @param mixed $input
-     * @param string $case_string
-     *      - require <=> 必須
-     *      - require,numeric <=> 必須 and 数字
-     *      - require,numeric,between(1~100) <=> 必須 and 数字 and 1~100の間
-     *      - require|numeric <=> 必須 or 数字
-     *      - require,numeric|alpha  <=> 必須 and (数字 or 英文字)
-     *      - require,numeric|alpha,length(3~5)  <=> 必須 and (数字 or 英文字) and 文字数が3~5間
-     *      - require,numeric,large(5)  <=> 必須 and 数字 and 5以上
-     * @param mixed $expectations
-     * @param string $message
-     * @return boolean[]|string[]
+     * カンマをAND、バーティカルバーをOR結合条件としてケース演算式を評価する
+     * @param mixed $value 入力値
+     * @param string $string_expressions
+     *      例）require,numeric <=> 必須 and 数字
+     *      例）require,alpha|numeric <=> 必須 and (数字 or 英文字)
+     *      例）require,numeric,between(1,10) <=> 必須 and 数字 and 1~10の間
+     *      例）require,alpha|numeric,length(5~) <=> 必須 and (数字 or 英文字) and 桁数が5以上
+     *      例）require,numeric,large(5)  <=> 必須 and 数字 and 5以上
+     * @return boolean
      */
-    public function cases($input, array $cases, $expectations=null, $message="")
-    {
-
-    }
-
-
-
-    public function case($input, string $string_expressions)
+    public function case($value, string $string_expressions)
     {
         // カンマを含めない場合、ANDで評価する必要がなく、ORで評価する必要があるか確認する
         if(! preg_match("/,/", $string_expressions))
         {
-            return $this->evalExpressionInOr($input, $string_expressions);
+            return $this->evalCaseExpressionInOr($value, $string_expressions);
         }
 
         // カンマで区切り、ANDで評価する
@@ -195,7 +144,7 @@ class Validator
 
         foreach ($expressions as $expression)
         {
-            if( !$this->evalExpressionInOr($input, $expression) )
+            if( !$this->evalCaseExpressionInOr($value, $expression) )
             {
                 return false;
             }
@@ -206,23 +155,24 @@ class Validator
 
 
     /**
-     * OR条件での評価
-     * @param mixed $input
-     * @param string $string_expressions
+     * バーティカルバー区切りをOR条件での評価する
+     * @param mixed $value
+     * @param string $string_case_expressions
      * @return boolean
      */
-    public function evalExpressionInOr($input, string $string_expressions)
+    private function evalCaseExpressionInOr($value, string $string_case_expressions)
     {
-        if(! preg_match("/\|/", $string_expressions))
+        if(! preg_match("/\|/", $string_case_expressions))
         {
-            return $this->evalExpression($input, $string_expressions);
+            return $this->evalCaseExpression($value, $string_case_expressions);
         }
 
-        $expressions = explode("|", $string_expressions);
+        // バーティカルバーで分割する
+        $expressions = explode("|", $string_case_expressions);
 
         foreach ($expressions as $expression)
         {
-            if($this->evalExpression($input, $expression))
+            if($this->evalCaseExpression($value, $expression))
             {
                 return true;
             }
@@ -233,83 +183,83 @@ class Validator
 
 
     /**
-     * ケース文を評価する
-     * @param mixed $input
-     * @param string $expression
+     * ケース演算文を評価する
+     * @param mixed $value
+     * @param string $case_expression
      * @return mixed|boolean
      */
-    public function evalExpression($input, string $expression)
+    public function evalCaseExpression($value, string $case_expression)
     {
-        if(! preg_match("/.+\(.+\)/", $expression))
+        // パラメータつきの演算でない場合
+        if(! preg_match("/.+\(.+\)/", $case_expression))
         {
-            return $this->eval($input, $expression);
+            return $this->eval($value, $case_expression);
         }
 
         // パラメータ付きを評価する
         // 例）equal(1), between(1~5)
-        $case = preg_replace("/(.+)\(.+\)/", "$1", $expression);
+        $case = preg_replace("/(.+)\(.+\)/", "$1", $case_expression);
 
         // 期待値
-        $expectation_string = preg_replace("/.+\((.+)\)/", "$1", $expression);
+        $expectation_string = preg_replace("/.+\((.+)\)/", "$1", $case_expression);
         $expectations = explode("~", $expectation_string);
 
         // 配列にする
-        $parameters = [$input, $case];
+        $parameters = [$value, $case];
         $parameters = array_merge($parameters, $expectations);
         return call_user_func_array([$this, "eval"], $parameters);
-        // return $this->eval($input, $case, ...$expectations);
+        // return $this->eval($value, $case, ...$expectations);
     }
 
 
     /**
-     * 各種ケースの評価
-     * @param mixed $input 入力値
+     * 各種ケースを評価する
+     * @param mixed $value 入力値
      * @param string $case ケース
      * @param mixed ...$expectations 期待値
      * @throws \Exception
      * @return boolean
      */
-    public function eval($input, string $case, ...$expectations)
+    public function eval($value, string $case, ...$expectations)
     {
-        var_dump(func_get_args());
         // 必須チェックの場合
         if($case===self::REQUIRE)
         {
-            return $input !== null && $input !== "";
+            return $value !== null && $value !== "";
         }
 
         // 比較演算の場合
         if( expression()->is($case) )
         {
-            return expression()->compare($input, $case, ...$expectations);
+            return expression()->compare($value, $case, ...$expectations);
         }
 
         // その他
         switch ($case)
         {
             case self::REGULAR:
-                // 正規表現、例）regular:/aaaaa/
-                return preg_match($expectations, $input) > 0;
+                // 正規表現、例）regular:/aaaaa/ TODO 未完成
+                return preg_match($expectations, $value) > 0;
 
             case self::NUMERIC:
             case self::INTEGER:
             case self::DOUBLE:
-                return is_numeric($input);
+                return is_numeric($value);
 
             case self::ALPHA:
-                return preg_match("/[a-zA-Z]/", $input) > 0;
+                return preg_match("/[a-zA-Z]/", $value) > 0;
             case self::SIGN:
-                return preg_match("/".preg_quote("\"!#$%&'()-=^~\|@{}[];:<>,./?\_")."/", $input) > 0;
+                return preg_match("/".preg_quote("\"!#$%&'()-=^~\|@{}[];:<>,./?\_")."/", $value) > 0;
 
             case self::EMAIL:
-                return preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $input) > 0;
+                return preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $value) > 0;
             case self::URL:
-                return preg_match('/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i', $input) > 0;
+                return preg_match('/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i', $value) > 0;
             case self::DOMAIN:
-                return preg_match('/^([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+)/i', $input) > 0;
+                return preg_match('/^([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+)/i', $value) > 0;
 
             case self::ZIP_CODE:
-                return preg_match("/^[0-9]{3}-[0-9]{4}$/", $input) > 0;
+                return preg_match("/^[0-9]{3}-[0-9]{4}$/", $value) > 0;
             case self::TELEPHONE:
                 return true; // TODO
             case self::COUNTRY_CODE:
@@ -317,7 +267,7 @@ class Validator
 
             case self::LENGTH:
             case self::SIZE:
-                return expression()->compare(strlen($input), Expression::BETWEEN, ...$expectations);
+                return expression()->compare(strlen($value), Expression::BETWEEN, ...$expectations);
 
             default:
                 throw new \Exception("不明Validate[case:{$case}]");
@@ -330,7 +280,7 @@ class Validator
      * @param string $case_name
      * @return string|string
      */
-    private function getDefaultMessage(string $case_name, array $cases=[])
+    private function getDefaultMessage(string $case_name)
     {
         if(empty($this->providers[$case_name]["message"]))
         {
