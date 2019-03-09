@@ -38,7 +38,7 @@ class Collection
      */
     public function first(array $condition)
     {
-        $rows = $this->condition($condition, 1)->all();
+        $rows = $this->condition($condition)->all();
         return array_shift($rows);
     }
 
@@ -67,7 +67,7 @@ class Collection
 
     /**
      * 指定項目の抽出
-     * @param string $property
+     * @param string $name
      * @return \Presto\Utilities\Collection
      */
     public function column(string $name)
@@ -122,8 +122,6 @@ class Collection
     /**
      * 条件で一覧を絞る
      * @param array $condition
-     * @param int $limit
-     * @param int $sort
      * @return \Presto\Utilities\Collection
      */
     public function condition(array $condition)

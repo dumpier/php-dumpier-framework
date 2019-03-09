@@ -65,7 +65,7 @@ class Validator
      * @param array $inputs
      * @param array $rules
      * @param bool $isOr
-     * @return boolean[]|array[][]
+     * @return array<int, array<int, mixed>|bool>
      */
     public function validate(array $inputs, array $rules, bool $isOr=false)
     {
@@ -87,11 +87,12 @@ class Validator
             }
 
             $value = isset($inputs[$field]) ? $inputs[$field] : "";
-            list($return, $msgs) = $this->case($value, $rule_case);
+            list($return, $msgs) = $this->cases($value, $rule_case);
 
             if(! $return )
             {
-                $messages[] = array_merge($messages, $msgs);
+                $result = $return;
+                $messages[] = empty($msgs) ? $messages : array_merge($messages, $msgs);
             }
         }
 
@@ -104,8 +105,7 @@ class Validator
      * TODO ORグルピング
      * @param mixed $value
      * @param array $cases
-     * @param string $message
-     * @return boolean[]|string[]
+     * @return array<int, array<int, mixed>|bool>
      */
     public function cases($value, array $cases)
     {
@@ -246,7 +246,7 @@ class Validator
         {
             case self::REGULAR:
                 // 正規表現、例）regular:/aaaaa/ TODO 未完成
-                return preg_match($expectations, $value) > 0;
+                throw new \Exception("TODO 正規表現はまだ未実装");
 
             case self::NUMERIC:
             case self::INTEGER:

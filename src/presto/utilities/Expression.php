@@ -84,13 +84,13 @@ class Expression
      * 比較演算
      * @param mixed $input
      * @param string $expression
-     * @param mixed $targets
+     * @param array ...$targets
      * @throws \Exception
      * @return boolean
      */
     public function compare($input, $expression, ...$targets)
     {
-        if($targets===null)
+        if(count($targets) == 0)
         {
             $targets = $expression;
             $expression = self::SIGN_EQUAL;

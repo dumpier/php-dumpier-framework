@@ -2,8 +2,8 @@
 namespace Presto\Traits;
 
 /**
- * @property $services
- * @property $repositories
+ * @property array $services
+ * @property array $repositories
  */
 trait Injectable
 {

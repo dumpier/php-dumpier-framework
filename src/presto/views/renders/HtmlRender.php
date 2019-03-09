@@ -47,14 +47,15 @@ class HtmlRender
         // キャッシュファイル名
         $cache_file =  cache_template_path("{$prefix}.{$checksum}.phtml");
 
-        if( file_exists($cache_file) && false )
+        if( file_exists($cache_file) )
         {
+            // キャッシュファイルがある場合
             $phtml =file_get_contents($cache_file);
         }
         else
         {
             // テンプレートをロードする
-            $phtml = $this->loadTemplate($template_file);
+            $phtml = $this->loadTemplate();
 
             // キャッシュファイルを作成する
             file_put_contents($cache_file, $phtml);
@@ -65,7 +66,6 @@ class HtmlRender
 
     /**
      * テンプレートのロード
-     * @param string $template_file
      * @return string
      */
     protected  function loadTemplate()

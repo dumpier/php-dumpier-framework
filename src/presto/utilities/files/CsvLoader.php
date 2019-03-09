@@ -62,7 +62,7 @@ class CsvLoader
             return $rows;
         }
 
-        return collection($rows)->get($parameter["condition"]);
+        return collection($rows)->condition($parameter["condition"])->all();
     }
 
 

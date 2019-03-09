@@ -17,7 +17,7 @@ class DirectoryLoader
     {
         if(! $this->isDirectory($path))
         {
-            return null;
+            return [];
         }
 
         $chain = empty($chain) ? end(explode()) : $chain;
@@ -50,7 +50,7 @@ class DirectoryLoader
      * フォルダとファイル一覧の取得
      * @param string $base
      * @param string $path
-     * @return [][]
+     * @return array
      */
     public function list(string $base, string $path="")
     {
@@ -139,6 +139,6 @@ class DirectoryLoader
             return true;
         }
 
-        throw new \Exception("Is not file !\n{$root_path}");
+        throw new \Exception("Is not file !\n{$path}");
     }
 }
