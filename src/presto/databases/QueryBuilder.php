@@ -11,7 +11,7 @@ class QueryBuilder
 
     protected $driver = "mysql";
 
-    /** @var array|\mysqli */
+    /** @var \mysqli[][] */
     protected $connections = [];
 
     /** @var string 現在接続中 */
@@ -174,8 +174,6 @@ class QueryBuilder
      * SELECT以外
      * @param string $sql
      * @param array $binds
-     * @param int $count
-     * @param bool $is_select
      * @return integer
      */
     private function query(string $sql, array $binds=[])

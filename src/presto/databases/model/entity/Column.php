@@ -24,7 +24,7 @@ class Column
 
     public function __construct(array $columns)
     {
-        foreach ($this as $property=>$val)
+        foreach ((array)$this as $property=>$val)
         {
             if(isset($columns[$property]))
             {

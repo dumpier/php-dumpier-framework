@@ -2,7 +2,7 @@
 namespace Presto\Utilities;
 
 use Presto\Traits\Singletonable;
-use Presto\Model\Model;
+use Presto\Databases\Model\Model;
 
 class Arrayer
 {
@@ -37,31 +37,6 @@ class Arrayer
         }
 
         $current = $value;
-    }
-
-
-    public function unset(array &$array, $path, $separator = '.')
-    {
-        $keys = explode($separator, $path);
-        $current = &$array;
-        $parent = &$array;
-
-        foreach ($keys as $i => $key)
-        {
-            if (!array_key_exists($key, $current))
-            {
-                return;
-            }
-
-            if ($i)
-            {
-                $parent = &$current;
-            }
-
-            $current = &$current[$key];
-        }
-
-        unset($parent[$key]);
     }
 
 
@@ -115,7 +90,7 @@ class Arrayer
     /**
      * 二つの配列を結合する TODO TODO TODO TODO
      * @param array $rows
-     * @param array $foreigns
+     * @param array $childrens
      * @param array $joins JOIN Condition
      * @param string $type
      * @return array
@@ -132,7 +107,7 @@ class Arrayer
 
                 $condition = array_combine($foreign_keys, $values);
 
-                $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? collection($childrens)->get($condition) : collection($childrens)->first($condition);
+                $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? collection($childrens)->condition($condition)->all() : collection($childrens)->first($condition);
             }
         }
 

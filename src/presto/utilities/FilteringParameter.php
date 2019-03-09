@@ -26,7 +26,7 @@ class FilteringParameter
     /** @var array 抽出項目一覧 */
     protected $fields = [];
 
-    /** @var array COUNT()する項目名 */
+    /** @var string COUNT()する項目名 */
     protected $count_field = "*";
 
     /** @var FilteringCondition */
