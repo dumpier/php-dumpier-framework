@@ -7,10 +7,18 @@ class Pregular
 {
     use Singletonable;
 
-    public static function all(string $pattern, string $text)
+    public function all(string $pattern, string $text)
     {
         preg_match_all($pattern, $text, $rows);
 
         return $rows[0];
     }
+
+    public function first(string $pattern, string $text)
+    {
+        preg_match($pattern, $text, $row);
+
+        return $row;
+    }
+
 }
