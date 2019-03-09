@@ -190,7 +190,7 @@ class QueryBuilder
      * @param string $sql
      * @param array $binds
      * @param int $count
-     * @return mixed|array
+     * @return int|array
      */
     private function querySelect(string $sql, array $binds=[], int $count=0)
     {

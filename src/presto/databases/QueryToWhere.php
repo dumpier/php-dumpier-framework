@@ -57,7 +57,7 @@ class QueryToWhere
             if(is_array($val))
             {
                 $expression = key($val);
-                if( expression()->is($expression) )
+                if( expression()->is( $expression ) )
                 {
                     // in, not in, >, >=, <, <=, <>, !=
                     list($sub_where, $binds) = $this->expression($key, $expression, $val[$expression], $binds);

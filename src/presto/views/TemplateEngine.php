@@ -27,7 +27,7 @@ class TemplateEngine
         // PHP構文タグ
         $phtml = $this->syntaxes($phtml);
 
-        $phtml = preg_replace("/\?>(\s*)<\?php/", "$1", $phtml);
+        $phtml = (string)preg_replace("/\?>(\s*)<\?php/", "$1", $phtml);
         return $phtml;
     }
 
@@ -56,7 +56,7 @@ class TemplateEngine
 
             $include_phtml = file_get_contents($file);
             $pattern = "/" . preg_quote($include, '/') . "/";
-            $phtml = preg_replace($pattern, $include_phtml, $phtml);
+            $phtml = (string)preg_replace($pattern, $include_phtml, $phtml);
         }
 
         return $phtml;
@@ -67,7 +67,7 @@ class TemplateEngine
      * 変数参照をPHPコードに変換
      * @example {{$name}}, {{ $player.exp }}
      * @param string $phtml
-     * @return string|mixed
+     * @return string
      */
     public function variables(string $phtml)
     {
@@ -76,10 +76,10 @@ class TemplateEngine
 
         foreach ($variables as $variable)
         {
-            $variable_name = preg_replace("/\{\{ *(\\$[^ ]+) *\}\}/", "$1", $variable);
-            $variable_name = preg_replace("/\.([^\. ]+)/", "['$1']", $variable_name);
+            $variable_name = (string)preg_replace("/\{\{ *(\\$[^ ]+) *\}\}/", "$1", $variable);
+            $variable_name = (string)preg_replace("/\.([^\. ]+)/", "['$1']", $variable_name);
 
-            $phtml = preg_replace("/" . preg_quote($variable, '/') . "/", "<?php echo {$variable_name};?>", $phtml);
+            $phtml = (string)preg_replace("/" . preg_quote($variable, '/') . "/", "<?php echo {$variable_name};?>", $phtml);
         }
 
 //        echo "<pre>".htmlspecialchars($phtml, ENT_QUOTES) . "</pre>";
@@ -95,7 +95,7 @@ class TemplateEngine
      * @example {@ Tags::test() }
      *
      * @param string $phtml
-     * @return string|mixed
+     * @return string
      */
     public function callables(string $phtml)
     {
@@ -105,13 +105,13 @@ class TemplateEngine
         foreach ($variables as $variable)
         {
             // 関数名
-            $function = preg_replace("/\{@ *(.+) *\(.*/", "$1", $variable);
+            $function = (string)preg_replace("/\{@ *(.+) *\(.*/", "$1", $variable);
 
             // 引数一覧
-            $arguments = preg_replace("/.+\( *(.*) *\) *\}/", "$1", $variable);
+            $arguments = (string)preg_replace("/.+\( *(.*) *\) *\}/", "$1", $variable);
 
             // 関数の呼び出しをPHPコードに変換
-            $phtml = preg_replace("/" . preg_quote($variable, '/') . "/", "<?php {$function}($arguments); ?>", $phtml);
+            $phtml = (string)preg_replace("/" . preg_quote($variable, '/') . "/", "<?php {$function}($arguments); ?>", $phtml);
         }
 
         return $phtml;
@@ -138,7 +138,11 @@ class TemplateEngine
     ];
 
 
-    // 独自タグをPHP構文に変換
+    /**
+     * 独自タグをPHP構文に変換
+     * @param string $phtml
+     * @return string
+     */
     public function syntaxes(string $phtml)
     {
         foreach (self::SYNTAX_LIST as $syntax)
@@ -149,7 +153,13 @@ class TemplateEngine
         return $phtml;
     }
 
-    // 独自タグをPHP構文に変換
+    /**
+     * 独自タグをPHP構文に変換
+     * @param string $phtml
+     * @param string $pattern
+     * @param string $replace
+     * @return string
+     */
     public function syntax(string $phtml, string $pattern, string $replace)
     {
         foreach (pregular()->all($pattern, $phtml) as $matche)
