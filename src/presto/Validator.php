@@ -101,6 +101,7 @@ class Validator
 
     /**
      * 1つの値に対して複数のケース演算を評価する
+     * TODO ORグルピング
      * @param mixed $value
      * @param array $cases
      * @param string $message

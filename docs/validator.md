@@ -20,6 +20,25 @@ $rules["or"]["field_2"] = ["require,between(1~100)"];
 validator()->validate($inputs, $rules);
 ```
 
+- cases($value, array $cases)
+
+```
+$cases = [];
+$cases[] = ["require","message"];
+$cases[] = ["numeric,between(1,100)","message"];
+
+validator()->cases(11, "require,numeric|alpha,length(1,5)");
+
+TODO......
+$cases = [];
+$cases[] = ["require","message"];
+$cases["or"] = ["email,r-like(gmail.com)","message"];
+$cases["or"] = ["numeric|alpha,length(1,100)","message"];
+
+validator()->cases(11, "require,numeric|alpha,length(1,5)");
+```
+
+
 - case($value, string $string_expressions)
 
 ```
