@@ -1,11 +1,11 @@
 <?php
 namespace Presto;
 
-use Presto\Traits\Singletonable;
+use Presto\Traits\Instanceable;
 
 class Validator
 {
-    use Singletonable;
+    use Instanceable;
 
     const REGULAR = "regular";
     const REQUIRE = "require";
@@ -29,7 +29,6 @@ class Validator
     const COUNTRY_CODE = "country-code";
 
 
-
     /**
      * サポートするルール一覧
      * @var array
@@ -38,8 +37,7 @@ class Validator
         // 必須
         self::REQUIRE=>["message"=>"必須", ],
         // 正規表現、例）regular:/aaaaa/
-        self::REGULAR=>["message"=>"正規表現",
-            "parameters"=>true],
+        self::REGULAR=>["message"=>"正規表現", "parameters"=>true],
 
         self::LENGTH =>["message"=>"文字数", "parameters"=>true],
         self::SIZE =>["message"=>"サイズ", ],
@@ -60,35 +58,41 @@ class Validator
         self::COUNTRY_CODE=>["message"=>"国番号", ],
     ];
 
-    public function provider(string $name, array $config)
-    {
-        $this->providers[$name] = $config;
-    }
-
 
     /**
-     *
+     * バリデーター
+     * TODO OR条件、グルピング条件未完成
+     * @param array $inputs
+     * @param array $rules
+     * @param bool $isOr
+     * @return boolean[]|array[][]
      */
     public function validate(array $inputs, array $rules, bool $isOr=false)
     {
+        $result = true;
         $messages = [];
 
-        foreach ($rules as $field=>$rule)
+        foreach ($rules as $field=>$rule_case)
         {
             if("or" === strtolower($field))
             {
-                list($or_result, $orMessages) = $this->validate($rule, $row, TRUE);
+                // OR条件 TODO 未完成
+                continue;
             }
 
-            $val = isset($row[$field]) ? $row[$field] : null;
-            list($result, $message) = $this->validate($val, $rule);
-
-            if( $result )
+            if(is_numeric($field))
             {
-                if($isOr) return [true, ""]; continue;
+                // グルーピング条件 TODO 未完成
+                continue;
             }
 
-            $messages[] = $message;
+            $value = isset($inputs[$field]) ? $inputs[$field] : "";
+            list($return, $msgs) = $this->case($value, $rule_case);
+
+            if(! $return )
+            {
+                $messages[] = array_merge($messages, $msgs);
+            }
         }
 
         return [$result, $messages];
@@ -96,7 +100,7 @@ class Validator
 
 
     /**
-     * ケースの振り分け
+     * 1つの値に対して複数のケース演算を評価する
      * @param mixed $value
      * @param array $cases
      * @param string $message
@@ -107,13 +111,15 @@ class Validator
         $result = true;
         $messages = [];
 
-        foreach ($cases as $case=>$messages)
+        foreach ($cases as $case=>$message)
         {
-            if(! $this->case($value, $case))
+            if( $this->case($value, $case) )
             {
-                $messages[] = $this->getDefaultMessage($case_name);
-                $result = false;
+                continue;
             }
+
+            $messages[] = $message;
+            $result = false;
         }
 
         return [$result, $messages];
@@ -204,7 +210,7 @@ class Validator
         $expectation_string = preg_replace("/.+\((.+)\)/", "$1", $case_expression);
         $expectations = explode("~", $expectation_string);
 
-        // 配列にする
+        // 配列にして$this->eval()を呼び出す
         $parameters = [$value, $case];
         $parameters = array_merge($parameters, $expectations);
         return call_user_func_array([$this, "eval"], $parameters);
