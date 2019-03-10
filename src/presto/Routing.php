@@ -25,7 +25,7 @@ class Routing
     /**
      * ルーティングの取得
      * @param string $uri
-     * @return string[]|array[]
+     * @return array<string, string, array>
      */
     public function get(string $uri=null)
     {
@@ -39,6 +39,7 @@ class Routing
 
         $controller = $this->routings[$uri]['controller'];
         $action = empty($this->routings[$uri]['action']) ? 'index' : $this->routings[$uri]['action'];
+
         // TODO
         $parameter = empty($this->routings[$uri]['parameters']) ? [] : $this->routings[$uri]['parameters'];
 
