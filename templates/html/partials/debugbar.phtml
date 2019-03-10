@@ -37,6 +37,9 @@
             </a>
           </li>
         @endforeach
+        <li><span class="fa fa-hashtag"></span></li>
+        <li><span class="fa fa-clock"></span>Time: {@ echo debugbar()->totalTime() } Sec</li>
+        <li><span class="fa fa-microchip"></span>Memory: {@ echo debugbar()->totalMemory() } Mb</li>
       </ul>
     </div> <!-- debugbar tab -->
   </div>
