@@ -1,6 +1,9 @@
 # PHP Presto Framework
+
+https://scrutinizer-ci.com/g/dumpier/php-presto-framework/
+
 ```
-軽い、速い、簡潔を目指す。
+軽量＆快速
 ```
 <img src=https://i.imgur.com/fpeJwF8.png>
 
