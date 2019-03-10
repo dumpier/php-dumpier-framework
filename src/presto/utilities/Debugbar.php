@@ -38,12 +38,19 @@ class Debugbar
 
     /**
      * レンダリング
-     * @param string $template
      * @param string $layout
+     * @param string $template
      */
-    public function render(string $template="", string $layout="")
+    public function render(string $layout="", string $template="")
     {
-        echo view()->layout("html/layouts/empty")->template("html/partials/debugbar")->render($this->all());
+        // ファイルに書き込む
+        $filename = date("Ymd_").uniqid();
+        file_put_contents(storage_path("debugbar/{$filename}.json"), json_encode($this->logs, JSON_UNESCAPED_UNICODE));
+
+        $layout = empty($layout) ? "html/layouts/empty" : $layout;
+        $template = empty($template) ? "html/partials/debugbar" : $template;
+
+        echo view()->layout($layout)->template($template)->render($this->all());
     }
 
 

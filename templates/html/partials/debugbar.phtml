@@ -31,9 +31,9 @@
         @foreach ( config('debugbar', 'items') as $type=>$config )
           @if ( ! $config['enable'] ) @continue @endif
           <li>
-            <a class='btn btn-sm btn-info' href='javascript:void(0);' onclick="$('div.debugbar-content').hide(); $('#debugbar-{{ $type }}').show(); $('#debugbar-body').show();">
+            <a class='btn btn-sm btn-default' href='javascript:void(0);' onclick="$('div.debugbar-content').hide(); $('#debugbar-{{ $type }}').show(); $('#debugbar-body').show();">
               <span class='{{ $config.css }}'></span>{{ $type }}
-              <span class="badge badge-pill badge-light">{@ $count = debugbar()->count($type) } @if ($count) {{ $count }} @endif</span>
+              <span class="badge badge-pill badge-dark">{@ $count = debugbar()->count($type) } @if ($count) {{ $count }} @endif</span>
             </a>
           </li>
         @endforeach
