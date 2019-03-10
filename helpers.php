@@ -36,10 +36,13 @@ if(! function_exists("protocol")){ /** @return string */ function protocol() { r
 // app
 if(! function_exists("app")){ /** @return object */ function app(string $class, ...$parameters) { if(class_exists($class)) { return new $class(...$parameters); } throw new Exception("クラス参照エラー[{$class}]"); }}
 
-
 // path
-if(! function_exists("path")) { /** @return string */ function path(string $path="") { return stringer()->cleanDirectorySeparator(dirname(dirname(dirname(__DIR__))) . "/{$path}"); }}
-// if(! function_exists("path")) { /** @return string */ function path(string $path="") { return stringer()->cleanDirectorySeparator(dirname(__DIR__) . "/php-presto-app/{$path}"); }}
+if(! function_exists("path")) { /** @return string */ function path(string $path="") {
+    // TODO 通常composerで取り込まれた場合とフレームワーク開発のためシンボリックで参照される場合の切り分け
+    $realpath = ("vendor"==dirname(dirname(__DIR__))) ?  dirname(dirname(dirname(__DIR__))) . "/{$path}" : dirname(__DIR__) . "/php-presto-app/{$path}";
+    return stringer()->cleanDirectorySeparator($realpath);
+    }
+}
 
 if(! function_exists("framework_path")) { /** @return string */ function framework_path(string $path="") { return stringer()->cleanDirectorySeparator(__DIR__ . DIRECTORY_SEPARATOR . $path); }}
 if(! function_exists("config_path")) { /** @return string */ function config_path(string $path="") { return path("config/{$path}"); } }
