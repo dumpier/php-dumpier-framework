@@ -8,34 +8,7 @@ https://scrutinizer-ci.com/g/dumpier/php-presto-framework/
 <img src=https://i.imgur.com/fpeJwF8.png>
 
 ## Validate
-```
-validator()->eval()
-validator()->case()
-validator()->rule()
-validator()->validate()
-validator()->validates()
-
-// 例）半角英数で、かつ長さが5～10間であるか
-validator()->eval("input string", "alpha|numeric,length(5,10)");
-
-// 例）数字OR文字列で、かつ長さが5～10間であるか
-validator()->eval("100", "numeric,between(100,200)|between(10100,10200)");
-
-// 例）複数条件を結合したチェック
-validator()->case("100", [ "require",
-                            "or"=>[
-                                "numeric,between(100,200)|between(10100,10200)"=>"100-200 or 10100-10200間の数字を入力してください",
-                                "alpha,length(10,20)"=>"10~20桁以内の半角英文字",
-                            ],
-                        ]);
-
-
-// 入力チェック
-validator()->validate($input, $validate);
-// 一括チェック
-validator()->validates(array $inputs, array $validates);
-
-```
+https://github.com/dumpier/php-presto-framework/blob/master/doc/validator.md
 
 ## Database
 ```
