@@ -22,10 +22,13 @@ class Debugbar
     const TYPE_AUTH = "auth";
     const TYPE_GATE = "gate";
 
-    private $time_start;
-    private $time_before;
-    private $time_current;
-    private $logs = [];
+    protected $time_start;
+    protected $time_before;
+    protected $time_current;
+    protected $logs = [];
+
+    protected $total_time = "";
+    protected $total_memory = 0;
 
     public function __construct()
     {
@@ -78,6 +81,10 @@ class Debugbar
 
         return count($this->logs[$type]);
     }
+
+
+    public function totalTime() { return $this->total_time; }
+    public function totalMemory() { return $this->total_memory; }
 
 
     /**
@@ -140,7 +147,10 @@ class Debugbar
         $row['memory_usage'] = round(memory_get_usage() / (1024 * 1024), 3);
         $row['memory_usage_peak'] = round(memory_get_peak_usage() / (1024 * 1024), 3);
 
-        $row['time_total'] = round($this->time_current - $this->time_start, 4);
+        $this->total_memory = ($this->total_memory < $row['memory_usage_peak']) ? $row['memory_usage_peak']: $this->total_memory;
+        $this->total_time = round($this->time_current - $this->time_start, 4);
+
+        $row['time_total'] = $this->total_time;
         $row['time_execute'] = round($this->time_current - $this->time_before, 4);
 
         $row['message'] = $msg;
