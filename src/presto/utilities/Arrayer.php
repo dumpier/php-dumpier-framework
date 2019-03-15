@@ -124,7 +124,7 @@ class Arrayer
     {
         foreach ($array as $key=>$val)
         {
-            if($this->isNotTarget($val))
+            if($this->isEmpty($val))
             {
                 unset ($array[$key]);
                 continue;
@@ -133,7 +133,7 @@ class Arrayer
             if(is_array($val))
             {
                 $clean = $this->clean($val);
-                if($this->isNotTarget($clean))
+                if($this->isEmpty($clean))
                 {
                     unset ($array[$key]);
                 }
@@ -148,7 +148,7 @@ class Arrayer
     }
 
 
-    private function isNotTarget($val)
+    private function isEmpty($val)
     {
         if($val==="" || $val===null || $val===[])
         {

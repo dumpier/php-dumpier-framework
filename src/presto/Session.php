@@ -12,6 +12,7 @@ class Session
         return $_SESSION;
     }
 
+
     public function get(string $key)
     {
         return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
@@ -34,6 +35,7 @@ class Session
     {
         unset($_SESSION);
     }
+
 
     public function delete(string $key)
     {

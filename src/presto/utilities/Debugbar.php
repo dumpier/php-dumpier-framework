@@ -32,10 +32,15 @@ class Debugbar
 
     public function __construct()
     {
-        $time = microtime(true);
-        $this->time_start = $time;
-        $this->time_before = $time;
-        $this->time_current = $time;
+        $this->time_start = $this->time_before = $this->time_current = microtime(true);
+    }
+
+    /**
+     * 先頭に追加
+     */
+    public function unshift($time_start)
+    {
+        $this->time_start = $this->time_before = $time_start;
     }
 
 
@@ -52,6 +57,12 @@ class Debugbar
 
         $layout = empty($layout) ? "html/layouts/empty" : $layout;
         $template = empty($template) ? "html/partials/debugbar" : $template;
+
+        // includeしたファイル一覧
+        foreach (get_included_files() as $file)
+        {
+            $this->logging(self::TYPE_FILES, $file);
+        }
 
         echo view()->layout($layout)->template($template)->render($this->all());
     }
@@ -158,8 +169,8 @@ class Debugbar
 
         // 呼び出し元
         $debug_backtrace = debug_backtrace();
-        $row['file'] = $debug_backtrace[2]['file'];
-        $row['line'] = $debug_backtrace[2]['line'];
+        $row['file'] = $debug_backtrace[2]['file'] ?? "";
+        $row['line'] = $debug_backtrace[2]['line'] ?? "";
 
         $this->logs[$type][] = $row;
 
