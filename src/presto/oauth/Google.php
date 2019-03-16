@@ -10,14 +10,14 @@ class Google
 
     public function get_auth_url()
     {
-        $google = config()->get("auth", "google.api");
-        $client = config()->get("auth", "google.client");
+        $google = config("auth", "google.api");
+        $client = config("auth", "google.client");
 
         $querys = [];
         $querys['client_id'] = $client["id"];
-        $querys['redirect_uri'] = $client["callback"];
+        $querys['redirect_uri'] = $this->getCallbackUrl();
         $querys['scope'] = $google["scope"];
-        $querys['response_type'] = $client["code"];
+        $querys['response_type'] = $client["response_type"];
 
         return $google["auth"] . http_build_query($querys);
     }
@@ -25,8 +25,8 @@ class Google
 
     public function token(string $code)
     {
-        $client = config()->get("auth", "google.client");
-        $google_api = config()->get("auth", "google.api.token");
+        $client = config("auth", "google.client");
+        $google_api = config("auth", "google.api.token");
 
         $params = [];
         $params["code"] = $client["code"];;
@@ -54,22 +54,60 @@ class Google
     }
 
 
-    public function userId(string $access_token)
+    private $userinfos = [];
+
+    /**
+     * GoogleのUserInfoの取得
+     * @param string $access_token
+     * @return string
+     */
+    public function userInfo(string $access_token)
     {
-        $google_api = config()->get("auth", "google.api.userinfo");
+        if($this->userinfos[$access_token])
+        {
+            return $this->userinfos[$access_token];
+        }
+
+        $google_api = config("auth", "google.api.userinfo");
 
         if (empty($access_token))
         {
             return null;
         }
 
-        $userInfo = json_decode(file_get_contents("{$google_api}{$access_token}"));
+        $this->userinfos[$access_token] = json_decode(file_get_contents("{$google_api}{$access_token}"));
 
-        if (empty($userInfo))
+        if (empty($this->userinfos[$access_token]))
         {
             return null;
         }
 
-        return $userInfo->id;
+        return $this->userinfos[$access_token];
+    }
+
+
+    public function userId(string $access_token)
+    {
+        $userInfo = $this->userInfo($access_token);
+
+        if($userInfo)
+        {
+            return $userInfo->id;
+        }
+
+        return null;
+    }
+
+
+    public function getCallbackUrl()
+    {
+        $callback_url = config("auth", "google.client.callback");
+        if(preg_match("/^[http|https]/", $callback_url))
+        {
+            return $callback_url;
+        }
+
+        $protocol = request()->getProtocol();
+        return "{$protocol}://{$_SERVER['HTTP_HOST']}{$callback_url}";
     }
 }

@@ -60,6 +60,35 @@ class Request
 
 
     /**
+     * httpsかの判定
+     * @return boolean
+     */
+    public function isHttps()
+    {
+        if(empty($_SERVER["HTTPS"]))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * httpsかhttpのいずれを返す
+     * @return string https|http
+     */
+    public function getProtocol()
+    {
+        if($this->isHttps())
+        {
+            return "https";
+        }
+
+        return "http";
+    }
+
+
+    /**
      * Ajax判定
      * @return boolean
      */
