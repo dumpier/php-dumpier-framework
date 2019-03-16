@@ -2,7 +2,6 @@
 namespace Presto\Core\Databases\Model;
 
 use Presto\Core\Traits\Singletonable;
-use Presto\Core\Databases\Model\RepositoryRelationTrait;
 
 class Repository
 {
