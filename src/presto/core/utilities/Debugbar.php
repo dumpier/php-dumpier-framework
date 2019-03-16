@@ -51,25 +51,14 @@ class Debugbar
      */
     public function render(string $layout="", string $template="")
     {
-        // ファイルに書き込む
-        $directory = storage_path("debugbar/" . date("Ymd/H/"));
-        if(!file_exists($directory))
-        {
-            mkdir($directory, 0777, TRUE);
-        }
+        // includeしたファイル一覧
+        $this->files();
 
-        $filename = $directory.date("Ymd-His-").uniqid() . ".json";
-        file_put_contents($filename, json_encode($this->logs, JSON_UNESCAPED_UNICODE));
+        // ログファイルに書き込む
+        $this->logging();
 
         $layout = empty($layout) ? "html/layouts/empty" : $layout;
         $template = empty($template) ? "html/partials/debugbar" : $template;
-
-        // includeしたファイル一覧
-        foreach (get_included_files() as $file)
-        {
-            $this->logging(self::TYPE_FILES, $file);
-        }
-
         echo view()->layout($layout)->template($template)->render($this->all());
     }
 
@@ -111,7 +100,7 @@ class Debugbar
      */
     public function messages(string $msg="", array $data=[])
     {
-        $this->logging(self::TYPE_MESSAGES, $msg, $data);
+        $this->record(self::TYPE_MESSAGES, $msg, $data);
     }
 
     /**
@@ -121,7 +110,7 @@ class Debugbar
      */
     public function timelines(string $msg="", array $data=[])
     {
-        $this->logging(self::TYPE_TIMELINES, $msg, $data);
+        $this->record(self::TYPE_TIMELINES, $msg, $data);
     }
 
     /**
@@ -131,7 +120,7 @@ class Debugbar
      */
     public function exceptions(string $msg="", array $data=[])
     {
-        $this->logging(self::TYPE_EXCEPTIONS, $msg, $data);
+        $this->record(self::TYPE_EXCEPTIONS, $msg, $data);
     }
 
     /**
@@ -141,12 +130,12 @@ class Debugbar
      */
     public function queries(string $msg="", array $data=[])
     {
-        $this->logging(self::TYPE_QUERIES, $msg, $data);
+        $this->record(self::TYPE_QUERIES, $msg, $data);
     }
 
     public function timerstart()
     {
-        $this->logging("");
+        $this->record("");
     }
 
 
@@ -156,7 +145,7 @@ class Debugbar
      * @param string $msg
      * @param array $data
      */
-    protected function logging(string $type, string $msg="", array $data=[])
+    protected function record(string $type, string $msg="", array $data=[])
     {
         $this->time_current = microtime(true);
 
@@ -181,6 +170,37 @@ class Debugbar
         $this->logs[$type][] = $row;
 
         $this->time_before = microtime(true);
+    }
+
+
+    /**
+     * includeしたファイル一覧
+     */
+    private function files()
+    {
+        // includeしたファイル一覧
+        foreach (get_included_files() as $file)
+        {
+            $this->record(self::TYPE_FILES, $file);
+        }
+    }
+
+
+    /**
+     * ログへの書き込み
+     */
+    private function logging()
+    {
+        // ファイルに書き込む
+        $directory = storage_path("debugbar/" . date("Ymd/H/"));
+
+        if(!file_exists($directory))
+        {
+            mkdir($directory, 0777, TRUE);
+        }
+
+        $filename = $directory.date("Ymd-His-").uniqid() . ".json";
+        file_put_contents($filename, json_encode($this->logs, JSON_UNESCAPED_UNICODE));
     }
 
 }

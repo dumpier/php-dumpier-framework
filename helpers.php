@@ -30,7 +30,7 @@ if(! function_exists("html")) { /** @return \Presto\Core\Helpers\Html\HtmlTag */
 if(! function_exists("paging")) { /** @return \Presto\Core\Helpers\Html\Paging */ function paging() { return \Presto\Core\Helpers\Html\Paging::instance(); }}
 
 if(! function_exists("baseuri")){ /** @return string */ function baseuri() { return config("app", "baseuri"); }}
-if(! function_exists("host")){ /** @return string */ function domain() { return $_SERVER['HTTP_HOST']; }}
+if(! function_exists("domain")){ /** @return string */ function domain() { return $_SERVER['HTTP_HOST']; }}
 if(! function_exists("protocol")){ /** @return string */ function protocol() { return $_SERVER["SERVER_PROTOCOL"]; }}
 
 // app
@@ -39,7 +39,7 @@ if(! function_exists("app")){ /** @return object */ function app(string $class, 
 // path
 if(! function_exists("path")) { /** @return string */ function path(string $path="") {
     // TODO 通常composerで取り込まれた場合とフレームワーク開発のためシンボリックで参照される場合の切り分け
-    $realpath = (is_link(__DIR__) || is_link(dirname(__DIR__))) ? dirname(__DIR__) . "/php-presto-app/{$path}" : dirname(dirname(dirname(__DIR__))) . "/{$path}";
+    $realpath = (is_link("/vagrant/code/github/dumpieer/php-presto-app/vendor/dumpier/php-presto-framework")) ? dirname(__DIR__) . "/php-presto-app/{$path}" : dirname(dirname(dirname(__DIR__))) . "/{$path}";
     return stringer()->cleanDirectorySeparator($realpath);
     }
 }
@@ -58,13 +58,10 @@ if(! function_exists("cache_path")) { /** @return string */ function cache_path(
 if(! function_exists("cache_template_path")) { /** @return string */ function cache_template_path(string $path="") { return path("storages/cache/templates/{$path}"); } }
 
 
-
 // files
 if(! function_exists("config")) { function config(string $filename, string $key="") { return \Presto\Core\Utilities\Files\ConfigLoader::instance()->get($filename, $key); }}
 if(! function_exists("directory")) { /** @return \Presto\Core\Utilities\Files\DirectoryLoader */ function directory() { return \Presto\Core\Utilities\Files\DirectoryLoader::instance(); }}
 if(! function_exists("csv")) { /** @return \Presto\Core\Utilities\Files\CsvLoader */ function csv() { return \Presto\Core\Utilities\Files\CsvLoader::instance(); }}
-
-
 
 
 // database
@@ -80,4 +77,9 @@ if(! function_exists("database")) {
     }
 }
 if(! function_exists("select")) { /** @return mixed */ function select(string $query, array $binds=[], $name=null) { return \Presto\Core\Databases\QueryBuilder::instance()->select($query, $binds, $name); }}
+
+
+// OAuth
+// TODO 現在googleのみ
+if(! function_exists("oauth")) { /** @return \Presto\Oauth\Google */ function oauth(string $name) { return \Presto\Oauth\Google::instance(); }}
 
