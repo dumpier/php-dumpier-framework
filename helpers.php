@@ -39,7 +39,7 @@ if(! function_exists("app")){ /** @return object */ function app(string $class, 
 // path
 if(! function_exists("path")) { /** @return string */ function path(string $path="") {
     // TODO 通常composerで取り込まれた場合とフレームワーク開発のためシンボリックで参照される場合の切り分け
-    $realpath = ("vendor"==dirname(dirname(__DIR__))) ?  dirname(dirname(dirname(__DIR__))) . "/{$path}" : dirname(__DIR__) . "/php-presto-app/{$path}";
+    $realpath = (is_link(__DIR__) || is_link(dirname(__DIR__))) ? dirname(__DIR__) . "/php-presto-app/{$path}" : dirname(dirname(dirname(__DIR__))) . "/{$path}";
     return stringer()->cleanDirectorySeparator($realpath);
     }
 }
