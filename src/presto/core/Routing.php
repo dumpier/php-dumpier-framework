@@ -1,5 +1,5 @@
 <?php
-namespace Presto;
+namespace Presto\Core;
 
 use Presto\Core\Traits\Singletonable;
 use Presto\Core\Traits\Accessible;
