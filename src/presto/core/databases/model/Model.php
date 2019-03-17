@@ -2,8 +2,12 @@
 namespace Presto\Core\Databases\Model;
 
 
+use Presto\Core\Traits\Towable;
+
 class Model
 {
+    use Towable;
+
     protected $connection;
     protected $database;
     protected $table;

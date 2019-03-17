@@ -2,6 +2,7 @@
 namespace Presto\Core;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Protocols\Http;
 
 class Response
 {
@@ -18,16 +19,38 @@ class Response
 
     protected $type;
 
+    protected $headers = [];
 
     public function header(string $key, $values, $replace = true)
     {
-
+        return $this;
     }
 
 
-    public function redirect(string $url, int $code=302)
+    /**
+     * リダイレクト
+     * @param string $url
+     * @param int $code
+     */
+    public function redirect(string $url, int $code=Http::CODE_302)
     {
         header("Location: $url", TRUE, $code);
         exit;
     }
+
+    public function charaset(string $charaset)
+    {
+
+    }
+
+    public function contentType(string $content_type)
+    {
+
+    }
+    /*
+     * header("Content-Type: application/json; charset=utf-8");
+     *
+     */
+
+
 }

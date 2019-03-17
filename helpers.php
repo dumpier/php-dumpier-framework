@@ -79,6 +79,12 @@ if(! function_exists("database")) {
 if(! function_exists("select")) { /** @return mixed */ function select(string $query, array $binds=[], $name=null) { return \Presto\Core\Databases\QueryBuilder::instance()->select($query, $binds, $name); }}
 
 
+// protocols
+if(! function_exists("http")) { /** @return \Presto\Core\Protocols\Http */ function http() { return \Presto\Core\Protocols\Http::instance(); }}
+
+
+// session
+if(! function_exists("session")) { /** @return \Presto\Core\Session */ function session() { return \Presto\Core\Session::instance(); }}
 // OAuth
 // TODO 現在googleのみ
 if(! function_exists("oauth")) { /** @return \Presto\Oauth\Google */ function oauth(string $name) { return \Presto\Oauth\Google::instance(); }}

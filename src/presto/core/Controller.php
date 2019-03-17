@@ -3,6 +3,7 @@ namespace Presto\Core;
 
 use Presto\Core\Traits\Injectable;
 use Presto\Core\Views\View;
+use Presto\Core\Protocols\Http;
 
 class Controller
 {
@@ -72,5 +73,11 @@ class Controller
         $contents["breadcrumb"] = static::$breadcrumb;
 
         return view()->type($this->view_type)->layout($this->layout)->template($this->template)->render($contents);
+    }
+
+
+    public function redirect(string $url, $code=Http::CODE_302)
+    {
+        response()->redirect("/admin/auth/index/", $code);
     }
 }
