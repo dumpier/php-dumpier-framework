@@ -78,6 +78,6 @@ class Controller
 
     public function redirect(string $url, $code=Http::CODE_302)
     {
-        response()->redirect("/admin/auth/index/", $code);
+        response()->redirect($url, $code);
     }
 }

@@ -76,7 +76,9 @@ class Repository
         $parameter["condition"][$primary_key_name] = $primary_key;
         $parameter["limit"] = 1;
 
-        return $this->find($parameter, $recursion);
+        $rows = $this->find($parameter, $recursion);
+
+        return empty($rows[0]) ? null : $rows[0];
     }
 
 
@@ -89,7 +91,9 @@ class Repository
     public function findFirst(array $parameter=[], int $recursion=0)
     {
         $parameter["limit"] = 1;
-        return $this->find($parameter, $recursion);
+        $rows = $this->find($parameter, $recursion);
+
+        return empty($rows[0]) ? null : $rows[0];
     }
 
 }
