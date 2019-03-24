@@ -1,6 +1,8 @@
 <?php
+// utilities
 if(! function_exists("arrayer")) { /** @return \Presto\Core\Utilities\Arrayer */ function arrayer() { return \Presto\Core\Utilities\Arrayer::instance(); }}
 if(! function_exists("collection")) { /** @return \Presto\Core\Utilities\Collection */ function collection(array $rows=[]) { return new \Presto\Core\Utilities\Collection($rows); }}
+if(! function_exists("encrypter")) { /** @return \Presto\Core\Utilities\Encrypter */ function encrypter() { return \Presto\Core\Utilities\Encrypter::instance(); }}
 if(! function_exists("paginator")) { /** @return \Presto\Core\Utilities\Paginator */ function paginator(array $rows=[], int $total_count=0, int $page=1, int $limit=\Presto\Core\Helpers\Html\Paging::LIMIT_COUNT) { return new \Presto\Core\Utilities\Paginator($rows, $total_count, $page, $limit); }}
 if(! function_exists("stringer")) { /** @return \Presto\Core\Utilities\Stringer */ function stringer() { return \Presto\Core\Utilities\Stringer::instance(); }}
 if(! function_exists("pregular")) { /** @return \Presto\Core\Utilities\Pregular */ function pregular() { return \Presto\Core\Utilities\Pregular::instance(); }}
