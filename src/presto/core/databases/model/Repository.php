@@ -96,4 +96,18 @@ class Repository
         return empty($rows[0]) ? null : $rows[0];
     }
 
+
+    /**
+     * ページング
+     * @param array $parameter
+     * @param int $recursion
+     * @return \Presto\Core\Utilities\Paginator
+     */
+    public function paging(array $parameter=[], int $recursion=0)
+    {
+        $connection = $this->model->getConnection();
+        $table = $this->model->getTable();
+
+        return database($connection)->paging($table, $parameter);
+    }
 }
