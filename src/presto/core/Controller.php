@@ -3,26 +3,31 @@ namespace Presto\Core;
 
 use Presto\Core\Traits\Injectable;
 use Presto\Core\Views\View;
+use Presto\Core\Protocols\Http;
 
 class Controller
 {
     use Injectable;
+    protected $repositories = [];
+    protected $services = [];
+
 
     /** レイアウト */
-    public $layout = "";
+    protected $layout = "";
 
     /** Viewタイプ */
-    public $view_type = View::HTML;
+    protected $view_type = View::HTML;
 
     /** テンプレート */
-    public $template = "";
+    protected $template = "";
 
 
     /** コンテンツ */
-    public $contents = [];
+    protected $contents = [];
 
     /** ぱんくず */
     protected static $breadcrumb = [];
+
 
     /**
      * ぱんくずの追加
@@ -72,5 +77,11 @@ class Controller
         $contents["breadcrumb"] = static::$breadcrumb;
 
         return view()->type($this->view_type)->layout($this->layout)->template($this->template)->render($contents);
+    }
+
+
+    public function redirect(string $url, $code=Http::CODE_302)
+    {
+        response()->redirect($url, $code);
     }
 }

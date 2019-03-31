@@ -36,7 +36,7 @@ class Collection
      * @param array $condition
      * @return array|mixed
      */
-    public function first(array $condition)
+    public function first(array $condition=[])
     {
         $rows = $this->condition($condition)->all();
         return array_shift($rows);
@@ -48,7 +48,7 @@ class Collection
      * @param array $condition
      * @return array|mixed
      */
-    public function last(array $condition)
+    public function last(array $condition=[])
     {
         return end($this->rows);
     }
@@ -114,7 +114,24 @@ class Collection
      */
     public function where(string $name, $expression, ...$value)
     {
-        $rows = array_filter($this->rows, function($row) use ($name, $expression, $value) { return expression()->compare($row[$name], $expression, ...$value); });
+        return $this->whereOrNowhere(TRUE, $name, $expression, $value);
+    }
+
+    /**
+     * NOWHERE
+     * @param string $name
+     * @param mixed $expression
+     * @param mixed ...$value
+     * @return \Presto\Core\Utilities\Collection
+     */
+    public function nowhere(string $name, $expression, ...$value)
+    {
+        return $this->whereOrNowhere(FALSE, $name, $expression, $value);
+    }
+
+    private function whereOrNowhere(bool $is_where=TRUE, string $name, $expression, ...$value)
+    {
+        $rows = array_filter($this->rows, function($row) use ($is_where, $name, $expression, $value) { return $is_where && expression()->compare($row[$name], $expression, ...$value); });
         return new static($rows);
     }
 
@@ -185,6 +202,20 @@ class Collection
         $rows = array_multisort($properties, $sort, $this->rows);
 
         return new static($rows);
+    }
+
+
+    // 追加
+    public function put($row)
+    {
+        $this->rows[] = $row;
+        return $this;
+    }
+
+    // 削除
+    public function delete(string $name, $expression, ...$value)
+    {
+        return $this->nowhere($name, $expression, $value);
     }
 
 }

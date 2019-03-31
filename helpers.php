@@ -1,6 +1,8 @@
 <?php
+// utilities
 if(! function_exists("arrayer")) { /** @return \Presto\Core\Utilities\Arrayer */ function arrayer() { return \Presto\Core\Utilities\Arrayer::instance(); }}
 if(! function_exists("collection")) { /** @return \Presto\Core\Utilities\Collection */ function collection(array $rows=[]) { return new \Presto\Core\Utilities\Collection($rows); }}
+if(! function_exists("encrypter")) { /** @return \Presto\Core\Utilities\Encrypter */ function encrypter() { return \Presto\Core\Utilities\Encrypter::instance(); }}
 if(! function_exists("paginator")) { /** @return \Presto\Core\Utilities\Paginator */ function paginator(array $rows=[], int $total_count=0, int $page=1, int $limit=\Presto\Core\Helpers\Html\Paging::LIMIT_COUNT) { return new \Presto\Core\Utilities\Paginator($rows, $total_count, $page, $limit); }}
 if(! function_exists("stringer")) { /** @return \Presto\Core\Utilities\Stringer */ function stringer() { return \Presto\Core\Utilities\Stringer::instance(); }}
 if(! function_exists("pregular")) { /** @return \Presto\Core\Utilities\Pregular */ function pregular() { return \Presto\Core\Utilities\Pregular::instance(); }}
@@ -79,6 +81,12 @@ if(! function_exists("database")) {
 if(! function_exists("select")) { /** @return mixed */ function select(string $query, array $binds=[], $name=null) { return \Presto\Core\Databases\QueryBuilder::instance()->select($query, $binds, $name); }}
 
 
+// protocols
+if(! function_exists("http")) { /** @return \Presto\Core\Protocols\Http */ function http() { return \Presto\Core\Protocols\Http::instance(); }}
+
+
+// session
+if(! function_exists("session")) { /** @return \Presto\Core\Session */ function session() { return \Presto\Core\Session::instance(); }}
 // OAuth
 // TODO 現在googleのみ
 if(! function_exists("oauth")) { /** @return \Presto\Oauth\Google */ function oauth(string $name) { return \Presto\Oauth\Google::instance(); }}

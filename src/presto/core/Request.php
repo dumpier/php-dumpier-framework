@@ -23,7 +23,7 @@ class Request
         else
         {
             // ajax
-            $this->is_ajax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')) ? true : false;
+            $this->is_ajax = http()->isAjax();
             $this->inputs = $_REQUEST;
         }
     }
@@ -51,40 +51,7 @@ class Request
      */
     public function uri()
     {
-        // ベースURIを除く
-        $uri = preg_replace("/^" . preg_quote(baseuri()) . "/", "", $_SERVER['REQUEST_URI']);
-        $uri = preg_replace("/\?.*/", "", $uri);
-
-        return $uri;
-    }
-
-
-    /**
-     * httpsかの判定
-     * @return boolean
-     */
-    public function isHttps()
-    {
-        if(empty($_SERVER["HTTPS"]))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * httpsかhttpのいずれを返す
-     * @return string https|http
-     */
-    public function getProtocol()
-    {
-        if($this->isHttps())
-        {
-            return "https";
-        }
-
-        return "http";
+        return http()->uri();
     }
 
 

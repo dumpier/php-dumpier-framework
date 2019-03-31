@@ -12,10 +12,11 @@ class Google
     {
         $google = config("auth", "google.api");
         $client = config("auth", "google.client");
+        $callback = config("auth", "google.client.callback");
 
         $querys = [];
         $querys['client_id'] = $client["id"];
-        $querys['redirect_uri'] = $this->getCallbackUrl();
+        $querys['redirect_uri'] = http()->url($callback);
         $querys['scope'] = $google["scope"];
         $querys['response_type'] = $client["response_type"];
 
@@ -96,18 +97,5 @@ class Google
         }
 
         return null;
-    }
-
-
-    public function getCallbackUrl()
-    {
-        $callback_url = config("auth", "google.client.callback");
-        if(preg_match("/^[http|https]/", $callback_url))
-        {
-            return $callback_url;
-        }
-
-        $protocol = request()->getProtocol();
-        return "{$protocol}://{$_SERVER['HTTP_HOST']}{$callback_url}";
     }
 }
