@@ -74,7 +74,7 @@ class QueryBuilder
      */
     public function paging(string $table, array $parameter=[])
     {
-        $page = input("page", 1);
+        $page = (int)input("page", 1);
         $count = $this->count($table, $parameter);
 
         list($start, ) = paging()->getStartEndRowNumber($count, $page);

@@ -65,7 +65,7 @@ class Paging
         else
         {
             $prev = $page - 1;
-            echo "<li class='page-item'><a href='{$base_url}' class='page-link'><span class='fa fa-angle-double-left'></span></a></li>";
+            echo "<li class='page-item'><a href='{$base_url}1' class='page-link'><span class='fa fa-angle-double-left'></span></a></li>";
             echo "<li class='page-item'><a href='{$base_url}{$prev}' class='page-link'><span class='fa fa-angle-left'></span></a></li>";
         }
 

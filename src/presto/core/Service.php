@@ -6,7 +6,6 @@ use Presto\Core\Traits\Injectable;
 class Service
 {
     use Injectable;
-
-    protected $services;
-    protected $repositories;
+    protected $repositories = [];
+    protected $services = [];
 }

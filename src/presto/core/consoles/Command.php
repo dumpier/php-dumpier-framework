@@ -6,14 +6,14 @@ use Presto\Core\Traits\Injectable;
 class Command
 {
     use Injectable;
+    protected $services = [];
+    protected $repositories = [];
+
 
     const INFO = "info";
     const DEBUG = "debug";
     const WARN = "warning";
     const ERROR = "error";
-
-    protected $services = [];
-    protected $repositories = [];
 
     public function handler() { }
 

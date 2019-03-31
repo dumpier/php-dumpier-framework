@@ -8,22 +8,26 @@ use Presto\Core\Protocols\Http;
 class Controller
 {
     use Injectable;
+    protected $repositories = [];
+    protected $services = [];
+
 
     /** レイアウト */
-    public $layout = "";
+    protected $layout = "";
 
     /** Viewタイプ */
-    public $view_type = View::HTML;
+    protected $view_type = View::HTML;
 
     /** テンプレート */
-    public $template = "";
+    protected $template = "";
 
 
     /** コンテンツ */
-    public $contents = [];
+    protected $contents = [];
 
     /** ぱんくず */
     protected static $breadcrumb = [];
+
 
     /**
      * ぱんくずの追加
