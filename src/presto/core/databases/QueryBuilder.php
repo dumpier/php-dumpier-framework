@@ -20,6 +20,8 @@ class QueryBuilder
     /** @var string 現在接続中 */
     protected $current_database ="";
 
+    /** @var int 直近のクエリで使用した自動生成のID */
+    private $last_insert_id = 0;
 
     /**
      * テーブル一覧の取得
@@ -58,6 +60,7 @@ class QueryBuilder
         $limit = empty($parameter["limit"]) ? 0 : $parameter["limit"];
         $sql_offset = empty($limit) ? "" : " LIMIT {$offset}, {$limit}";
 
+        // TODO order by
         $sql_orderby = empty($parameter["order"]) ? "" : "ORDER BY " . implode(",", $parameter["order"]);
 
         $sql = "SELECT {$fields} FROM `{$table}` {$where} {$sql_orderby} {$sql_offset}";
@@ -140,7 +143,11 @@ class QueryBuilder
 
         $sql = "INSERT INTO `{$table}` (`{$sql_column}`) VALUES ({$sql_values})";
 
-        return $this->query($sql, $binds);
+        // TODO 結果判定
+        $result = $this->query($sql, $binds);
+
+        // TODO last_insert_idの再確認
+        return $this->last_insert_id;
     }
 
 
@@ -250,6 +257,8 @@ class QueryBuilder
         // TODO 処理結果の判定
         $return = $stmt->execute();
 
+        // TODO last_insert_idの再確認
+        $this->last_insert_id = $conn->insert_id;
         return $stmt;
     }
 
