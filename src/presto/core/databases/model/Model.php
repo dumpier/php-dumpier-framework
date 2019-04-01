@@ -3,17 +3,11 @@ namespace Presto\Core\Databases\Model;
 
 
 use Presto\Core\Traits\Towable;
+use Presto\Core\Traits\Instanceable;
 
 class Model
 {
-    use Towable;
-
-    protected $connection;
-    protected $database;
-    protected $table;
-
-    protected $originals;
-    protected $relations;
+    use Instanceable, Towable;
 
     const HAS_ONE = 'has-one';
     const HAS_MANY = 'has-many';
@@ -34,6 +28,16 @@ class Model
     /** 排他制御用項目 TODO 未実装 */
     const COLUMN_EXCLUSIVE = "exclusive";
 
+    protected $connection;
+    protected $database;
+    protected $table;
+
+    protected $properties = [];
+    protected $originals;
+    protected $relations;
+
+    /** @var int 直近のクエリで使用した自動生成のID */
+    private $last_insert_id = 0;
 
     /**
      * Connection名の取得
@@ -62,7 +66,7 @@ class Model
      */
     public function getPrimaryKey()
     {
-        return self::PRIMARY_KEY;
+        return static::PRIMARY_KEY;
     }
 
     /**
@@ -71,7 +75,22 @@ class Model
      */
     public function getPrimaryValue()
     {
-        return $this->{self::PRIMARY_KEY};
+        if(empty($this->{static::PRIMARY_KEY}))
+        {
+            return null;
+        }
+
+        return $this->{static::PRIMARY_KEY};
+    }
+
+
+    /**
+     * 直近のクエリで使用した自動生成のIDを返す
+     * @return number
+     */
+    public function getLastInsertId()
+    {
+        return $this->last_insert_id;
     }
 
 
@@ -88,13 +107,19 @@ class Model
             throw new \Exception("既存モデルからは新規追加できない。");
         }
 
-        database($this->connection)->insert($this->table, $row);
+        $row = empty($row) ? $this->toArray() : $row;
+
+        // TODO last_insert_idの整理
+        $this->last_insert_id = database($this->connection)->insert($this->table, $row);
+        $this->{static::PRIMARY_KEY} = $this->last_insert_id;
+
         return $this;
     }
 
+
     public function update(array $row=[])
     {
-        database($this->connection)->update($this->table, $row, [self::PRIMARY_KEY =>$this->getPrimaryValue()]);
+        database($this->connection)->update($this->table, $row, [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
         return $this;
     }
 
@@ -112,20 +137,20 @@ class Model
 
     public function delete()
     {
-        database($this->connection)->delete($this->table, [self::PRIMARY_KEY =>$this->getPrimaryValue()]);
+        database($this->connection)->delete($this->table, [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
     }
 
 
     public function hide()
     {
-        database($this->connection)->update($this->table, [self::COLUMN_DELETED=>TRUE], [self::PRIMARY_KEY =>$this->getPrimaryValue()]);
+        database($this->connection)->update($this->table, [static::COLUMN_DELETED=>TRUE], [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
         return $this;
     }
 
 
     public function show()
     {
-        database($this->connection)->update($this->table, [self::COLUMN_DELETED=>FALSE], [self::PRIMARY_KEY =>$this->getPrimaryValue()]);
+        database($this->connection)->update($this->table, [static::COLUMN_DELETED=>FALSE], [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
         return $this;
     }
 
