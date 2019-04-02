@@ -3,12 +3,28 @@ namespace Presto\Core\Helpers\Html;
 
 use Presto\Core\Traits\Singletonable;
 
-class Paging
+class PagingTag
 {
     use Singletonable;
 
     const PAGINATOR_COUNT = 10;
     const LIMIT_COUNT = 20;
+
+    protected $css_class = "";
+    protected $target = "";
+
+    public function css(string $css_class)
+    {
+        $this->css_class = $css_class;
+        return $this;
+    }
+
+    public function target(string $target)
+    {
+        $this->target = $target;
+        return $this;
+    }
+
 
     // ページング取得
     public function paging(array $rows, int $page=1, int $limit=self::LIMIT_COUNT)
@@ -44,7 +60,7 @@ class Paging
     // ページングヘルパー
     // -------------------------------------------------------
     // ページングヘルパー
-    public function html(int $count, int $limit=self::LIMIT_COUNT)
+    public function render(int $count, int $limit=self::LIMIT_COUNT)
     {
         $page = (int)input("page", 1);
         $base_url = $this->baseurl();
@@ -65,19 +81,19 @@ class Paging
         else
         {
             $prev = $page - 1;
-            echo "<li class='page-item'><a href='{$base_url}1' class='page-link'><span class='fa fa-angle-double-left'></span></a></li>";
-            echo "<li class='page-item'><a href='{$base_url}{$prev}' class='page-link'><span class='fa fa-angle-left'></span></a></li>";
+            echo "<li class='page-item'><a href='{$base_url}1' class='page-link {$this->css_class}' p-target='{$this->target}'><span class='fa fa-angle-double-left'></span></a></li>";
+            echo "<li class='page-item'><a href='{$base_url}{$prev}' class='page-link {$this->css_class}' p-target='{$this->target}'><span class='fa fa-angle-left'></span></a></li>";
         }
 
         for($i=$start; $i<=$end; $i++)
         {
             if($i == $page)
             {
-                echo "<li class='page-item active'><span class='page-link'>{$i}</span></li>";
+                echo "<li class='page-item active'><span class='page-link {$this->css_class}' p-target='{$this->target}'>{$i}</span></li>";
                 continue;
             }
 
-            echo "<li class='page-item'><a href='{$base_url}{$i}' class='page-link'>{$i}</a></li>";
+            echo "<li class='page-item'><a href='{$base_url}{$i}' class='page-link {$this->css_class}' p-target='{$this->target}'>{$i}</a></li>";
         }
 
         if($page == $end)
@@ -88,8 +104,8 @@ class Paging
         else
         {
             $next = $page + 1;
-            echo "<li class='page-item'><a href='{$base_url}{$next}'  class='page-link'><span class='fa fa-angle-right'></span></a></li>";
-            echo "<li class='page-item'><a href='{$base_url}{$total_page}'  class='page-link'><span class='fa fa-angle-double-right'></span></a></li>";
+            echo "<li class='page-item'><a href='{$base_url}{$next}'  class='page-link {$this->css_class}' p-target='{$this->target}'><span class='fa fa-angle-right'></span></a></li>";
+            echo "<li class='page-item'><a href='{$base_url}{$total_page}'  class='page-link {$this->css_class}' p-target='{$this->target}'><span class='fa fa-angle-double-right'></span></a></li>";
         }
 
         echo "</ul>";

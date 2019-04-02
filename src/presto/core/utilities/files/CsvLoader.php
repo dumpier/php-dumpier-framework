@@ -105,7 +105,7 @@ class CsvLoader
     {
         $rows = $this->find($csvfile, $parameter);
 
-        list($rows, $count) = paging()->paging($rows, $page);
+        list($rows, $count) = html()->paging()->paging($rows, $page);
         $fields = $this->getFields($csvfile);
 
         return [$rows, $count, $fields];

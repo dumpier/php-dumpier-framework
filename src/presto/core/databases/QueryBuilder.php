@@ -2,7 +2,7 @@
 namespace Presto\Core\Databases;
 
 use Presto\Core\Traits\Singletonable;
-use Presto\Core\Helpers\Html\Paging;
+use Presto\Core\Helpers\Html\PagingTag;
 use Presto\Core\Utilities\Paginator;
 
 class QueryBuilder
@@ -80,9 +80,9 @@ class QueryBuilder
         $page = (int)input("page", 1);
         $count = $this->count($table, $parameter);
 
-        list($start, ) = paging()->getStartEndRowNumber($count, $page);
+        list($start, ) = html()->paging()->getStartEndRowNumber($count, $page);
         $parameter["offset"] = $start;
-        $parameter["limit"] = Paging::LIMIT_COUNT;
+        $parameter["limit"] = PagingTag::LIMIT_COUNT;
         $rows = $this->select($table, $parameter);
 
         return new Paginator($rows, $count, $page);

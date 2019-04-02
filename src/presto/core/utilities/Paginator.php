@@ -2,19 +2,19 @@
 namespace Presto\Core\Utilities;
 
 use Presto\Core\Traits\Instanceable;
-use Presto\Core\Helpers\Html\Paging;
+use Presto\Core\Helpers\Html\PagingTag;
 
 class Paginator
 {
     use Instanceable;
 
-    protected $limit = Paging::LIMIT_COUNT;
+    protected $limit = PagingTag::LIMIT_COUNT;
     protected $page = 0;
     protected $total_count = 0;
     protected $rows = [];
 
 
-    public function __construct(array $rows, int $total_count, int $page=1, int $limit=Paging::LIMIT_COUNT)
+    public function __construct(array $rows, int $total_count, int $page=1, int $limit=PagingTag::LIMIT_COUNT)
     {
         $this->rows = $rows;
         $this->total_count = $total_count;

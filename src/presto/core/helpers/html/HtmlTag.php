@@ -7,113 +7,29 @@ class HtmlTag
 {
     use Singletonable;
 
+    /** @return \Presto\Core\Helpers\Html\TableTag */
+    public function table() { return TableTag::instance(); }
 
-    public function select(string $tagname, array $rows, $default=0, string $title="選択", string $append="")
-    {
-        echo "<select name={$tagname} class=\"form-control\">";
+    /** @return \Presto\Core\Helpers\Html\SelectTag */
+    public function select() { return SelectTag::instance(); }
 
-        echo "<option value=0>-- {$title} --</option>";
+    /** @return \Presto\Core\Helpers\Html\TreeTag */
+    public function tree() { return TreeTag::instance(); }
 
-        foreach ($rows as $key=>$val)
-        {
-            echo "<option value=\"{$key}\">{$val}{$append}</option>";
-        }
-
-        echo "</select>";
-    }
-
-    public function tree(array $array, int $recursion=0)
-    {
-        if(empty($array))
-        {
-            return "";
-        }
-
-        $string = "<ul>";
-
-        foreach ($array as $key=>$val)
-        {
-            if(is_array($val))
-            {
-                $string .= "<li>{$key} : ";
-                $string .= $this->toTreeString($val, $recursion+1);
-                $string .= "</li>";
-                continue;
-            }
-
-            $string .="<li>{$key} : {$val}</li>";
-        }
-
-        $string .= "</ul>";
-        return $string;
-    }
+    /** @return \Presto\Core\Helpers\Html\PagingTag */
+    public function paging() { return PagingTag::instance(); }
 
 
-    public function table(array $rows, array $header=[], array $parameter=[])
-    {
-        if(empty($rows))
-        {
-            echo "データがない";
-            return ;
-        }
-
-        // ヘッダー
-        $header = empty($header) ? array_keys($rows[0]) : $header;
-
-        // 出力項目
-        $fields = empty($parameter["fields"]) ? $header : $parameter["fields"];
-
-        echo "<div class='table-responsive'>";
-        echo "<table class='table table-counter table-hover table-striped'>";
-        echo "<thead>";
-        echo "<tr>";
-        foreach ($fields as $field)
-        {
-            echo "<th>{$field}</th>";
-        }
-        echo "</tr>";
-        echo "</thead>";
-
-
-        echo "</tbody>";
-        foreach ($rows as $no=>$row)
-        {
-            echo "<tr>";
-            foreach ($fields as $field)
-            {
-                echo "<td>";
-
-                if($field == arrayer()->get($parameter, "links.key"))
-                {
-                    $url = arrayer()->get($parameter, "links.url") . $row[$field];
-                    $prefix = arrayer()->get($parameter, "links.prefix");
-                    $attributes = arrayer()->get($parameter, "links.attributes");
-
-                    echo "<a href='{$url}' {$attributes}>{$prefix}";
-                    $this->echo($row[$field]);
-                    echo "</a></td>";
-                }
-                else
-                {
-                    $this->echo($row[$field]);
-                }
-                echo "</td>";
-            }
-
-            echo "</tr>";
-        }
-
-        echo "</tbody>";
-        echo "</table>";
-
-        echo "</div>";
-    }
-
+    /**
+     * XSS対応の表示
+     * @param mixed $val
+     */
     public function echo($val)
     {
         if(is_array($val))
         {
             $string = arrayer()->toTreeString($val);
+
             if(empty($string))
             {
                 return ;

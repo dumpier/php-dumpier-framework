@@ -29,7 +29,7 @@ if(! function_exists("template")) { /** @return \Presto\Core\Views\TemplateEngin
 
 // helper
 if(! function_exists("html")) { /** @return \Presto\Core\Helpers\Html\HtmlTag */ function html() { return \Presto\Core\Helpers\Html\HtmlTag::instance(); }}
-if(! function_exists("paging")) { /** @return \Presto\Core\Helpers\Html\Paging */ function paging() { return \Presto\Core\Helpers\Html\Paging::instance(); }}
+
 
 if(! function_exists("baseuri")){ /** @return string */ function baseuri() { return config("app", "baseuri"); }}
 if(! function_exists("domain")){ /** @return string */ function domain() { return $_SERVER['HTTP_HOST']; }}
