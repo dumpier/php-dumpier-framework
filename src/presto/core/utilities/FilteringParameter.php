@@ -2,7 +2,7 @@
 namespace Presto\Core\Utilities;
 
 use Presto\Core\Traits\Accessible;
-use Presto\Core\Helpers\Html\Paging;
+use Presto\Core\Helpers\Html\PagingTag;
 
 class FilteringParameter
 {
@@ -15,7 +15,7 @@ class FilteringParameter
     protected $offset = 0;
 
     /** @var integer LIMIT */
-    protected $limit = Paging::LIMIT_COUNT;
+    protected $limit = PagingTag::LIMIT_COUNT;
 
     /** @var array 並び替え */
     protected $order = [];
