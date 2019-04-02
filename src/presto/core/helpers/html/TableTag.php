@@ -92,7 +92,7 @@ class TableTag
         $this->fields = empty($this->fields) ? $this->header : $this->fields;
 
         // 高さ
-        $style = empty($this->table_height) ? "" : "height:{$this->table_height}px;";
+        $style = empty($this->height) ? "" : "height:{$this->height}px;";
 
         echo "<div class='table-responsive' style='{$style}'>";
         echo "<table class='table table-counter table-hover table-striped'>";
