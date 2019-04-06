@@ -6,6 +6,11 @@ use Presto\Core\Traits\Towable;
 use Presto\Core\Traits\Instanceable;
 use Presto\Core\Databases\QueryBuilder;
 
+/**
+ * @property array $table テーブル名
+ * @property array $properties テーブル項目一覧
+ *
+ */
 class Model
 {
     use Instanceable, Towable;
@@ -31,14 +36,32 @@ class Model
 
     protected $connection;
     protected $database;
-    protected $table;
 
-    protected $properties = [];
     protected $originals;
     protected $relations;
 
     /** @var int 直近のクエリで使用した自動生成のID */
     private $last_insert_id = 0;
+
+
+    /**
+     * プロパティの設定
+     * @param array $row
+     * @return \Presto\Core\Databases\Model\Model
+     */
+    public function properties(array $row)
+    {
+        foreach ($this->properties as $property)
+        {
+            if(isset($row[$property]))
+            {
+                $this->{$property} = $row[$property];
+            }
+        }
+
+        return $this;
+    }
+
 
     /**
      * Connection名の取得
@@ -120,6 +143,9 @@ class Model
 
     public function update(array $row=[])
     {
+        // TODO 再調整
+        $row = empty($row) ? $this->toArray() : $row;
+
         QueryBuilder::instance()->connect($this->connection)->update($this->table, $row, [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
         return $this;
     }

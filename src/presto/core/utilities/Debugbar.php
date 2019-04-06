@@ -193,7 +193,7 @@ class Debugbar
     private function logging()
     {
         // ファイルに書き込む
-        $directory = Pather::instance()->storage("debugbar/" . date("Ymd/H/"));
+        $directory = Pather::instance()->storage("debugbar/" . date("Y/m/d/H/"));
 
         if(!file_exists($directory))
         {
