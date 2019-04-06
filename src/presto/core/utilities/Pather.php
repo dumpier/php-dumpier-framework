@@ -33,7 +33,11 @@ class Pather
     }
 
     /** @return string */
-    public function framework(string $path="") { return Stringer::instance()->cleanDirectorySeparator(__DIR__ . DIRECTORY_SEPARATOR . $path); }
+    public function framework(string $path="")
+    {
+        $root = dirname(dirname(dirname(dirname(__DIR__))));
+        return Stringer::instance()->cleanDirectorySeparator("{$root}/{$path}");
+    }
 
     /** @return string */
     public function app(string $path="") { return path("app/{$path}"); }
