@@ -158,7 +158,7 @@ class QueryBuilder
     {
         $values = array_values($row);
         $sql_set = trim(implode("`= ?,`", array_keys($row)), ",`");
-        list($where, $binds) = where($condition);
+        list($where, $binds) = QueryToWhere::instance()->convert($condition);
 
         foreach ($binds as $val)
         {
@@ -173,7 +173,7 @@ class QueryBuilder
 
     public function delete(string $table, array $condition)
     {
-        list($where, $binds) = where($condition);
+        list($where, $binds) = QueryToWhere::instance()->convert($condition);
         $sql = "DELETE FROM `{$table}` {$where}";
 
         return $this->query($sql, $binds);
@@ -190,6 +190,11 @@ class QueryBuilder
     {
         $stmt = $this->execute($sql, $binds);
         Debugbar::instance()->queries($sql, $binds);
+
+        if($stmt->errno)
+        {
+            throw new \Exception("mysql error code: {$stmt->errno}, {$stmt->error}. sql:{$sql}, binds:" . json_encode($binds), $stmt->errno);
+        }
 
         return $stmt->errno;
     }
@@ -241,7 +246,7 @@ class QueryBuilder
 
         if(FALSE === $stmt)
         {
-            throw new \Exception($conn->error, $conn->errno);
+            throw new \Exception("mysql error:{$conn->errno}, {$conn->error}, sql:{$sql}, binds:" .json_encode($binds), $conn->errno);
         }
 
         // バインド処理

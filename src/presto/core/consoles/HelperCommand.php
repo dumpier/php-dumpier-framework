@@ -87,7 +87,7 @@ EOF;
     {
         $classname = str_replace(Pather::instance()->class(), "", str_replace(".php", "", $path));
         $classname = str_replace("/", "\\", $classname);
-        $classname = "\\App".Stringer::instance()->toPascal($classname);
+        $classname = "\\App\\".Stringer::instance()->toPascal($classname);
 
         return $classname;
     }

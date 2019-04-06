@@ -68,7 +68,7 @@ class Repository
      * 主キーで検索
      * @param int $primary_key
      * @param int $recursion
-     * @return array|mixed
+     * @return Model|NULL
      */
     public function findByPk(int $primary_key, int $recursion=0)
     {
@@ -79,7 +79,7 @@ class Repository
 
         $rows = $this->find($parameter, $recursion);
 
-        return empty($rows[0]) ? null : $rows[0];
+        return empty($rows[0]) ? NULL : $this->class::instance()->properties($rows[0]);
     }
 
 
