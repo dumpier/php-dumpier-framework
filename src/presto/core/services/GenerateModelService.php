@@ -155,7 +155,7 @@ class GenerateModelService extends \Presto\Core\Service
         $codes[] = " */";
         $codes[] = "class {$classname} extends Repository";
         $codes[] = "{";
-        $codes[] = "    protected \$model = {$dao_classname}::class;";
+        $codes[] = "    protected \$class = {$dao_classname}::class;";
         $codes[] = "}";
 
         return [$file, $codes];
