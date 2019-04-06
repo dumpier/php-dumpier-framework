@@ -27,8 +27,8 @@ class GenerateModelService extends \Presto\Core\Service
         // -------------------------------------
         foreach ($table->columns as $column)
         {
-            $type = $column->getType();
-            $codes[] = " * @property {$type} \${$column->Field} {$column->Comment}";
+            // $type = $column->getType();
+            // $codes[] = " * @property {$type} \${$column->Field} {$column->Comment}";
         }
 
         $codes[] = " */";
@@ -40,39 +40,31 @@ class GenerateModelService extends \Presto\Core\Service
         // -------------------------------------
         // テーブル定義の出力
         // -------------------------------------
-        $codes[] = "    public static \$COLUMNS = [";
+        $codes[] = "    /** テーブル名 */";
+        $codes[] = "    protected \$table = \"{$table->name}\";";
+        $codes[] = "";
+        $codes[] = "    /** 項目一覧 */";
+        $codes[] = "    protected \$properties = [";
         foreach ($table->columns as $column)
         {
             $type = $column->getType();
-            $codes[] = "        '{$column->Field}' =>['type'=> '{$type}', 'original_type' => '{$column->Type}', 'name' => '{$column->Comment}', ],";
+            $codes[] = "        \"{$column->Field}\",";
+            // $codes[] = "        '{$column->Field}' =>['type'=> '{$type}', 'original_type' => '{$column->Type}', 'comment' => '{$column->Comment}', ],";
         }
         $codes[] = "    ];";
         // -------------------------------------
 
-        // -------------------------------------
-        // モデル新規作成
-        // -------------------------------------
         $codes[] = "";
-        $codes[] = "    /**";
-        $codes[] = "     * 新規データ作成";
-        $codes[] = "     * @param array \$row";
-        $codes[] = "     * @return \\{$model_namespace}\\{$model_classname}";
-        $codes[] = "     */";
-        $codes[] = "    public static function add(array \$row=[])";
-        $codes[] = "    {";
-        $codes[] = "        \$self = new static;";
         $codes[] = "";
-        $codes[] = "        // 入力値のチェック";
-        $codes[] = "        \$self->validate(\$row);";
-        $codes[] = "";
-        $codes[] = "        // 代入処理";
-        $codes[] = "        \$self->initialize(\$row);";
-        $codes[] = "";
-        $codes[] = "        \$self->save();";
-        $codes[] = "        return \$self;";
-        $codes[] = "    }";
-        $codes[] = "";
-        // -------------------------------------
+
+        // 項目一覧
+        foreach ($table->columns as $column)
+        {
+            $type = $column->getType();
+            $codes[] = "    /** @var {$type} {$column->Comment} */";
+            $codes[] = "    public \${$column->Field} = " . $column->getDefaultValueExpression() . ";";
+            $codes[] = "";
+        }
 
         $codes[] = "}";
 
@@ -89,8 +81,6 @@ class GenerateModelService extends \Presto\Core\Service
     {
         // DB名、ネームスペースとクラス名
         list($dbname, $namespace, $classname, $file) = $this->getPropertyInfo($table);
-        // ファイルパース
-        $file = "Templates/Properties/{$dbname}/{$classname}.php";
 
         $codes = [];
         $codes[] = "namespace {$namespace};";
@@ -106,7 +96,6 @@ class GenerateModelService extends \Presto\Core\Service
         }
 
         $codes[] = "}";
-
 
         return [$file, $codes];
     }
@@ -136,7 +125,7 @@ class GenerateModelService extends \Presto\Core\Service
         $codes[] = "{";
         $codes[] = "    use {$phpdoc_classname};";
         $codes[] = "";
-        $codes[] = "    protected \$table = '{$table->name}';";
+        $codes[] = "    protected \$table = \"{$table->name}\";";
         $codes[] = "}";
 
         return [$file, $codes];
@@ -158,13 +147,13 @@ class GenerateModelService extends \Presto\Core\Service
         $codes = [];
         $codes[] = "namespace {$namespace};";
         $codes[] = "";
-        $codes[] = "use App\\Models\\Repositories\\Base{$dbname}Repository;";
+        $codes[] = "use Presto\Core\Databases\Model\Repository;";
         $codes[] = "use {$dao_namespace}\\{$dao_classname};";
         $codes[] = "";
         $codes[] = "/**";
         $codes[] = " * {$table->name}";
         $codes[] = " */";
-        $codes[] = "class {$classname} extends Base{$dbname}Repository";
+        $codes[] = "class {$classname} extends Repository";
         $codes[] = "{";
         $codes[] = "    protected \$model = {$dao_classname}::class;";
         $codes[] = "}";
@@ -175,42 +164,56 @@ class GenerateModelService extends \Presto\Core\Service
 
     private function getPHPDocInfo(Table $table)
     {
-        $dbname = Stringer::instance()->toPascal($table->connection);
+        list($connection, $connection_upper) = $this->getConnectionName($table);
         $classname = Stringer::instance()->toPascal($table->name)."DocTrait";
-        $namespace = "App\\Models\\Templates\\Docs\\{$dbname}";
-        $file = "Templates/Docs/{$dbname}/{$classname}.php";
+        $namespace = "App\\Models\\Templates\\Docs\\{$connection_upper}";
 
-        return [$dbname, $namespace, $classname, $file];
+        // フォルダ名は全部小文字
+        $file = "templates/docs/{$connection}/{$classname}.php";
+
+        return [$connection_upper, $namespace, $classname, $file];
     }
 
     private function getPropertyInfo(Table $table)
     {
-        $dbname = Stringer::instance()->toPascal($table->connection);
+        list($connection, $connection_upper) = $this->getConnectionName($table);
         $classname = Stringer::instance()->toPascal($table->name)."Property";
-        $namespace = "App\\Models\\Templates\\Properties\\{$dbname}";
-        $file = "Templates/Properties/{$dbname}/{$classname}.php";
+        $namespace = "App\\Models\\Templates\\Properties\\{$connection_upper}";
 
-        return [$dbname, $namespace, $classname, $file];
+        // フォルダ名は全部小文字
+        $file = "templates/properties/{$connection}/{$classname}.php";
+
+        return [$connection_upper, $namespace, $classname, $file];
     }
 
     private function getDaoInfo(Table $table)
     {
-        $dbname = Stringer::instance()->toPascal($table->connection);
+        list($connection, $connection_upper) = $this->getConnectionName($table);
         $classname = Stringer::instance()->toPascal($table->name)."Model";
-        $namespace = "App\\Models\\Daos\\{$dbname}";
-        $file = "Daos/{$dbname}/{$classname}.php";
+        $namespace = "App\\Models\\Daos\\{$connection_upper}";
 
-        return [$dbname, $namespace, $classname, $file];
+        // フォルダ名は全部小文字
+        $file = "daos/{$connection}/{$classname}.php";
+
+        return [$connection_upper, $namespace, $classname, $file];
     }
 
     private function getRepositoryInfo(Table $table)
     {
-        $dbname = Stringer::instance()->toPascal($table->connection);
+        list($connection, $connection_upper) = $this->getConnectionName($table);
         $classname = Stringer::instance()->toPascal($table->name)."Repository";
-        $namespace = "App\\Models\\Repositories\\{$dbname}";
-        $file = "Repositories/{$dbname}/{$classname}.php";
+        $namespace = "App\\Models\\Repositories\\{$connection_upper}";
 
-        return [$dbname, $namespace, $classname, $file];
+        // フォルダ名は全部小文字
+        $file = "repositories/{$connection}/{$classname}.php";
+
+        return [$connection_upper, $namespace, $classname, $file];
     }
 
+
+    private function getConnectionName(Table $table)
+    {
+        $connection = preg_replace("/_[0-9]+/", "", $table->connection);
+        return [$connection, Stringer::instance()->toPascal($connection)];
+    }
 }

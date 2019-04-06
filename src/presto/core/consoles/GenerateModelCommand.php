@@ -17,21 +17,29 @@ class GenerateModelCommand extends \Presto\Core\Consoles\Command
 {
     const IGNORE_TABLE = ['migrations'];
 
-    protected $services = [
-        GenerateModelService::class,
-    ];
-
     protected $signature = 'generate:model';
     protected $description = 'Generate Models';
     protected $base_path = "";
 
+    protected $services = [
+        GenerateModelService::class,
+    ];
 
 
-    public function handle()
+
+    public function handler()
     {
+        $this->info("###################################################");
+        $this->info("# START GENERAGE Repository, Model");
+        $this->info("###################################################");
+
         $this->initializeArguments();
 
         $this->generate();
+
+        $this->info("-----------------------------------------------------");
+        $this->info(" COMPLETED! ");
+        $this->info("-----------------------------------------------------");
     }
 
 
@@ -43,7 +51,7 @@ class GenerateModelCommand extends \Presto\Core\Consoles\Command
 
     private function generate()
     {
-        foreach (ConfigLoader::instance()->get('database.connections') as $connection=>$config)
+        foreach (ConfigLoader::instance()->get("database", "connections") as $connection=>$config)
         {
             $this->info("# Start generate database {$connection}'s models.");
 

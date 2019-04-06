@@ -10,6 +10,10 @@ class HelperCommand extends \Presto\Core\Consoles\Command
 
     public function handler()
     {
+        $this->info("###################################################");
+        $this->info("# START GENERAGE Service, Repository, Model");
+        $this->info("###################################################");
+
         // サービス一覧
         $service_comment = $this->getServiceAndRepositoryList(Pather::instance()->service());
         // リポジトリ一覧
@@ -23,17 +27,19 @@ class HelperCommand extends \Presto\Core\Consoles\Command
         $data = <<<EOF
 <?php
 {$phpcomment}
-class Controller extends \Presto\Core\Controller {}
+interface InjectableInterface {}
 
-{$phpcomment}
-class Service extends \Presto\Core\Service {}
-
-{$phpcomment}
-class Command extends \Presto\Core\Consoles\Command {}
+class Controller extends \Presto\Core\Controller implements InjectableInterface {}
+class Service extends \Presto\Core\Service implements InjectableInterface {}
+class Command extends \Presto\Core\Consoles\Command implements InjectableInterface {}
 EOF;
 
         // facade.phpを生成する
         file_put_contents($filename, $data);
+        $this->info("-----------------------------------------------------");
+        $this->info(" COMPLETED! ");
+        $this->info("-----------------------------------------------------");
+
     }
 
 
@@ -51,6 +57,7 @@ EOF;
             // フォルダの場合、下位の精査する
             if(is_dir($path))
             {
+                $this->info("# change folder : {$path}");
                 $phpcomment .= $this->getServiceAndRepositoryList($path);
             }
 
@@ -62,8 +69,10 @@ EOF;
 
             // クラス
             $class = $this->getClassByPath($path);
+
             // 変数名
             $property = $this->getPropertyNameByClass($class);
+            $this->info("\t- class: {$class}, property: {$property}");
 
             // PHPDocコメント
             $phpcomment .= " * @property {$class} \${$property}" . PHP_EOL;
@@ -86,7 +95,7 @@ EOF;
     // 変数名
     private function getPropertyNameByClass(string $class)
     {
-        $name = Stringer::instance()->toCamel(preg_replace("/^.+\\\\/", "", $class));
+        $name = Stringer::instance()->toPascal(preg_replace("/^.+\\\\/", "", $class));
         return str_replace("Repository", "", $name);
     }
 }
