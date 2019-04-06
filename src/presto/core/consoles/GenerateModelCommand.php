@@ -3,6 +3,9 @@ namespace Presto\Core\Consoles;
 
 use Presto\Core\Databases\Model\Entity\Table;
 use Presto\Core\Services\GenerateModelService;
+use Presto\Core\Utilities\Files\ConfigLoader;
+use Presto\Core\Databases\QueryBuilder;
+use Presto\Core\Utilities\Pather;
 
 
 /**
@@ -34,18 +37,18 @@ class GenerateModelCommand extends \Presto\Core\Consoles\Command
 
     private function initializeArguments()
     {
-        $this->base_path = path('storages/generates/app/models/');
+        $this->base_path = Pather::instance()->path('storages/generates/app/models/');
     }
 
 
     private function generate()
     {
-        foreach (config('database.connections') as $connection=>$config)
+        foreach (ConfigLoader::instance()->get('database.connections') as $connection=>$config)
         {
             $this->info("# Start generate database {$connection}'s models.");
 
             // テーブル一覧の取得
-            $tables = database($connection)->tables();
+            $tables = QueryBuilder::instance()->connect($connection)->tables();
 
             foreach ($tables as $val)
             {
@@ -76,7 +79,7 @@ class GenerateModelCommand extends \Presto\Core\Consoles\Command
         $this->info("  - Start generate {$table_name}'s models.");
 
         // 項目定義一覧
-        $columns = database($connection)->columns($table_name);
+        $columns = QueryBuilder::instance()->connect($connection)->columns($table_name);
 
         // テーブル定義を構造化する
         $table = new Table($connection, $table_name, $columns);

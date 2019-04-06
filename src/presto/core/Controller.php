@@ -76,12 +76,12 @@ class Controller
         // ぱんくずを追加
         $contents["breadcrumb"] = static::$breadcrumb;
 
-        return view()->type($this->view_type)->layout($this->layout)->template($this->template)->render($contents);
+        return View::instance()->type($this->view_type)->layout($this->layout)->template($this->template)->render($contents);
     }
 
 
     public function redirect(string $url, $code=Http::CODE_302)
     {
-        response()->redirect($url, $code);
+        Response::instance()->redirect($url, $code);
     }
 }

@@ -2,6 +2,8 @@
 namespace Presto\Core\Utilities\Files;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Utilities\Arrayer;
+use Presto\Core\Utilities\Pather;
 
 class ConfigLoader
 {
@@ -27,7 +29,7 @@ class ConfigLoader
             return null;
         }
 
-        return arrayer()->get($configs, $key);
+        return Arrayer::instance()->get($configs, $key);
     }
 
 
@@ -36,7 +38,7 @@ class ConfigLoader
         // キャッシュがある場合
         if(empty($this->configs[$filename]))
         {
-            $config_path = path("config/{$filename}.php");
+            $config_path = Pather::instance()->path("config/{$filename}.php");
 
             if( ! file_exists( $config_path ) )
             {

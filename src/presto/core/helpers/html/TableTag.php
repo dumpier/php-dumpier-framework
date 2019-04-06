@@ -2,6 +2,7 @@
 namespace Presto\Core\Helpers\Html;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Utilities\Arrayer;
 
 class TableTag
 {
@@ -141,19 +142,19 @@ class TableTag
         {
             echo "<td>";
 
-            if($field == arrayer()->get($this->links, "links.key"))
+            if($field == Arrayer::instance()->get($this->links, "links.key"))
             {
-                $url = arrayer()->get($this->links, "links.url") . $row[$field];
-                $prefix = arrayer()->get($this->links, "links.prefix");
-                $attributes = arrayer()->get($this->links, "links.attributes");
+                $url = Arrayer::instance()->get($this->links, "links.url") . $row[$field];
+                $prefix = Arrayer::instance()->get($this->links, "links.prefix");
+                $attributes = Arrayer::instance()->get($this->links, "links.attributes");
 
                 echo "<a href='{$url}' {$attributes}>{$prefix}";
-                html()->echo($row[$field]);
+                HtmlTag::instance()->echo($row[$field]);
                 echo "</a></td>";
             }
             else
             {
-                html()->echo($row[$field]);
+                HtmlTag::instance()->echo($row[$field]);
             }
             echo "</td>";
         }

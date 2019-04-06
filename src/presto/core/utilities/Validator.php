@@ -236,9 +236,9 @@ class Validator
         }
 
         // 比較演算の場合
-        if( expression()->is($case) )
+        if( Expression::instance()->is($case) )
         {
-            return expression()->compare($value, $case, ...$expectations);
+            return Expression::instance()->compare($value, $case, ...$expectations);
         }
 
         // その他
@@ -274,7 +274,7 @@ class Validator
 
             case self::LENGTH:
             case self::SIZE:
-                return expression()->compare(strlen($value), Expression::BETWEEN, ...$expectations);
+                return Expression::instance()->compare(strlen($value), Expression::BETWEEN, ...$expectations);
 
             default:
                 throw new \Exception("不明Validate[case:{$case}]");

@@ -1,6 +1,9 @@
 <?php
 namespace Presto\Core\Traits;
 
+use Presto\Core\Utilities\Stringer;
+use Presto\Core\Presto;
+
 /**
  * @property array $services
  * @property array $repositories
@@ -15,7 +18,7 @@ trait Injectable
 
     public function __get(string $property)
     {
-        $name = stringer()->toPascal($property);
+        $name = Stringer::instance()->toPascal($property);
 
         if(preg_match("/Service$/", $name))
         {
@@ -34,7 +37,7 @@ trait Injectable
         {
             if(preg_match("/{$name}/", $class))
             {
-                return app($class);
+                return Presto::instance()->app($class);
             }
         }
 

@@ -3,6 +3,7 @@ namespace Presto\Core;
 
 use Presto\Core\Traits\Singletonable;
 use Presto\Core\Traits\Accessible;
+use Presto\Core\Utilities\Stringer;
 
 class Routing
 {
@@ -29,7 +30,7 @@ class Routing
      */
     public function get(string $uri=null)
     {
-        $uri = $uri ?? request()->uri();
+        $uri = $uri ?? Request::instance()->uri();
 
         // 未定義の場合、自動で取得
         if(empty($this->routings[$uri]))
@@ -78,13 +79,13 @@ class Routing
         $controller = "";
         $controller_name = "\\App\Http\\Controllers\\";
 
-        $uri = trim(request()->uri(), "/");
+        $uri = trim(Request::instance()->uri(), "/");
         $array = explode("/", $uri);
 
         foreach ($array as $string)
         {
             array_shift($array);
-            $controller_name .= stringer()->toPascal($string);
+            $controller_name .= Stringer::instance()->toPascal($string);
 
             if( class_exists($controller_name . "Controller") )
             {

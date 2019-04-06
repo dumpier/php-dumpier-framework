@@ -2,6 +2,8 @@
 namespace Presto\Core\Views;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Utilities\Pregular;
+use Presto\Core\Utilities\Pather;
 
 class TemplateEngine
 {
@@ -41,13 +43,13 @@ class TemplateEngine
     public function includes(string $phtml)
     {
         // includeタグ一覧
-        $includes = pregular()->all("/@include\(.+?\)/", $phtml);
+        $includes = Pregular::instance()->all("/@include\(.+?\)/", $phtml);
 
         foreach ($includes as $include)
         {
             // includeするパーツを探す
             $file = preg_replace("/@include\( *'(.+)' *\)/", "$1", $include);
-            $file = template_path("{$file}.phtml");
+            $file = Pather::instance()->template("{$file}.phtml");
 
             if(! file_exists($file))
             {
@@ -72,7 +74,7 @@ class TemplateEngine
     public function variables(string $phtml)
     {
         // 例）{{ $xxx.yyy }}
-        $variables = pregular()->all("/\{\{ *\\$.+? *\}\} */", $phtml);
+        $variables = Pregular::instance()->all("/\{\{ *\\$.+? *\}\} */", $phtml);
 
         foreach ($variables as $variable)
         {
@@ -100,7 +102,7 @@ class TemplateEngine
     public function callables(string $phtml)
     {
         // 関数の呼び出し一覧 例）{@ debug() }
-        $variables = pregular()->all("/\{@ *.+? *\( *.* *\) *\}/", $phtml);
+        $variables = Pregular::instance()->all("/\{@ *.+? *\( *.* *\) *\}/", $phtml);
 
         foreach ($variables as $variable)
         {
@@ -162,7 +164,7 @@ class TemplateEngine
      */
     public function syntax(string $phtml, string $pattern, string $replace)
     {
-        foreach (pregular()->all($pattern, $phtml) as $matche)
+        foreach (Pregular::instance()->all($pattern, $phtml) as $matche)
         {
             $phtml = str_replace($matche, preg_replace($pattern, $replace, $matche), $phtml);
         }

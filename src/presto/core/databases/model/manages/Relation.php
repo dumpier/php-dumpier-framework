@@ -2,6 +2,7 @@
 namespace Presto\Core\Databases\Model\Manages;
 
 use Presto\Core\Databases\Model\Repository;
+use Presto\Core\Utilities\Expression;
 
 class Relation
 {
@@ -63,6 +64,6 @@ class Relation
             return true;
         }
 
-        return expression()->isMatch($row, $this->where);
+        return Expression::instance()->isMatch($row, $this->where);
     }
 }

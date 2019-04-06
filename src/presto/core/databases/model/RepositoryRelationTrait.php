@@ -5,6 +5,7 @@ use Presto\Core\Databases\Model\Manages\RelationManage;
 use Presto\Core\Databases\Model\Manages\Relation;
 use Presto\Core\Databases\Model\Manages\SliceManage;
 use Presto\Core\Databases\Model\Manages\ScopeManage;
+use Presto\Core\Utilities\Arrayer;
 
 /**
  * @property array $slices
@@ -67,7 +68,7 @@ trait RepositoryRelationTrait
         $foreigns = $relation->getRepository()->find(["condition"=>$cond], $recursion);
 
         // 子テーブルを親に代入
-        $rows = arrayer()->mapping($rows, $foreigns, $relation->join, $relation->type);
+        $rows = Arrayer::instance()->mapping($rows, $foreigns, $relation->join, $relation->type);
 
         return $rows;
     }

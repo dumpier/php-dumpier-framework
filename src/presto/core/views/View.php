@@ -3,6 +3,10 @@ namespace Presto\Core\Views;
 
 use Presto\Core\Traits\Singletonable;
 use Presto\Core\Views\Renders\HtmlRender;
+use Presto\Core\Utilities\Stringer;
+use Presto\Core\Utilities\Debugbar;
+use Presto\Core\Routing;
+use Presto\Core\Utilities\Pather;
 
 class View
 {
@@ -67,7 +71,7 @@ class View
      */
     public function render(array $contents=[])
     {
-        timelines("rendering start !");
+        Debugbar::instance()->timelines("rendering start !");
 
         switch ($this->type)
         {
@@ -125,7 +129,7 @@ class View
             return $this->getHtmlPath($this->layout);
         }
 
-        return framework_path('templates/html/layouts/html.phtml');
+        return Pather::instance()->framework('templates/html/layouts/html.phtml');
     }
 
 
@@ -143,12 +147,12 @@ class View
         }
 
         // テンプレートが未指定の場合
-        list($controller, $action, $parameter) = routing()->get();
+        list($controller, $action, ) = Routing::instance()->get();
         $template = strtolower($controller) . DIRECTORY_SEPARATOR . strtolower($action);
 
         $template = str_replace("app\\http\\controllers\\", "", $template);
         $template = str_replace("controller", "", $template);
-        $template = stringer()->cleanDirectorySeparator($template);
+        $template = Stringer::instance()->cleanDirectorySeparator($template);
 
         $template = $this->getHtmlPath("html/pages/{$template}");
 
@@ -168,12 +172,12 @@ class View
      */
     private function getHtmlPath(string $template)
     {
-        if(file_exists($path = template_path("{$template}.phtml")))
+        if(file_exists($path = Pather::instance()->template("{$template}.phtml")))
         {
             return $path;
         }
 
-        return framework_path("templates/{$template}.phtml");
+        return Pather::instance()->framework("templates/{$template}.phtml");
     }
     // ------------------------------------------------------------------------
 

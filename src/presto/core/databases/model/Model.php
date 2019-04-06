@@ -4,6 +4,7 @@ namespace Presto\Core\Databases\Model;
 
 use Presto\Core\Traits\Towable;
 use Presto\Core\Traits\Instanceable;
+use Presto\Core\Databases\QueryBuilder;
 
 class Model
 {
@@ -110,7 +111,7 @@ class Model
         $row = empty($row) ? $this->toArray() : $row;
 
         // TODO last_insert_idの整理
-        $this->last_insert_id = database($this->connection)->insert($this->table, $row);
+        $this->last_insert_id = QueryBuilder::instance()->connect($this->connection)->insert($this->table, $row);
         $this->{static::PRIMARY_KEY} = $this->last_insert_id;
 
         return $this;
@@ -119,7 +120,7 @@ class Model
 
     public function update(array $row=[])
     {
-        database($this->connection)->update($this->table, $row, [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
+        QueryBuilder::instance()->connect($this->connection)->update($this->table, $row, [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
         return $this;
     }
 
@@ -137,20 +138,20 @@ class Model
 
     public function delete()
     {
-        database($this->connection)->delete($this->table, [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
+        QueryBuilder::instance()->connect($this->connection)->delete($this->table, [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
     }
 
 
     public function hide()
     {
-        database($this->connection)->update($this->table, [static::COLUMN_DELETED=>TRUE], [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
+        QueryBuilder::instance()->connect($this->connection)->update($this->table, [static::COLUMN_DELETED=>TRUE], [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
         return $this;
     }
 
 
     public function show()
     {
-        database($this->connection)->update($this->table, [static::COLUMN_DELETED=>FALSE], [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
+        QueryBuilder::instance()->connect($this->connection)->update($this->table, [static::COLUMN_DELETED=>FALSE], [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
         return $this;
     }
 
