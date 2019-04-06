@@ -2,6 +2,7 @@
 namespace Presto\Core\Utilities;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Views\View;
 
 class Debugbar
 {
@@ -59,7 +60,7 @@ class Debugbar
 
         $layout = empty($layout) ? "html/layouts/empty" : $layout;
         $template = empty($template) ? "html/partials/debugbar" : $template;
-        echo view()->layout($layout)->template($template)->render($this->all());
+        echo View::instance()->layout($layout)->template($template)->render($this->all());
     }
 
 
@@ -192,7 +193,7 @@ class Debugbar
     private function logging()
     {
         // ファイルに書き込む
-        $directory = storage_path("debugbar/" . date("Ymd/H/"));
+        $directory = Pather::instance()->storage("debugbar/" . date("Ymd/H/"));
 
         if(!file_exists($directory))
         {

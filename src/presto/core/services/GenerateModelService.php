@@ -2,6 +2,7 @@
 namespace Presto\Core\Services;
 
 use Presto\Core\Databases\Model\Entity\Table;
+use Presto\Core\Utilities\Stringer;
 
 class GenerateModelService extends \Presto\Core\Service
 {
@@ -174,8 +175,8 @@ class GenerateModelService extends \Presto\Core\Service
 
     private function getPHPDocInfo(Table $table)
     {
-        $dbname = stringer()->toPascal($table->connection);
-        $classname = stringer()->toPascal($table->name)."DocTrait";
+        $dbname = Stringer::instance()->toPascal($table->connection);
+        $classname = Stringer::instance()->toPascal($table->name)."DocTrait";
         $namespace = "App\\Models\\Templates\\Docs\\{$dbname}";
         $file = "Templates/Docs/{$dbname}/{$classname}.php";
 
@@ -184,8 +185,8 @@ class GenerateModelService extends \Presto\Core\Service
 
     private function getPropertyInfo(Table $table)
     {
-        $dbname = stringer()->toPascal($table->connection);
-        $classname = stringer()->toPascal($table->name)."Property";
+        $dbname = Stringer::instance()->toPascal($table->connection);
+        $classname = Stringer::instance()->toPascal($table->name)."Property";
         $namespace = "App\\Models\\Templates\\Properties\\{$dbname}";
         $file = "Templates/Properties/{$dbname}/{$classname}.php";
 
@@ -194,8 +195,8 @@ class GenerateModelService extends \Presto\Core\Service
 
     private function getDaoInfo(Table $table)
     {
-        $dbname = stringer()->toPascal($table->connection);
-        $classname = stringer()->toPascal($table->name)."Model";
+        $dbname = Stringer::instance()->toPascal($table->connection);
+        $classname = Stringer::instance()->toPascal($table->name)."Model";
         $namespace = "App\\Models\\Daos\\{$dbname}";
         $file = "Daos/{$dbname}/{$classname}.php";
 
@@ -204,8 +205,8 @@ class GenerateModelService extends \Presto\Core\Service
 
     private function getRepositoryInfo(Table $table)
     {
-        $dbname = stringer()->toPascal($table->connection);
-        $classname = stringer()->toPascal($table->name)."Repository";
+        $dbname = Stringer::instance()->toPascal($table->connection);
+        $classname = Stringer::instance()->toPascal($table->name)."Repository";
         $namespace = "App\\Models\\Repositories\\{$dbname}";
         $file = "Repositories/{$dbname}/{$classname}.php";
 

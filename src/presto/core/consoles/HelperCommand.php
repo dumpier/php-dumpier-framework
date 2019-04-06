@@ -1,6 +1,9 @@
 <?php
 namespace Presto\Core\Consoles;
 
+use Presto\Core\Utilities\Stringer;
+use Presto\Core\Utilities\Pather;
+
 class HelperCommand extends \Presto\Core\Consoles\Command
 {
     protected $description = "helpers.php ヘルパーの作成";
@@ -8,14 +11,14 @@ class HelperCommand extends \Presto\Core\Consoles\Command
     public function handler()
     {
         // サービス一覧
-        $service_comment = $this->getServiceAndRepositoryList(service_path());
+        $service_comment = $this->getServiceAndRepositoryList(Pather::instance()->service());
         // リポジトリ一覧
-        $repository_comment = $this->getServiceAndRepositoryList(repository_path());
+        $repository_comment = $this->getServiceAndRepositoryList(Pather::instance()->repository());
 
         // サービスとリポジトリ一覧
         $phpcomment = "/**" . PHP_EOL . $service_comment ." *".PHP_EOL. $repository_comment . " */";
 
-        $filename = path("helpers.php");
+        $filename = Pather::instance()->path("helpers.php");
 
         $data = <<<EOF
 <?php
@@ -73,9 +76,9 @@ EOF;
     // クラス名
     private function getClassByPath(string $path)
     {
-        $classname = str_replace(class_path(), "", str_replace(".php", "", $path));
+        $classname = str_replace(Pather::instance()->class(), "", str_replace(".php", "", $path));
         $classname = str_replace("/", "\\", $classname);
-        $classname = "\\App".stringer()->toPascal($classname);
+        $classname = "\\App".Stringer::instance()->toPascal($classname);
 
         return $classname;
     }
@@ -83,7 +86,7 @@ EOF;
     // 変数名
     private function getPropertyNameByClass(string $class)
     {
-        $name = stringer()->toCamel(preg_replace("/^.+\\\\/", "", $class));
+        $name = Stringer::instance()->toCamel(preg_replace("/^.+\\\\/", "", $class));
         return str_replace("Repository", "", $name);
     }
 }

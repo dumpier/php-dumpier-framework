@@ -1,22 +1,23 @@
 <?php
-namespace Presto\Oauth;
+namespace Presto\Socialite;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Protocols\Http;
+use Presto\Core\Utilities\Files\ConfigLoader;
 
 class Google
 {
     use Singletonable;
 
-
     public function get_auth_url()
     {
-        $google = config("auth", "google.api");
-        $client = config("auth", "google.client");
-        $callback = config("auth", "google.client.callback");
+        $google = ConfigLoader::instance()->get("auth", "google.api");
+        $client = ConfigLoader::instance()->get("auth", "google.client");
+        $callback = ConfigLoader::instance()->get("auth", "google.client.callback");
 
         $querys = [];
         $querys['client_id'] = $client["id"];
-        $querys['redirect_uri'] = http()->url($callback);
+        $querys['redirect_uri'] = Http::instance()->url($callback);
         $querys['scope'] = $google["scope"];
         $querys['response_type'] = $client["response_type"];
 
@@ -26,8 +27,8 @@ class Google
 
     public function token(string $code)
     {
-        $client = config("auth", "google.client");
-        $google_api = config("auth", "google.api.token");
+        $client = ConfigLoader::instance()->get("auth", "google.client");
+        $google_api = ConfigLoader::instance()->get("auth", "google.api.token");
 
         $params = [];
         $params["code"] = $client["code"];;
@@ -69,7 +70,7 @@ class Google
             return $this->userinfos[$access_token];
         }
 
-        $google_api = config("auth", "google.api.userinfo");
+        $google_api = ConfigLoader::instance()->get("auth", "google.api.userinfo");
 
         if (empty($access_token))
         {

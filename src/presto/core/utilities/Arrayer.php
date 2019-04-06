@@ -87,6 +87,12 @@ class Arrayer
     }
 
 
+    public function toTreeString($val)
+    {
+
+    }
+
+
     /**
      * 二つの配列を結合する TODO TODO TODO TODO
      * @param array $rows
@@ -107,7 +113,7 @@ class Arrayer
 
                 $condition = array_combine($foreign_keys, $values);
 
-                $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? collection($childrens)->condition($condition)->all() : collection($childrens)->first($condition);
+                $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? Collection::instance($childrens)->condition($condition)->all() : Collection::instance($childrens)->first($condition);
             }
         }
 

@@ -2,6 +2,7 @@
 namespace Presto\Core\Protocols;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Presto;
 
 class Http
 {
@@ -72,7 +73,7 @@ class Http
         $uri = $uri ?? $_SERVER["REQUEST_URI"];
 
         // ベースURIを除く
-        $uri = preg_replace("/^" . preg_quote(baseuri()) . "/", "", $uri);
+        $uri = preg_replace("/^" . preg_quote(Presto::instance()->baseuri()) . "/", "", $uri);
         $uri = preg_replace("/\?.*/", "", $uri);
 
         return $uri;

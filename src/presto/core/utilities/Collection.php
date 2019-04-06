@@ -131,7 +131,7 @@ class Collection
 
     private function whereOrNowhere(bool $is_where=TRUE, string $name, $expression, ...$value)
     {
-        $rows = array_filter($this->rows, function($row) use ($is_where, $name, $expression, $value) { return $is_where && expression()->compare($row[$name], $expression, ...$value); });
+        $rows = array_filter($this->rows, function($row) use ($is_where, $name, $expression, $value) { return $is_where && Expression::instance()->compare($row[$name], $expression, ...$value); });
         return new static($rows);
     }
 
@@ -149,7 +149,7 @@ class Collection
 
         foreach ($this->rows as $row)
         {
-            if(expression()->isMatch($row, $condition))
+            if(Expression::instance()->isMatch($row, $condition))
             {
                 $rows[] = $row;
                 $count ++;

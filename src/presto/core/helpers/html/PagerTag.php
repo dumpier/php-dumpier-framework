@@ -2,15 +2,16 @@
 namespace Presto\Core\Helpers\Html;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Request;
 
-class PagingTag
+class PagerTag
 {
     use Singletonable;
 
     const PAGINATOR_COUNT = 10;
     const LIMIT_COUNT = 20;
 
-    protected $css_class = "";
+    protected $css_class = "presto-get";
     protected $target = "";
 
     public function css(string $css_class)
@@ -62,7 +63,7 @@ class PagingTag
     // ページングヘルパー
     public function render(int $count, int $limit=self::LIMIT_COUNT)
     {
-        $page = (int)input("page", 1);
+        $page = (int)Request::instance()->input("page", 1);
         $base_url = $this->baseurl();
 
         list($start_i, $end_i) = $this->getStartEndRowNumber($count, $page);

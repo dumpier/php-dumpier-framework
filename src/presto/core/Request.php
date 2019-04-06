@@ -2,6 +2,7 @@
 namespace Presto\Core;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Protocols\Http;
 
 class Request
 {
@@ -23,7 +24,7 @@ class Request
         else
         {
             // ajax
-            $this->is_ajax = http()->isAjax();
+            $this->is_ajax = Http::instance()->isAjax();
             $this->inputs = $_REQUEST;
         }
     }
@@ -51,7 +52,7 @@ class Request
      */
     public function uri()
     {
-        return http()->uri();
+        return Http::instance()->uri();
     }
 
 

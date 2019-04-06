@@ -2,8 +2,11 @@
 namespace Presto\Core\Databases;
 
 use Presto\Core\Traits\Singletonable;
-use Presto\Core\Helpers\Html\PagingTag;
+use Presto\Core\Helpers\Html\PagerTag;
 use Presto\Core\Utilities\Paginator;
+use Presto\Core\Utilities\Debugbar;
+use Presto\Core\Request;
+use Presto\Core\Utilities\Files\ConfigLoader;
 
 class QueryBuilder
 {
@@ -77,12 +80,12 @@ class QueryBuilder
      */
     public function paging(string $table, array $parameter=[])
     {
-        $page = (int)input("page", 1);
+        $page = (int)Request::instance()->input("page", 1);
         $count = $this->count($table, $parameter);
 
         list($start, ) = html()->paging()->getStartEndRowNumber($count, $page);
         $parameter["offset"] = $start;
-        $parameter["limit"] = PagingTag::LIMIT_COUNT;
+        $parameter["limit"] = PagerTag::LIMIT_COUNT;
         $rows = $this->select($table, $parameter);
 
         return new Paginator($rows, $count, $page);
@@ -186,7 +189,7 @@ class QueryBuilder
     private function query(string $sql, array $binds=[])
     {
         $stmt = $this->execute($sql, $binds);
-        debugbar()->queries($sql, $binds);
+        Debugbar::instance()->queries($sql, $binds);
 
         return $stmt->errno;
     }
@@ -208,7 +211,7 @@ class QueryBuilder
         // 1行のみ取得の場合
         if($count == 1)
         {
-            debugbar()->queries($sql, $binds);
+            Debugbar::instance()->queries($sql, $binds);
             return $result->fetch_array(MYSQLI_ASSOC);
         }
 
@@ -218,7 +221,7 @@ class QueryBuilder
             array_push($rows, $row);
         }
 
-        debugbar()->queries($sql, $binds);
+        Debugbar::instance()->queries($sql, $binds);
         return $rows;
     }
 
@@ -232,7 +235,7 @@ class QueryBuilder
      */
     private function execute(string $sql, array $binds=[])
     {
-        debugbar()->timerstart();
+        Debugbar::instance()->timerstart();
         $conn = $this->connection($this->current_conn, $this->current_database);
         $stmt = $conn->prepare($sql);
 
@@ -311,15 +314,15 @@ class QueryBuilder
     // condition配列からWHEREとBINDの取得
     private function where(array $parameter=[])
     {
-        return empty($parameter["condition"]) ? ["",[]] : where($parameter["condition"]);
+        return empty($parameter["condition"]) ? ["",[]] : QueryToWhere::instance()->convert($parameter["condition"]);
     }
 
     // database.configの取得
     private function config(string $name="", string $database="")
     {
-        $name = empty($name) ? config("database", "default") : $name;
+        $name = empty($name) ? ConfigLoader::instance()->get("database", "default") : $name;
 
-        $config = config("database", "connections.{$name}");
+        $config = ConfigLoader::instance()->get("database", "connections.{$name}");
 
         $config['host'] = empty($config['host']) ? "127.0.0.0" : $config['host'];
         $config['port'] = empty($config['port']) ? 3306 : $config['port'];

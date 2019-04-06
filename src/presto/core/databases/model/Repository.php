@@ -2,6 +2,7 @@
 namespace Presto\Core\Databases\Model;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Databases\QueryBuilder;
 
 class Repository
 {
@@ -51,7 +52,7 @@ class Repository
         $connection = $this->model->getConnection();
         $table = $this->model->getTable();
 
-        $rows = database($connection)->select($table, $parameter);
+        $rows = QueryBuilder::instance()->connect($connection)->select($table, $parameter);
 
         if( empty($recursion) && empty($parameter["recursion"]))
         {
@@ -108,6 +109,6 @@ class Repository
         $connection = $this->model->getConnection();
         $table = $this->model->getTable();
 
-        return database($connection)->paging($table, $parameter);
+        return QueryBuilder::instance()->connect($connection)->paging($table, $parameter);
     }
 }

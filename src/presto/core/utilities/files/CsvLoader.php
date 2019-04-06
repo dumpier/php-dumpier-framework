@@ -2,6 +2,8 @@
 namespace Presto\Core\Utilities\Files;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Utilities\Collection;
+use Presto\Core\Utilities\Debugbar;
 
 class CsvLoader
 {
@@ -62,7 +64,7 @@ class CsvLoader
             return $rows;
         }
 
-        return collection($rows)->condition($parameter["condition"])->all();
+        return Collection::instance($rows)->condition($parameter["condition"])->all();
     }
 
 
@@ -76,7 +78,7 @@ class CsvLoader
             return empty($rows[0]) ? [] : $rows[0];
         }
 
-        return collection($rows)->first($parameter["condition"]);
+        return Collection::instance($rows)->first($parameter["condition"]);
     }
 
 
@@ -91,7 +93,7 @@ class CsvLoader
             return empty($last) ? [] : $last;
         }
 
-        return collection($rows)->last($parameter["condition"]);
+        return Collection::instance($rows)->last($parameter["condition"]);
     }
 
 
@@ -131,7 +133,7 @@ class CsvLoader
             return $this->caches[$csvfile];
         }
 
-        timelines("Start load csv file .", [$csvfile]);
+        Debugbar::instance()->timelines("Start load csv file .", [$csvfile]);
 
         $spl = new \SplFileObject($csvfile);
         $spl->setFlags(\SplFileObject::READ_CSV | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
@@ -160,7 +162,7 @@ class CsvLoader
         $this->caches[$csvfile]["header"] = $headers;
         $this->caches[$csvfile]["body"] = array_slice($body, self::HEADER_LINE_COUNT);
 
-        timelines("Load csv file completed .", [$csvfile]);
+        Debugbar::instance()->timelines("Load csv file completed .", [$csvfile]);
 
         return $this->caches[$csvfile];
     }
