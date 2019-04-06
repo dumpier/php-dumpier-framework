@@ -4,17 +4,16 @@ namespace Presto\Core\Helpers\Html;
 use Presto\Core\Traits\Singletonable;
 use Presto\Core\Utilities\Arrayer;
 
-class TableTag
+class TableTag extends BaseTag
 {
     use Singletonable;
 
-    protected $height;
     protected $header = [];
     protected $fields = [];
     protected $links = [];
 
 
-    public function reset()
+    public function reset(...$properties)
     {
         $this->header = [];
         $this->fields = [];
@@ -22,25 +21,26 @@ class TableTag
         $this->links = [];
     }
 
+
     /**
      * ヘッダーの指定
-     * @param array $header
+     * @param array $value
      * @return \Presto\Core\Helpers\Html\TableTag
      */
-    public function header(array $header)
+    public function header(array $value)
     {
-        $this->header = $header;
+        $this->header = $value;
         return $this;
     }
 
     /**
      * 出力項目の指定
-     * @param array $fields
+     * @param array $value
      * @return \Presto\Core\Helpers\Html\TableTag
      */
-    public function fields(array $fields)
+    public function fields(array $value)
     {
-        $this->fields = $fields;
+        $this->fields = $value;
         return $this;
     }
 
@@ -56,18 +56,6 @@ class TableTag
     public function link(string $key, string $url, string $prefix, string $attributes)
     {
         $this->links[] = ["url"=>$url, "key"=>$key, "prefix"=>$prefix, "attributes"=>$attributes];
-        return $this;
-    }
-
-
-    /**
-     * 表示高さの指定
-     * @param int $height
-     * @return \Presto\Core\Helpers\Html\TableTag
-     */
-    public function height(int $height)
-    {
-        $this->height = $height;
         return $this;
     }
 
