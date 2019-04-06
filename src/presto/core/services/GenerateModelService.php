@@ -40,9 +40,9 @@ class GenerateModelService extends \Presto\Core\Service
         // -------------------------------------
         // テーブル定義の出力
         // -------------------------------------
-        $codes[] = "    /** テーブル名 */";
-        $codes[] = "    protected \$table = \"{$table->name}\";";
-        $codes[] = "";
+        // $codes[] = "    /** テーブル名 */";
+        // $codes[] = "    protected \$table = \"{$table->name}\";";
+        // $codes[] = "";
         $codes[] = "    /** 項目一覧 */";
         $codes[] = "    protected \$properties = [";
         foreach ($table->columns as $column)

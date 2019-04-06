@@ -65,6 +65,11 @@ class Column
 
         if("string"==$this->getType())
         {
+            if( in_array($this->Type, ["date", "datetime", "timestamp"]) )
+            {
+                return "NULL";
+            }
+
             return '"' . $val . '"';
         }
 
