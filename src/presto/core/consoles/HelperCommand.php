@@ -86,6 +86,7 @@ EOF;
     private function getClassByPath(string $path)
     {
         $classname = str_replace(Pather::instance()->class(), "", str_replace(".php", "", $path));
+        $classname = Stringer::instance()->cleanDirectorySeparator($classname);
         $classname = str_replace("/", "\\", $classname);
         $classname = "\\App\\".Stringer::instance()->toPascal($classname);
 

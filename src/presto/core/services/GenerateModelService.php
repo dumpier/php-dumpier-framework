@@ -40,9 +40,9 @@ class GenerateModelService extends \Presto\Core\Service
         // -------------------------------------
         // テーブル定義の出力
         // -------------------------------------
-        $codes[] = "    /** テーブル名 */";
-        $codes[] = "    protected \$table = \"{$table->name}\";";
-        $codes[] = "";
+        // $codes[] = "    /** テーブル名 */";
+        // $codes[] = "    protected \$table = \"{$table->name}\";";
+        // $codes[] = "";
         $codes[] = "    /** 項目一覧 */";
         $codes[] = "    protected \$properties = [";
         foreach ($table->columns as $column)
@@ -155,7 +155,7 @@ class GenerateModelService extends \Presto\Core\Service
         $codes[] = " */";
         $codes[] = "class {$classname} extends Repository";
         $codes[] = "{";
-        $codes[] = "    protected \$model = {$dao_classname}::class;";
+        $codes[] = "    protected \$class = {$dao_classname}::class;";
         $codes[] = "}";
 
         return [$file, $codes];

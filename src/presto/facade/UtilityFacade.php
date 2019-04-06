@@ -41,4 +41,8 @@ class UtilityFacade
 
     /** @return \Presto\Core\Utilities\Breadcrumb */
     public function breadcrumb(array $rows=[]) { return \Presto\Core\Utilities\Breadcrumb::instance()->adds($rows); }
+
+    /** @return \Presto\Core\Utilities\Lottery */
+    public function lottery() { return \Presto\Core\Utilities\Lottery::instance(); }
+
 }

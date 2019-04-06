@@ -3,7 +3,7 @@ namespace Presto\Core\Helpers\Html;
 
 use Presto\Core\Traits\Singletonable;
 
-class TreeTag
+class TreeTag extends BaseTag
 {
     use Singletonable;
 
