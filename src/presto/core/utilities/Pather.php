@@ -21,6 +21,7 @@ class Pather
         }
         else
         {
+            //  TODO 簡略化というか、このファイルの場所が変わる都度変わるのを何とかする
             $this->root = dirname(dirname(dirname(dirname(dirname(dirname(dirname(__DIR__)))))));
         }
     }
@@ -35,6 +36,7 @@ class Pather
     /** @return string */
     public function framework(string $path="")
     {
+        //  TODO 簡略化というか、このファイルの場所が変わる都度変わるのを何とかする
         $root = dirname(dirname(dirname(dirname(__DIR__))));
         return Stringer::instance()->cleanDirectorySeparator("{$root}/{$path}");
     }
