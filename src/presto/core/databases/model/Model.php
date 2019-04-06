@@ -6,6 +6,11 @@ use Presto\Core\Traits\Towable;
 use Presto\Core\Traits\Instanceable;
 use Presto\Core\Databases\QueryBuilder;
 
+/**
+ * @property array $table テーブル名
+ * @property array $properties テーブル項目一覧
+ *
+ */
 class Model
 {
     use Instanceable, Towable;
@@ -31,9 +36,7 @@ class Model
 
     protected $connection;
     protected $database;
-    protected $table;
 
-    protected $properties = [];
     protected $originals;
     protected $relations;
 
