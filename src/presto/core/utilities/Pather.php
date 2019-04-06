@@ -21,7 +21,7 @@ class Pather
         }
         else
         {
-            $this->root = dirname(dirname(dirname(__DIR__)));
+            $this->root = dirname(dirname(dirname(dirname(dirname(dirname(dirname(__DIR__)))))));
         }
 
         var_dump($this->root);
