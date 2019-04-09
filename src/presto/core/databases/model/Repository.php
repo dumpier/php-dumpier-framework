@@ -13,7 +13,7 @@ class Repository
     const HAS_MANY = "has-many";
 
 
-    /** @var string モデルクラス */
+    /** @var string|Model モデルクラス */
     protected $class;
 
     /** @var Model モデルのインスタンス */
@@ -27,7 +27,7 @@ class Repository
 
     public function __construct()
     {
-        $this->model = new $this->class;
+        $this->model = $this->class::instance();
     }
 
 
@@ -54,13 +54,15 @@ class Repository
 
         $rows = QueryBuilder::instance()->connect($connection)->select($table, $parameter);
 
-        if( empty($recursion) && empty($parameter["recursion"]))
+        $recursion = empty($parameter["recursion"]) ? $recursion : $parameter["recursion"];
+
+        if( empty($recursion)  )
         {
             return $rows;
         }
 
         // リレーションのロード
-        return $this->loadRelations($rows);
+        return $this->loadRelations($rows, $recursion);
     }
 
 
@@ -79,7 +81,7 @@ class Repository
 
         $rows = $this->find($parameter, $recursion);
 
-        return empty($rows[0]) ? NULL : $this->class::instance()->properties($rows[0]);
+        return empty($rows[0]) ? NULL : $this->class::instance(array_shift($rows));
     }
 
 
@@ -94,7 +96,7 @@ class Repository
         $parameter["limit"] = 1;
         $rows = $this->find($parameter, $recursion);
 
-        return empty($rows[0]) ? null : $rows[0];
+        return empty($rows[0]) ? null : $this->class::instance(array_shift($rows));
     }
 
 
@@ -111,4 +113,5 @@ class Repository
 
         return QueryBuilder::instance()->connect($connection)->paging($table, $parameter);
     }
+
 }
