@@ -44,6 +44,11 @@ class Model
     private $last_insert_id = 0;
 
 
+    public function __construct(array $row=[])
+    {
+        $this->properties($row);
+    }
+
     /**
      * プロパティの設定
      * @param array $row

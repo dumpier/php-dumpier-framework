@@ -286,6 +286,8 @@ class QueryBuilder
         // 接続がある場合
         if( ! empty($this->connections[$name][$database]) )
         {
+            $this->current_conn = $name;
+            $this->current_database = $database;
             return $this->connections[$name][$database];
         }
 
