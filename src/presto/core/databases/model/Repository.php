@@ -3,6 +3,10 @@ namespace Presto\Core\Databases\Model;
 
 use Presto\Core\Traits\Singletonable;
 use Presto\Core\Databases\QueryBuilder;
+use Presto\Core\Utilities\Collection;
+use Presto\Core\Request;
+use Presto\Core\Helpers\Html\PagerTag;
+use Presto\Core\Utilities\Paginator;
 
 class Repository
 {
@@ -53,16 +57,29 @@ class Repository
         $table = $this->model->getTable();
 
         $rows = QueryBuilder::instance()->connect($connection)->select($table, $parameter);
+        $collection = Collection::instance($rows, $this->class);
 
         $recursion = empty($parameter["recursion"]) ? $recursion : $parameter["recursion"];
 
         if( empty($recursion)  )
         {
-            return $rows;
+            return $collection;
         }
 
         // リレーションのロード
-        return $this->loadRelations($rows, $recursion);
+        return $this->loadRelations($collection, $recursion);
+    }
+
+    /**
+     * カウント
+     * @param array $parameter
+     * @return number
+     */
+    public function count(array $parameter=[])
+    {
+        $connection = $this->model->getConnection();
+        $table = $this->model->getTable();
+        return QueryBuilder::instance()->connect($connection)->count($table, $parameter);
     }
 
 
@@ -81,7 +98,7 @@ class Repository
 
         $rows = $this->find($parameter, $recursion);
 
-        return empty($rows[0]) ? NULL : $this->class::instance(array_shift($rows));
+        return $rows->first();
     }
 
 
@@ -96,7 +113,7 @@ class Repository
         $parameter["limit"] = 1;
         $rows = $this->find($parameter, $recursion);
 
-        return empty($rows[0]) ? null : $this->class::instance(array_shift($rows));
+        return $rows->first();
     }
 
 
@@ -108,10 +125,16 @@ class Repository
      */
     public function paging(array $parameter=[], int $recursion=0)
     {
-        $connection = $this->model->getConnection();
-        $table = $this->model->getTable();
+        $page = (int)Request::instance()->input("page", 1);
+        $count = $this->count($parameter);
 
-        return QueryBuilder::instance()->connect($connection)->paging($table, $parameter);
+        list($start, ) = PagerTag::instance()->getStartEndRowNumber($count, $page);
+        $parameter["offset"] = $start;
+        $parameter["limit"] = PagerTag::LIMIT_COUNT;
+
+        $rows = $this->find($parameter, $recursion);
+
+        return Paginator::instance($rows, $count, $page);
     }
 
 }

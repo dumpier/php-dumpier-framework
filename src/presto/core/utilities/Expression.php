@@ -147,12 +147,12 @@ class Expression
 
     /**
      * 指定条件に該当するデータであるか
-     * @param array $row
+     * @param \ArrayAccess|array $row
      * @param array $condition
      * @param bool $isOr
      * @return boolean
      */
-    public function isMatch(array $row, array $condition, bool $isOr=FALSE)
+    public function isMatch($row, array $condition, bool $isOr=FALSE)
     {
         foreach ($condition as $key=>$val)
         {

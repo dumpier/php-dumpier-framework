@@ -11,7 +11,7 @@ use Presto\Core\Databases\QueryBuilder;
  * @property array $properties テーブル項目一覧
  *
  */
-class Model
+class Model implements \ArrayAccess
 {
     use Instanceable, Towable;
 
@@ -42,6 +42,32 @@ class Model
 
     /** @var int 直近のクエリで使用した自動生成のID */
     private $last_insert_id = 0;
+
+
+    // ------------------------------------------------
+    // ArrayAccess
+    // ------------------------------------------------
+    public function offsetExists ( $offset )
+    {
+        return isset($this->{$offset});
+    }
+    public function offsetGet ( $offset )
+    {
+        return isset($this->{$offset}) ? $this->{$offset} : null;
+    }
+    public function offsetSet ( $offset , $value )
+    {
+        if(!in_array($offset, $this->properties))
+        {
+            throw new \Exception("Modelに存在しない項目[{$offset}]");
+        }
+        $this->{$offset} = $value;
+    }
+    public function offsetUnset ( $offset )
+    {
+        unset($this->{$offset});
+    }
+    // ------------------------------------------------
 
 
     public function __construct(array $row=[])
