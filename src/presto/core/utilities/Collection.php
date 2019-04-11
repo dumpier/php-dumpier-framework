@@ -2,10 +2,14 @@
 namespace Presto\Core\Utilities;
 
 use Presto\Core\Traits\Instanceable;
+use Presto\Core\Traits\Bases\ArrayAccessTrait;
+use Presto\Core\Traits\Bases\IteratorTrait;
 
-class Collection
+class Collection implements \ArrayAccess, \Iterator
 {
     use Instanceable;
+    use ArrayAccessTrait;
+    use IteratorTrait;
 
     /** @var array */
     protected $rows;
@@ -14,12 +18,41 @@ class Collection
     protected $count;
 
 
-    public function __construct(array $rows=[])
+    public function __construct(array $rows=[], $class="")
     {
-        $this->rows = $rows;
+        $this->rows = ($class) ? $this->converts($rows, $class) : $rows;
         $this->count = count($this->rows);
     }
 
+    private function converts(array $rows, string $class)
+    {
+        $result = [];
+        foreach ($rows as $row)
+        {
+            $result[] = $this->convert($row, $class);
+        }
+
+        return $result;
+    }
+
+    private function convert(array $row, string $class)
+    {
+        return new $class($row);
+    }
+
+
+    // TODO 改良
+    public function toArray()
+    {
+        $rows = [];
+
+        foreach ($this->rows as $key=>$row)
+        {
+            $rows[$key] = is_array($row) ? $row : $row->toArray();
+        }
+
+        return $rows;
+    }
 
     /**
      * 全部取得
@@ -131,7 +164,10 @@ class Collection
 
     private function whereOrNowhere(bool $is_where=TRUE, string $name, $expression, ...$value)
     {
-        $rows = array_filter($this->rows, function($row) use ($is_where, $name, $expression, $value) { return $is_where && Expression::instance()->compare($row[$name], $expression, ...$value); });
+        $rows = array_filter($this->rows, function($row) use ($is_where, $name, $expression, $value) {
+            return $is_where && Expression::instance()->compare($row[$name], $expression, ...$value);
+        });
+
         return new static($rows);
     }
 

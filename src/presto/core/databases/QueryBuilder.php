@@ -73,26 +73,6 @@ class QueryBuilder
 
 
     /**
-     * ページング
-     * @param string $table
-     * @param array $parameter
-     * @return \Presto\Core\Utilities\Paginator
-     */
-    public function paging(string $table, array $parameter=[])
-    {
-        $page = (int)Request::instance()->input("page", 1);
-        $count = $this->count($table, $parameter);
-
-        list($start, ) = html()->paging()->getStartEndRowNumber($count, $page);
-        $parameter["offset"] = $start;
-        $parameter["limit"] = PagerTag::LIMIT_COUNT;
-        $rows = $this->select($table, $parameter);
-
-        return new Paginator($rows, $count, $page);
-    }
-
-
-    /**
      * カウント
      * @param string $table
      * @param array $parameter

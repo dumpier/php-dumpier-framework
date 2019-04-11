@@ -8,13 +8,16 @@ class Paginator
 {
     use Instanceable;
 
+
     protected $limit = PagerTag::LIMIT_COUNT;
     protected $page = 0;
     protected $total_count = 0;
-    protected $rows = [];
+
+    /** @var Collection|array */
+    protected $rows;
 
 
-    public function __construct(array $rows, int $total_count, int $page=1, int $limit=PagerTag::LIMIT_COUNT)
+    public function __construct($rows, int $total_count, int $page=1, int $limit=PagerTag::LIMIT_COUNT)
     {
         $this->rows = $rows;
         $this->total_count = $total_count;
@@ -71,6 +74,17 @@ class Paginator
 
     public function all()
     {
+        return $this->rows;
+    }
+
+
+    public function toArray()
+    {
+        if($this->rows instanceof Collection)
+        {
+            return $this->rows->toArray();
+        }
+
         return $this->rows;
     }
 }
