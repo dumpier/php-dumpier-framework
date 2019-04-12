@@ -27,7 +27,7 @@ class TemplateEngine
         $phtml = $this->callables($phtml);
 
         // PHP構文タグ
-        $phtml = $this->syntaxes($phtml);
+        $phtml = $this->directives($phtml);
 
         $phtml = (string)preg_replace("/\?>(\s*)<\?php/", "$1", $phtml);
         return $phtml;
@@ -121,9 +121,9 @@ class TemplateEngine
 
 
     /**
-     * PHP構文に変換するタグ一覧
+     * PHP指令に変換するタグ一覧
      * */
-    const SYNTAX_LIST = [
+    const DIRECTIVE_LIST = [
         "foreach" => ["pattern"=>"/@foreach *\((.+)\) */m", "replace"=>"<?php foreach($1) {  ?>", ],
         "endforeach" => ["pattern"=>"/@endforeach */m", "replace"=>"<?php } ?>", ],
 
@@ -141,28 +141,28 @@ class TemplateEngine
 
 
     /**
-     * 独自タグをPHP構文に変換
+     * 独自タグをPHP指令に変換
      * @param string $phtml
      * @return string
      */
-    public function syntaxes(string $phtml)
+    public function directives(string $phtml)
     {
-        foreach (self::SYNTAX_LIST as $syntax)
+        foreach (self::DIRECTIVE_LIST as $directive)
         {
-            $phtml = $this->syntax($phtml, $syntax['pattern'], $syntax['replace']);
+            $phtml = $this->directive($phtml, $directive['pattern'], $directive['replace']);
         }
 
         return $phtml;
     }
 
     /**
-     * 独自タグをPHP構文に変換
+     * 独自タグをPHP指令に変換
      * @param string $phtml
      * @param string $pattern
      * @param string $replace
      * @return string
      */
-    public function syntax(string $phtml, string $pattern, string $replace)
+    public function directive(string $phtml, string $pattern, string $replace)
     {
         foreach (Pregular::instance()->all($pattern, $phtml) as $matche)
         {
