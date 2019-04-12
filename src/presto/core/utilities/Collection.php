@@ -24,6 +24,9 @@ class Collection implements \ArrayAccess, \Iterator
         $this->count = count($this->rows);
     }
 
+    // ----------------------------------------------------------
+    // クラスの変換 TODO 改良
+    // ----------------------------------------------------------
     private function converts(array $rows, string $class)
     {
         $result = [];
@@ -40,7 +43,6 @@ class Collection implements \ArrayAccess, \Iterator
         return new $class($row);
     }
 
-
     // TODO 改良
     public function toArray()
     {
@@ -53,6 +55,8 @@ class Collection implements \ArrayAccess, \Iterator
 
         return $rows;
     }
+    // ----------------------------------------------------------
+
 
     /**
      * 全部取得
