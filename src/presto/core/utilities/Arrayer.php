@@ -95,8 +95,8 @@ class Arrayer
 
     /**
      * 二つの配列を結合する TODO TODO TODO TODO
-     * @param Collection|Model|array|mixed $rows
-     * @param Collection|Model|array|mixed $childrens
+     * @param Collection|Model[]|array|mixed $rows
+     * @param Collection|Model[]|array|mixed $childrens
      * @param array $joins JOIN Condition
      * @param string $type
      * @return array

@@ -20,12 +20,14 @@ class Collection implements \ArrayAccess, \Iterator
 
     public function __construct($rows=[], $class="")
     {
-        if($rows instanceof Collection)
+        if($rows instanceof self)
         {
-            return $rows;
+            $this->rows = $rows->all();
         }
-
-        $this->rows = ($class) ? $this->converts($rows, $class) : $rows;
+        else
+        {
+            $this->rows = ($class) ? $this->converts($rows, $class) : $rows;
+        }
     }
 
     // ----------------------------------------------------------
