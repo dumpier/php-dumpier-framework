@@ -57,7 +57,7 @@ class Relation
     }
 
 
-    public function isWhereTarget(array $row)
+    public function isWhereTarget(\ArrayAccess $row)
     {
         if(empty($this->where))
         {

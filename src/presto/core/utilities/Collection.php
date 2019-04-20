@@ -12,22 +12,26 @@ class Collection implements \ArrayAccess, \Iterator
     use IteratorTrait;
 
     /** @var array */
-    protected $rows;
+    protected $rows=[];
 
     /** @var int */
-    protected $count;
+    protected $count = 0;
 
 
-    public function __construct(array $rows=[], $class="")
+    public function __construct($rows=[], $class="")
     {
+        if($rows instanceof Collection)
+        {
+            return $rows;
+        }
+
         $this->rows = ($class) ? $this->converts($rows, $class) : $rows;
-        $this->count = count($this->rows);
     }
 
     // ----------------------------------------------------------
     // クラスの変換 TODO 改良
     // ----------------------------------------------------------
-    private function converts(array $rows, string $class)
+    private function converts($rows, string $class)
     {
         $result = [];
         foreach ($rows as $row)
@@ -38,7 +42,7 @@ class Collection implements \ArrayAccess, \Iterator
         return $result;
     }
 
-    private function convert(array $row, string $class)
+    private function convert($row, string $class)
     {
         return new $class($row);
     }
@@ -47,13 +51,16 @@ class Collection implements \ArrayAccess, \Iterator
     public function toArray()
     {
         $rows = [];
-
         foreach ($this->rows as $key=>$row)
         {
             $rows[$key] = is_array($row) ? $row : $row->toArray();
         }
-
         return $rows;
+    }
+
+    public function toJson()
+    {
+        return json_encode($this->toArray(), JSON_UNESCAPED_SLASHES);
     }
     // ----------------------------------------------------------
 
