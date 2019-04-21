@@ -4,6 +4,7 @@ namespace Presto\Core\Utilities;
 use Presto\Core\Traits\Instanceable;
 use Presto\Core\Helpers\Html\PagerTag;
 use Presto\Core\Traits\Accessible;
+use Presto\Core\Databases\Model\Model;
 
 class Paginator
 {
@@ -15,7 +16,7 @@ class Paginator
     protected $page = 0;
     protected $count = 0;
 
-    /** @var Collection|array */
+    /** @var Collection|Model[]|array */
     protected $rows;
 
 

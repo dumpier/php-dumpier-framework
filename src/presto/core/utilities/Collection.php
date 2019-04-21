@@ -67,6 +67,33 @@ class Collection implements \ArrayAccess, \Iterator
     // ----------------------------------------------------------
 
 
+    // ----------------------------------------------------------
+    // 追加、削除など
+    // ----------------------------------------------------------
+    // 追加
+    public function put($name, $row=null)
+    {
+        if($row === null)
+        {
+            $this->rows[] = $name;
+        }
+        else
+        {
+            $this->rows[$name] = $row;
+        }
+
+        return $this;
+    }
+
+
+    // 削除
+    public function delete(string $name, $expression, ...$value)
+    {
+        return $this->nowhere($name, $expression, $value);
+    }
+    // ----------------------------------------------------------
+
+
     /**
      * 全部取得
      * @return array
@@ -215,6 +242,22 @@ class Collection implements \ArrayAccess, \Iterator
 
 
     /**
+     * 並び替え
+     * @param string $property
+     * @param int $sort
+     * @return \Presto\Core\Utilities\Collection
+     */
+    public function sort(string $property, int $sort=SORT_ASC)
+    {
+        $properties = array_column($this->rows, $property);
+
+        $rows = array_multisort($properties, $sort, $this->rows);
+
+        return new static($rows);
+    }
+
+
+    /**
      * 配列の一部を展開する
      * @return \Presto\Core\Utilities\Collection
      */
@@ -236,35 +279,4 @@ class Collection implements \ArrayAccess, \Iterator
     {
         return new static(array_chunk($this->rows, $size, $preserve));
     }
-
-
-    /**
-     * 並び替え
-     * @param string $property
-     * @param int $sort
-     * @return \Presto\Core\Utilities\Collection
-     */
-    public function sort(string $property, int $sort=SORT_ASC)
-    {
-        $properties = array_column($this->rows, $property);
-
-        $rows = array_multisort($properties, $sort, $this->rows);
-
-        return new static($rows);
-    }
-
-
-    // 追加
-    public function put($row)
-    {
-        $this->rows[] = $row;
-        return $this;
-    }
-
-    // 削除
-    public function delete(string $name, $expression, ...$value)
-    {
-        return $this->nowhere($name, $expression, $value);
-    }
-
 }

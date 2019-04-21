@@ -35,7 +35,7 @@ trait Injectable
 
         foreach ($classes as $class)
         {
-            if(preg_match("/{$name}/", $class))
+            if(preg_match("/\\\\{$name}/", $class))
             {
                 return Presto::instance()->app($class);
             }
