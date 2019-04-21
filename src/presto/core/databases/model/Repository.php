@@ -134,7 +134,7 @@ class Repository
 
         $rows = $this->find($parameter, $recursion);
 
-        return Paginator::instance($rows, $count, $page);
+        return Paginator::instance($rows)->count($count)->page($page);
     }
 
 }

@@ -89,7 +89,7 @@ class QueryBuilder
         $parameter["limit"] = PagerTag::LIMIT_COUNT;
         $rows = $this->select($table, $parameter);
 
-        return new Paginator($rows, $count, $page);
+        return Paginator::instance($rows)->count($count)->page($page);
     }
 
 
