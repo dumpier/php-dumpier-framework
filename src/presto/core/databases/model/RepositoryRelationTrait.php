@@ -6,6 +6,7 @@ use Presto\Core\Databases\Model\Manages\Relation;
 use Presto\Core\Databases\Model\Manages\SliceManage;
 use Presto\Core\Databases\Model\Manages\ScopeManage;
 use Presto\Core\Utilities\Arrayer;
+use Presto\Core\Utilities\Collection;
 
 /**
  * @property array $slices
@@ -26,10 +27,10 @@ trait RepositoryRelationTrait
 
     /**
      * 全リレーションのロード
-     * @param array $rows
-     * @return array|mixed
+     * @param array|mixed $rows
+     * @return Collection|Model[]|array|mixed
      */
-    public function loadRelations(array $rows, int $recursion=0)
+    public function loadRelations(\ArrayAccess $rows, int $recursion=0)
     {
         $this->relationManage = new RelationManage($this->relations);
         $this->sliceManage = new SliceManage($this->slices);
@@ -54,12 +55,10 @@ trait RepositoryRelationTrait
     /**
      * 指定リレーションのロード
      * @param array $rows
-     *
-     *
      * @param Relation $relation
      * @return array|mixed
      */
-    public function loadRelation(array $rows, Relation $relation, int $recursion=0)
+    public function loadRelation(\ArrayAccess $rows, Relation $relation, int $recursion=0)
     {
         // 子テーブルの検索条件
         $cond = $this->foreignCondition($rows, $relation);
@@ -80,7 +79,7 @@ trait RepositoryRelationTrait
      * @param Relation $relation
      * @return array
      */
-    protected function foreignCondition(array $rows, Relation $relation)
+    protected function foreignCondition(\ArrayAccess $rows, Relation $relation)
     {
         $cond = [];
 

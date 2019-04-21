@@ -5,6 +5,7 @@ namespace Presto\Core\Databases\Model;
 use Presto\Core\Traits\Towable;
 use Presto\Core\Traits\Instanceable;
 use Presto\Core\Databases\QueryBuilder;
+use Presto\Core\Utilities\Collection;
 
 /**
  * @property array $table テーブル名
@@ -38,7 +39,9 @@ class Model implements \ArrayAccess
     protected $database;
 
     protected $originals;
-    protected $relations;
+
+    /** @var array リレーション TODO Relationの再検討 */
+    public $relations;
 
     /** @var int 直近のクエリで使用した自動生成のID */
     private $last_insert_id = 0;
@@ -59,8 +62,11 @@ class Model implements \ArrayAccess
     {
         if(!in_array($offset, $this->properties))
         {
-            throw new \Exception("Modelに存在しない項目[{$offset}]");
+            // TODO Relationの再検討
+            $this->relations[$offset] = $value;
+            // throw new \Exception("Modelに存在しない項目[{$offset}]");
         }
+
         $this->{$offset} = $value;
     }
     public function offsetUnset ( $offset )

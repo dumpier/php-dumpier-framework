@@ -8,7 +8,7 @@ class PagerTag extends BaseTag
 {
     use Singletonable;
 
-    const PAGINATOR_COUNT = 10;
+    const PAGER_COUNT = 10;
     const LIMIT_COUNT = 20;
 
 
@@ -73,6 +73,7 @@ class PagerTag extends BaseTag
     public function render(int $count, int $limit=self::LIMIT_COUNT)
     {
         $page = (int)Request::instance()->input("page", 1);
+        $page = empty($page) ? 1: $page;
         $base_url = $this->baseurl();
 
         list($start_i, $end_i) = $this->getStartEndRowNumber($count, $page);
@@ -134,10 +135,10 @@ class PagerTag extends BaseTag
 
     public function getStartEndPageNumber(int $total_page, int $page=1)
     {
-        $start = $page - ceil(self::PAGINATOR_COUNT / 2);
+        $start = $page - ceil(self::PAGER_COUNT / 2);
         $start = ($start <= 1) ? 1 : $start;
 
-        $end = $start + self::PAGINATOR_COUNT - 1;
+        $end = $start + self::PAGER_COUNT - 1;
         $end = ($end >= $total_page) ? $total_page : $end;
 
         return [$start, $end];

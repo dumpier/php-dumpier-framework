@@ -95,13 +95,13 @@ class Arrayer
 
     /**
      * 二つの配列を結合する TODO TODO TODO TODO
-     * @param array $rows
-     * @param array $childrens
+     * @param Collection|Model[]|array|mixed $rows
+     * @param Collection|Model[]|array|mixed $childrens
      * @param array $joins JOIN Condition
      * @param string $type
      * @return array
      */
-    public function mapping(array $rows, array $childrens, array $joins, string $type=Model::HAS_MANY)
+    public function mapping($rows, $childrens, array $joins, string $type=Model::HAS_MANY)
     {
         foreach ($rows as $no=>$row)
         {

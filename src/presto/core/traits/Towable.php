@@ -14,7 +14,6 @@ trait Towable
             return (array)$this;
         }
 
-
         // TODO
         $array = [];
         foreach ($this->properties as $property)
@@ -29,12 +28,6 @@ trait Towable
     public function toJson()
     {
         return json_encode($this->toArray(), JSON_UNESCAPED_UNICODE);
-    }
-
-
-    public function toString()
-    {
-
     }
 
 }

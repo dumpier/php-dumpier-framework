@@ -19,7 +19,7 @@ class UtilityFacade
     public function encrypter() { return \Presto\Core\Utilities\Encrypter::instance(); }
 
     /** @return \Presto\Core\Utilities\Paginator */
-    public function paginator(array $rows=[], int $total_count=0, int $page=1, int $limit=PagerTag::LIMIT_COUNT) { return new \Presto\Core\Utilities\Paginator($rows, $total_count, $page, $limit); }
+    public function paginator(array $rows=[]) { return new \Presto\Core\Utilities\Paginator($rows); }
 
     /** @return \Presto\Core\Utilities\Stringer */
     public function stringer() { return \Presto\Core\Utilities\Stringer::instance(); }

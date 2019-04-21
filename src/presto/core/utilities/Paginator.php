@@ -3,72 +3,48 @@ namespace Presto\Core\Utilities;
 
 use Presto\Core\Traits\Instanceable;
 use Presto\Core\Helpers\Html\PagerTag;
+use Presto\Core\Traits\Accessible;
+use Presto\Core\Databases\Model\Model;
 
 class Paginator
 {
     use Instanceable;
+    use Accessible;
 
 
     protected $limit = PagerTag::LIMIT_COUNT;
     protected $page = 0;
-    protected $total_count = 0;
+    protected $count = 0;
 
-    /** @var Collection|array */
+    /** @var Collection|Model[]|array */
     protected $rows;
 
 
-    public function __construct($rows, int $total_count, int $page=1, int $limit=PagerTag::LIMIT_COUNT)
+    public function __construct($rows)
     {
         $this->rows = $rows;
-        $this->total_count = $total_count;
-        $this->page = $page;
-        $this->limit = $limit;
     }
 
     // 現在表示中のページ
     public function page(int $input=null)
     {
-        if(null === $input)
-        {
-            return $this->page;
-        }
-
-        $this->page = $input;
-        return $this;
+        return $this->accessor("page", $input);
     }
 
     // １ページの表示件数
     public function limit(int $input=null)
     {
-        if(null === $input)
-        {
-            return $this->limit;
-        }
-
-        $this->limit = $input;
-        return $this;
+        return $this->accessor("limit", $input);
     }
 
     public function count(int $input=null)
     {
-        if(null === $input)
-        {
-            return $this->total_count;
-        }
-
-        $this->total_count = $input;
-        return $this;
+        return $this->accessor("count", $input);
     }
 
     public function rows(array $input=null)
     {
-        if(null === $input)
-        {
-            return $this->rows;
-        }
-
-        $this->rows = $input;
-        return $this;
+        return $this->accessor("rows", $input);
     }
 
 
