@@ -7,8 +7,7 @@ trait Accessible
     {
         if($input)
         {
-            $this->set($property, $input);
-            return $this;
+            return $this->set($property, $input);
         }
 
         return $this->get($property);
@@ -24,6 +23,7 @@ trait Accessible
     public function set(string $property, $input)
     {
         $this->{$property} = $input;
+        return $this;
     }
 
 

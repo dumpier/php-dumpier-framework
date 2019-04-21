@@ -25,5 +25,5 @@ class HtmlFacade
     public function tree() { return TreeTag::instance(); }
 
     /** @return PagerTag */
-    public function paging() { return PagerTag::instance(); }
+    public function pager() { return PagerTag::instance(); }
 }

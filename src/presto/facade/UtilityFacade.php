@@ -2,7 +2,6 @@
 namespace Presto\Facade;
 
 use Presto\Core\Traits\Singletonable;
-use Presto\Core\Helpers\Html\PagerTag;
 
 class UtilityFacade
 {
@@ -26,6 +25,9 @@ class UtilityFacade
 
     /** @return \Presto\Core\Utilities\Pregular */
     public function pregular() { return \Presto\Core\Utilities\Pregular::instance(); }
+
+    /** @return \Presto\Core\Utilities\Pager */
+    public function pager() { return \Presto\Core\Utilities\Pager::instance(); }
 
     /** @return \Presto\Core\Utilities\Expression */
     public function expression() { return \Presto\Core\Utilities\Expression::instance(); }

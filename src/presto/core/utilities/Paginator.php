@@ -2,7 +2,6 @@
 namespace Presto\Core\Utilities;
 
 use Presto\Core\Traits\Instanceable;
-use Presto\Core\Helpers\Html\PagerTag;
 use Presto\Core\Traits\Accessible;
 use Presto\Core\Databases\Model\Model;
 
@@ -12,7 +11,7 @@ class Paginator
     use Accessible;
 
 
-    protected $limit = PagerTag::LIMIT_COUNT;
+    protected $limit = Pager::LIMIT_COUNT;
     protected $page = 0;
     protected $count = 0;
 
