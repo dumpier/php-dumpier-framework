@@ -4,6 +4,7 @@ namespace Presto\Core\Utilities\Files;
 use Presto\Core\Traits\Singletonable;
 use Presto\Core\Utilities\Collection;
 use Presto\Core\Utilities\Debugbar;
+use Presto\Core\Utilities\Pager;
 
 class CsvLoader
 {
@@ -107,7 +108,7 @@ class CsvLoader
     {
         $rows = $this->find($csvfile, $parameter);
 
-        list($rows, $count) = html()->paging()->paging($rows, $page);
+        list($rows, $count) = Pager::instance()->page($page)->paging($rows);
         $fields = $this->getFields($csvfile);
 
         return [$rows, $count, $fields];

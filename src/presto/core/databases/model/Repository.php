@@ -5,8 +5,8 @@ use Presto\Core\Traits\Singletonable;
 use Presto\Core\Databases\QueryBuilder;
 use Presto\Core\Utilities\Collection;
 use Presto\Core\Request;
-use Presto\Core\Helpers\Html\PagerTag;
 use Presto\Core\Utilities\Paginator;
+use Presto\Core\Utilities\Pager;
 
 class Repository
 {
@@ -128,9 +128,9 @@ class Repository
         $page = (int)Request::instance()->input("page", 1);
         $count = $this->count($parameter);
 
-        list($start, ) = PagerTag::instance()->getStartEndRowNumber($count, $page);
+        list($start, ) = Pager::instance()->count($count)->page($page)->getStartEndRowNumber();
         $parameter["offset"] = $start;
-        $parameter["limit"] = PagerTag::LIMIT_COUNT;
+        $parameter["limit"] = Pager::LIMIT_COUNT;
 
         $rows = $this->find($parameter, $recursion);
 
