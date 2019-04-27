@@ -132,11 +132,26 @@ class Collection implements \ArrayAccess, \Iterator
      * @param array $condition
      * @return number
      */
-    public function count(array $condition)
+    public function count(array $condition=[])
     {
-        return $this->condition($condition)->count;
+        if($condition)
+        {
+            return $this->condition($condition)->count;
+        }
+
+        return $this->count = count($this->rows);
     }
 
+
+    /**
+     * 合計
+     * @param string $name
+     * @return number
+     */
+    public function sum(string $name)
+    {
+        return array_sum(array_column($this->rows, $name));
+    }
 
     /**
      * 指定項目の抽出
