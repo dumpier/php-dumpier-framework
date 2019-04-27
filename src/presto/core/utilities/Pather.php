@@ -57,16 +57,30 @@ class Pather
     /** @return string */
     public function repository(string $path="") { return path("app/classes/models/repositories/{$path}"); }
 
-
     /** @return string */
     public function template(string $path="") { return path("app/templates/{$path}"); }
 
+
     /** @return string */
     public function storage(string $path="") { return path("storages/{$path}"); }
+    /** @return string */
+    public function debugbar(string $path="") { return path("storages/debugbar/{$path}"); }
 
     /** @return string */
     public function cache(string $path="") { return path("storages/cache/{$path}"); }
     /** @return string */
     public function cache_template(string $path="") { return path("storages/cache/templates/{$path}"); }
 
+    /** @return string */
+    public function switching(string $root="res", string $path="") {
+        switch($root)
+        {
+            case "log":
+                return $this->debugbar($path);
+
+            case "res":
+            default:
+                return $this->resource($path);
+        }
+    }
 }

@@ -190,7 +190,7 @@ class Debugbar
     /**
      * ログへの書き込み
      */
-    private function logging()
+    public function logging()
     {
         // ファイルに書き込む
         $directory = Pather::instance()->storage("debugbar/" . date("Y/m/d/H/"));

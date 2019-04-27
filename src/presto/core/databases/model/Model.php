@@ -1,11 +1,8 @@
 <?php
 namespace Presto\Core\Databases\Model;
 
-
-use Presto\Core\Traits\Towable;
 use Presto\Core\Traits\Instanceable;
 use Presto\Core\Databases\QueryBuilder;
-use Presto\Core\Utilities\Collection;
 
 /**
  * @property array $table テーブル名
@@ -14,7 +11,7 @@ use Presto\Core\Utilities\Collection;
  */
 class Model implements \ArrayAccess
 {
-    use Instanceable, Towable;
+    use Instanceable;
 
     const HAS_ONE = 'has-one';
     const HAS_MANY = 'has-many';
@@ -216,6 +213,36 @@ class Model implements \ArrayAccess
     {
         QueryBuilder::instance()->connect($this->connection)->update($this->table, [static::COLUMN_DELETED=>FALSE], [static::PRIMARY_KEY =>$this->getPrimaryValue()]);
         return $this;
+    }
+
+    public function toArray()
+    {
+        $array = [];
+
+        foreach ($this->properties as $property)
+        {
+            $array[$property] = property_exists($this, $property) ? $this->{$property} : null;
+        }
+
+        return array_merge($array, $this->toArrayRelation());
+    }
+
+
+    protected function toArrayRelation()
+    {
+        if(empty($this->relations))
+        {
+            return [];
+        }
+
+        $array = [];
+
+        foreach ($this->relations as $key=>$rows)
+        {
+            $array[$key] = $rows->toArray();
+        }
+
+        return $array;
     }
 
 }
