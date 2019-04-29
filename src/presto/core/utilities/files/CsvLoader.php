@@ -17,48 +17,38 @@ class CsvLoader
     const HEADER_LINE_NO_FIELD = 0;
 
 
-    public function isCsv(string $path)
-    {
-        if(pathinfo($path, PATHINFO_EXTENSION) == 'csv')
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     // CSVボディーの取得
-    public function getBody(string $csvfile)
+    public function getBody(string $file)
     {
-        return $this->load($csvfile)["body"];
+        return $this->load($file)["body"];
     }
 
     // CSヘッダーの取得
-    public function getHeaders(string $csvfile)
+    public function getHeaders(string $file)
     {
-        return $this->load($csvfile)["header"];
+        return $this->load($file)["header"];
     }
 
     // CSV項目一覧の取得
-    public function getFields(string $csvfile)
+    public function getFields(string $file)
     {
-        return $this->getHeaders($csvfile)[self::HEADER_LINE_NO_FIELD];
+        return $this->getHeaders($file)[self::HEADER_LINE_NO_FIELD];
     }
 
 
     // -------------------------------------------------------
     // 検索
     // -------------------------------------------------------
-    public function findById(string $csvfile, int $id)
+    public function findById(string $file, int $id)
     {
-        return $this->findFirst($csvfile, ["condition"=>['id'=>$id]]);
+        return $this->findFirst($file, ["condition"=>['id'=>$id]]);
     }
 
     // 検索
-    public function find(string $csvfile, array $parameter=[])
+    public function find(string $file, array $parameter=[])
     {
         // 全CSVデータを取得
-        $rows = $this->getBody($csvfile);
+        $rows = $this->getBody($file);
 
         if(empty($parameter["condition"]))
         {
@@ -70,9 +60,9 @@ class CsvLoader
 
 
     // 先頭の１個を取得
-    public function findFirst(string $csvfile, array $parameter=[])
+    public function findFirst(string $file, array $parameter=[])
     {
-        $rows = $this->getBody($csvfile);
+        $rows = $this->getBody($file);
 
         if(empty($parameter["condition"]))
         {
@@ -100,16 +90,16 @@ class CsvLoader
 
     /**
      *  ページング
-     * @param string $csvfile
+     * @param string $file
      * @param int $page
      * @param array $parameter
      */
-    public function paging(string $csvfile, int $page=1, array $parameter=[])
+    public function paging(string $file, int $page=1, array $parameter=[])
     {
-        $rows = $this->find($csvfile, $parameter);
+        $rows = $this->find($file, $parameter);
 
         list($rows, $count) = Pager::instance()->page($page)->paging($rows);
-        $fields = $this->getFields($csvfile);
+        $fields = $this->getFields($file);
 
         return [$rows, $count, $fields];
     }
@@ -127,16 +117,16 @@ class CsvLoader
      * @param string $csvfile
      * @return mixed
      */
-    private function load(string $csvfile)
+    private function load(string $file)
     {
-        if(! empty($this->caches[$csvfile]))
+        if(! empty($this->caches[$file]))
         {
-            return $this->caches[$csvfile];
+            return $this->caches[$file];
         }
 
-        Debugbar::instance()->timelines("Start load csv file .", [$csvfile]);
+        Debugbar::instance()->timelines("Start load csv file .", [$file]);
 
-        $spl = new \SplFileObject($csvfile);
+        $spl = new \SplFileObject($file);
         $spl->setFlags(\SplFileObject::READ_CSV | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY);
 
         // ヘッダーの取得
@@ -160,12 +150,12 @@ class CsvLoader
             $body[] = array_combine($fields, $row);
         }
 
-        $this->caches[$csvfile]["header"] = $headers;
-        $this->caches[$csvfile]["body"] = array_slice($body, self::HEADER_LINE_COUNT);
+        $this->caches[$file]["header"] = $headers;
+        $this->caches[$file]["body"] = array_slice($body, self::HEADER_LINE_COUNT);
 
-        Debugbar::instance()->timelines("Load csv file completed .", [$csvfile]);
+        Debugbar::instance()->timelines("Load csv file completed .", [$file]);
 
-        return $this->caches[$csvfile];
+        return $this->caches[$file];
     }
 
 }
