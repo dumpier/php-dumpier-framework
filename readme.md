@@ -5,7 +5,7 @@ https://scrutinizer-ci.com/g/dumpier/php-presto-framework/
 ```
 軽量＆快速
 ```
-<img src=https://i.imgur.com/dVMdfzo.gif>
+<img src=https://i.imgur.com/bHE9vza.gif>
 <img src=https://i.imgur.com/pvSSxYF.gif>
 
 ## Validate
