@@ -9,12 +9,6 @@ https://scrutinizer-ci.com/g/dumpier/php-presto-framework/
 <img src=https://i.imgur.com/QSwm8l8.gif>
 <img src=https://i.imgur.com/pvSSxYF.gif>
 
-# 使った画像
-```
-ぴぽや倉庫
-https://pipoya.net/sozai/
-```
-
 ## Validate
 https://github.com/dumpier/php-presto-framework/blob/master/doc/validator.md
 
@@ -158,4 +152,12 @@ class PlayerDeckRepository extends Repository
 $parameters = [];
 $parameters["condition"]["player_id"] = 1;
 $this->playerDeck->find($parameters, $recursion=1);
+```
+
+# 使った素材
+```
+エトリエ
+http://etolier.webcrow.jp/material/menu.html
+ぴぽや倉庫
+https://pipoya.net/sozai/
 ```
