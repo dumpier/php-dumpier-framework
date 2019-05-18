@@ -98,8 +98,14 @@ class Collection implements \ArrayAccess, \Iterator
      * 全部取得
      * @return array
      */
-    public function all()
+    public function all(int $count=0)
     {
+        if($count)
+        {
+            $rows = array_slice($this->rows, 0, $count);
+            return new static($rows);
+        }
+
         return $this->rows;
     }
 
@@ -189,6 +195,20 @@ class Collection implements \ArrayAccess, \Iterator
             $rows[$key] = $row;
         }
 
+        return new static($rows);
+    }
+
+
+    public function shuffle()
+    {
+        $rows = $this->rows;
+        shuffle($rows);
+        return new static($rows);
+    }
+
+    public function merge(Collection $Collection)
+    {
+        $rows = array_merge($this->rows, $Collection->rows);
         return new static($rows);
     }
 

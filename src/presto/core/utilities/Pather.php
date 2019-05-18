@@ -65,6 +65,8 @@ class Pather
     public function storage(string $path="") { return path("storages/{$path}"); }
     /** @return string */
     public function debugbar(string $path="") { return path("storages/debugbar/{$path}"); }
+    /** @return string */
+    public function public(string $path="") { return path("public/res/{$path}"); }
 
     /** @return string */
     public function cache(string $path="") { return path("storages/cache/{$path}"); }
@@ -75,6 +77,8 @@ class Pather
     public function switching(string $root="res", string $path="") {
         switch($root)
         {
+            case "public":
+                return $this->public($path);
             case "log":
                 return $this->debugbar($path);
 
