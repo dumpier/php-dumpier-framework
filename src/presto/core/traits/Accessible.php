@@ -5,12 +5,12 @@ trait Accessible
 {
     protected function accessor(string $property, $input=null)
     {
-        if($input)
+        if($input===null)
         {
-            return $this->set($property, $input);
+            return $this->get($property);
         }
 
-        return $this->get($property);
+        return $this->set($property, $input);
     }
 
 
