@@ -14,13 +14,16 @@ https://github.com/dumpier/php-presto-framework/blob/master/doc/validator.md
 
 ## Database
 ```
+// データ取得
+database("shard_01")->table("player")->paging($parameters);
+
 // DB検索
 $parameters = [];
 $parameters["condition"]["last_login"][">="] = "2019-02-11";
 $parameters["condition"]["or"]["level"]["in"] = [10,11,12];
 $parameters["condition"]["or"]["rank"]["between"] = [3,4];
 
-$players = dataabse("shard_01")->table("player")->paging($parameters);
+database("shard_01")->table("player")->paging($parameters);
 
 
 // 配列検索
@@ -160,4 +163,6 @@ $this->playerDeck->find($parameters, $recursion=1);
 http://etolier.webcrow.jp/material/menu.html
 ぴぽや倉庫
 https://pipoya.net/sozai/
+ゆうひな
+https://twitter.com/AonoriwaKame
 ```
