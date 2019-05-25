@@ -99,9 +99,10 @@ class Arrayer
      * @param Collection|Model[]|array|mixed $childrens
      * @param array $joins JOIN Condition
      * @param string $type
+     * @param bool $is_model
      * @return array
      */
-    public function mapping($rows, $childrens, array $joins, string $type=Model::HAS_MANY)
+    public function mapping($rows, $childrens, array $joins, string $type=Model::HAS_MANY, bool $is_model=false)
     {
         foreach ($rows as $no=>$row)
         {
@@ -113,7 +114,14 @@ class Arrayer
 
                 $condition = array_combine($foreign_keys, $values);
 
-                $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? Collection::instance($childrens)->condition($condition)->all() : Collection::instance($childrens)->first($condition);
+                if($is_model)
+                {
+                    $rows[$no]->relations[$foreign_name] = ($type==Model::HAS_MANY) ? Collection::instance($childrens)->condition($condition) : Collection::instance($childrens)->first($condition);
+                }
+                else
+                {
+                    $rows[$no][$foreign_name] = ($type==Model::HAS_MANY) ? Collection::instance($childrens)->condition($condition)->all() : Collection::instance($childrens)->first($condition);
+                }
             }
         }
 

@@ -2,34 +2,108 @@
 namespace Presto\Core\Utilities\Files;
 
 use Presto\Core\Traits\Singletonable;
+use Presto\Core\Utilities\Pager;
 
 class FileLoader
 {
     use Singletonable;
 
-    public function isJson(string $path)
-    {
-        return $this->extensionIs($path, "json");
-    }
+    const CACHE_LINECOUNT = "linecount";
+    const CACHE_SIZE = "size";
+    private $cachs = [];
 
-    public function isCsv(string $path)
-    {
-        return $this->extensionIs($path, "csv");
-    }
+    public function isCsv(string $filename) { return $this->extension($filename) == "csv"; }
+    public function isJson(string $filename) { return $this->extension($filename) == "json"; }
+    public function isIni(string $filename) { return $this->extension($filename) == "ini"; }
+    public function isYaml(string $filename) { return $this->extension($filename) == "yaml"; }
 
-    public function extensionIs(string $path, string $extension)
+    /**
+     * ファイル拡張子の取得
+     * @param string $path
+     * @return mixed
+     */
+    public function extension(string $filename) { return pathinfo($filename, PATHINFO_EXTENSION); }
+
+    /**
+     * ファイルサイズの取得
+     * @param string $filename
+     * @return number
+     */
+    public function byte(string $filename)
     {
-        if($this->extension($path) == $extension)
+        if( ! isset ($this->cachs[$filename][self::CACHE_SIZE]) )
         {
-            return true;
+            $this->cachs[$filename][self::CACHE_SIZE] = filesize($filename);
         }
 
-        return false;
+        return $this->cachs[$filename][self::CACHE_SIZE];
     }
 
-    public function extension(string $path)
+
+    /**
+     * ファイル行数の取得
+     * @param string $filename
+     */
+    public function line(string $filename)
     {
-        return pathinfo($path, PATHINFO_EXTENSION);
+        if( ! isset ($this->cachs[$filename][self::CACHE_LINECOUNT]) )
+        {
+            $this->cachs[$filename][self::CACHE_LINECOUNT] = $this->getLineCount($filename);
+        }
+
+        return $this->cachs[$filename][self::CACHE_LINECOUNT];
     }
+
+    /**
+     * 全部読み込み
+     * @param string $filename
+     * @return string
+     */
+    public function all(string $filename) { return file_get_contents($filename); }
+
+
+    /**
+     * ページング
+     * @param string $filename
+     * @param int $page
+     * @return string[]
+     */
+    public function paging(string $filename, int $page=1)
+    {
+        $lines = [];
+
+        // 行数の取得
+        $linecount = $this->line($filename);
+
+        list($start, $end) = Pager::instance()->count($linecount)->page($page)->getStartEndRowNumber();
+
+        $fp = fopen($filename, 'r');
+        for ($i = $start; $i < $end; $i++)
+        {
+            $lines[] = fgets($fp);
+        }
+        fclose($fp);
+
+        return [$lines, $linecount];
+    }
+
+    // TODO ファイル行数の取得
+    private function getLineCount(string $filename)
+    {
+        debugbar()->timelines("Start get line count");
+
+        $count = exec('wc -l '.$filename);
+        $count = trim(str_replace($filename, '', $count));
+
+//         $fp = fopen( $filename, 'r' );
+//         for( $count = 0; fgets( $fp); $count++ );
+//         fclose($fp);
+
+        debugbar()->timelines("Get line count completed !");
+
+        return $count;
+    }
+
+
 
 }

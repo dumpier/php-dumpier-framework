@@ -16,9 +16,6 @@
 .debugbar-data-popup { position: absolute; background:#fff; border: solid 3px #eee;padding:5px; }
 </style>
 
-<script>
-</script>
-
 <div id=debugbar class='active'>
 	<div id='debugbar-icon'>
 		<div style='position: absolute; right:10px;'>
@@ -39,7 +36,7 @@
 				@endforeach
 				<li><span class="fa fa-hashtag"></span></li>
 				<li><span class="fa fa-clock"></span>Time: {@ echo debugbar()->totalTime() } Sec</li>
-				<li><span class="fa fa-microchip"></span>Memory: {@ echo debugbar()->totalMemory() } Mb</li>
+				<li><span class="fa fa-microchip"></span>Memory: {@ echo util()->unit()->auto( debugbar()->totalMemory() ) }</li>
 			</ul>
 		</div> <!-- debugbar tab -->
 	</div>
@@ -50,33 +47,9 @@
 			<div id="debugbar-{{ $type }}" class='debugbar-content'>
 				<h3 style='text-transform: uppercase;'>{{ $type }}</h3>
 
-				@if (! empty($logs[$type]) )
-				<div class='table-responsive-1'>
-					<table class='table table-hover table-striped'>
-						<tr>
-							<th>Total time</th><th>Execute time</th><th>Memory / Peak</th><th>Message</th><th>File</th>
-						</tr>
-
-						@foreach ($logs[$type] as $row)
-						<tr>
-							<td>{{ $row['time_total'] }}</td>
-							<td>{{ $row['time_execute'] }}</td>
-							<td>{{ $row['memory_usage'] }} / {{ $row['memory_usage_peak'] }}&nbsp;MB</td>
-							<td>
-								{{ $row['message'] }}
-								@if (!empty($row['data']))
-									<a class='text-info' href='javascript: void(0);' onmouseover="$('div.debugbar-data-wrap').hide(); $(this).next('div.debugbar-data-wrap').show();" onmouseout="$(this).next('div.debugbar-data-wrap').hide();">view detail</a>
-									<div class=debugbar-data-wrap><div class=debugbar-data-popup>{@ print_r($row['data']) }</div></div>
-								@endif
-							</td>
-							<td>{{ $row['file'] }}&nbsp;#{{ $row['line'] }}</td>
-						</tr>
-						@endforeach
-
-					</table>
-				</div>
+				@if (!empty($logs[$type]) )
+				<div class='table-responsive-1'>{@ echo debugbar()->toHtml($logs) }</div>
 				@endif
-
 			</div>
 		@endforeach
 	</div> <!-- debugbar body -->

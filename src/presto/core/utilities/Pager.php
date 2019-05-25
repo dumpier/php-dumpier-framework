@@ -18,26 +18,15 @@ class Pager
     protected $limit = self::LIMIT_COUNT;
 
 
-    public function __construct()
+    public function __construct(int $page=1)
     {
         $this->page = (int)Request::instance()->input("page", 1);
         $this->page = empty($this->page) ? 1: $this->page;
     }
 
-    public function count(int $value=null)
-    {
-        return $this->accessor("count", $value);
-    }
-
-    public function page(int $value=null)
-    {
-        return $this->accessor("page", $value);
-    }
-
-    public function limit(int $value=null)
-    {
-        return $this->accessor("limit", $value);
-    }
+    public function count(int $value=null) { return $this->accessor("count", $value); }
+    public function page(int $value=null) { return $this->accessor("page", $value); }
+    public function limit(int $value=null) { return $this->accessor("limit", $value); }
 
     // ページング取得
     public function paging(array $rows)
@@ -50,7 +39,9 @@ class Pager
         return [$target_rows, $count];
     }
 
-    // 表示開始と終了No
+    /**
+     * 表示開始と終了行番号
+     */
     public function getStartEndRowNumber()
     {
         $start = $this->limit * ($this->page - 1);
@@ -62,13 +53,18 @@ class Pager
         return [$start, $end];
     }
 
-    // 総ページ数の取得
+    /**
+     * 総ページ数の取得
+     */
     public function getTotalPageCount()
     {
         return ceil($this->count / $this->limit);
     }
 
 
+    /**
+     * 表示開始と終了ページ番号
+     */
     public function getStartEndPageNumber(int $total_page)
     {
         $start = $this->page - ceil(self::PAGER_COUNT / 2);

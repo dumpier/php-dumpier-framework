@@ -73,6 +73,21 @@ class Model implements \ArrayAccess
     // ------------------------------------------------
 
 
+    // ------------------------------------------------
+    // Relation
+    // ------------------------------------------------
+    public function __get($property)
+    {
+        return isset($this->relations[$property]) ? $this->relations[$property] : NULL;
+    }
+
+    public function __set($property, $value)
+    {
+        $this->relations[$property] = $value;
+    }
+    // ------------------------------------------------
+
+
     public function __construct(array $row=[])
     {
         $this->properties($row);

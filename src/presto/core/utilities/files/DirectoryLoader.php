@@ -52,28 +52,30 @@ class DirectoryLoader
      * @param string $path
      * @return array
      */
-    public function list(string $base, string $path="")
+    public function list(string $basedir, string $path="")
     {
-        $full_path = "{$base}{$path}";
-        $path = empty($path) ? $base : $path;
+        $fullpath = "{$basedir}{$path}";
+        $path = empty($path) ? $basedir : $path;
 
-        $this->checkIsDirectory($full_path);
+        $this->checkIsDirectory($fullpath);
 
         $directories = [];
         $files = [];
 
-        foreach (glob("{$full_path}/*") as $sub_path)
+        foreach (glob("{$fullpath}/*") as $sub_path)
         {
             if($this->isDirectory($sub_path))
             {
-                $directories[] = str_replace($base, "", $sub_path);
+                $directories[] = str_replace($basedir, "", $sub_path);
                 continue;
             }
 
             if($this->isFile($sub_path))
             {
-                $files[] = str_replace($base, "", $sub_path);
-                continue;
+                $size = util()->file()->byte($sub_path);
+                $name = str_replace($basedir, "", $sub_path);
+
+                $files[] = ["size"=>$size, "name"=>$name];
             }
         }
 

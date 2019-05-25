@@ -74,14 +74,14 @@ class TemplateEngine
     public function variables(string $phtml)
     {
         // 例）{{ $xxx.yyy }}
-        $variables = Pregular::instance()->all("/\{\{ *\\$.+? *\}\} */", $phtml);
+        $targets = Pregular::instance()->all("/\{\{ *\\$.+? *\}\} */", $phtml);
 
-        foreach ($variables as $variable)
+        foreach ($targets as $target)
         {
-            $variable_name = (string)preg_replace("/\{\{ *(\\$[^ ]+) *\}\}/", "$1", $variable);
+            $variable_name = (string)preg_replace("/\{\{ *(\\$[^ ]+) *\}\}/", "$1", $target);
             $variable_name = (string)preg_replace("/\.([^\. ]+)/", "['$1']", $variable_name);
 
-            $phtml = (string)preg_replace("/" . preg_quote($variable, '/') . "/", "<?php echo {$variable_name};?>", $phtml);
+            $phtml = (string)preg_replace("/" . preg_quote($target, '/') . "/", "<?php echo {$variable_name};?>", $phtml);
         }
 
 //        echo "<pre>".htmlspecialchars($phtml, ENT_QUOTES) . "</pre>";
@@ -102,18 +102,19 @@ class TemplateEngine
     public function callables(string $phtml)
     {
         // 関数の呼び出し一覧 例）{@ debug() }
-        $variables = Pregular::instance()->all("/\{@ *.+? *\( *.* *\) *\}/", $phtml);
+        // $targets = Pregular::instance()->all("/\{@ *.+? *\( *.* *\) *\}+?/", $phtml);
+        $targets = Pregular::instance()->all("/\{@ *.+? *\}+?/", $phtml);
 
-        foreach ($variables as $variable)
+        foreach ($targets as $target)
         {
             // 関数名
-            $function = (string)preg_replace("/\{@ *(.+) *\(.*/", "$1", $variable);
+            $function = (string)preg_replace("/\{@ *(.+) *\(.*/", "$1", $target);
 
             // 引数一覧
-            $arguments = (string)preg_replace("/.+\( *(.*) *\) *\}/", "$1", $variable);
+            $arguments = (string)preg_replace("/.+\( *(.*) *\) *\}/", "$1", $target);
 
             // 関数の呼び出しをPHPコードに変換
-            $phtml = (string)preg_replace("/" . preg_quote($variable, '/') . "/", "<?php {$function}($arguments); ?>", $phtml);
+            $phtml = (string)preg_replace("/" . preg_quote($target, '/') . "/", "<?php {$function}($arguments); ?>", $phtml);
         }
 
         return $phtml;
