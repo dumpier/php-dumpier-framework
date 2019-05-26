@@ -14,6 +14,14 @@ class HtmlTag
      */
     public function echo($val)
     {
+        echo $this->html($val);
+    }
+
+
+    public function html($val)
+    {
+        $html = "";
+
         if(is_array($val))
         {
             $string = Arrayer::instance()->toTreeString($val);
@@ -23,7 +31,7 @@ class HtmlTag
                 return ;
             }
 
-            echo <<<EOF
+            $html .= <<<EOF
 <div style='position:relative;' onmouseover="$(this).children('div').show();" onmouseout="$(this).children('div').hide();">
   <a href='javascript:void(0);'>view</a>
   <div style='position:absolute; z-index:1001; top:0px; left:30px; background:#fff; padding:10px; border:solid 3px #ddd; display:none;'>{$string}</div>
@@ -32,9 +40,10 @@ EOF;
         }
         else
         {
-            echo $val;
+            $html .= $val;
         }
 
+        return $html;
     }
 
 }

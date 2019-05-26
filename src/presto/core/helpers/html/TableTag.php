@@ -1,25 +1,17 @@
 <?php
 namespace Presto\Core\Helpers\Html;
 
-use Presto\Core\Traits\Singletonable;
 use Presto\Core\Utilities\Arrayer;
+use Presto\Core\Traits\Instanceable;
 
 class TableTag extends BaseTag
 {
-    use Singletonable;
+    use Instanceable;
 
     protected $header = [];
     protected $fields = [];
     protected $links = [];
-
-
-    public function reset(...$properties)
-    {
-        $this->header = [];
-        $this->fields = [];
-        $this->height = 0;
-        $this->links = [];
-    }
+    protected $height = 0;
 
 
     /**
@@ -49,13 +41,13 @@ class TableTag extends BaseTag
      * リンクの指定
      * @param string $key
      * @param string $url
-     * @param string $prefix
-     * @param string $attributes
+     * @param string $attribute
+     * @param array $refrences
      * @return \Presto\Core\Helpers\Html\TableTag
      */
-    public function link(string $key, string $url, string $prefix, string $attributes)
+    public function link(string $key, string $url="", string $attribute="", array $refrences=[])
     {
-        $this->links[] = ["url"=>$url, "key"=>$key, "prefix"=>$prefix, "attributes"=>$attributes];
+        $this->links[$key] = ["url"=>$url, "attribute"=>$attribute, "refrences"=>$refrences];
         return $this;
     }
 
@@ -63,91 +55,85 @@ class TableTag extends BaseTag
     /**
      * データ一覧の表示
      * @param array $rows
-     * @param bool $is_reset パラメータをリセットするか
      * @return void|\Presto\Core\Helpers\Html\TableTag
      */
-    public function render(array $rows, bool $is_reset=false)
+    public function render(array $rows)
     {
-        if(empty($rows))
-        {
+        if(empty($rows)) {
             echo "データがない";
             return ;
         }
 
-        // ヘッダー
         $this->header = empty($this->header) ? array_keys($rows[0]) : $this->header;
-
-        // 出力項目
         $this->fields = empty($this->fields) ? $this->header : $this->fields;
-
-        // 高さ
         $style = empty($this->height) ? "" : "height:{$this->height}px;";
 
-        echo "<div class='table-responsive' style='{$style}'>";
-        echo "<table class='table table-counter table-hover table-striped'>";
 
         // ヘッダー
-        echo "<thead>";
-        echo "<tr>";
-        foreach ($this->fields as $field)
-        {
-            echo "<th>{$field}</th>";
+        $html_header = "";
+        foreach ($this->fields as $field) {
+            $html_header .= "<th>{$field}</th>";
         }
-        echo "</tr>";
-        echo "</thead>";
+        $html_header = "<thead><tr>{$html_header}</tr></thead>";
 
-        $this->rows($rows);
+        // 行の出力
+        $html_body = $this->rows($rows);
 
-        echo "</table>";
+        $html = "<table class='table table-counter table-hover table-striped'>{$html_header}{$html_body}</table>";
 
-        echo "</div>";
-
-        if ($is_reset)
-        {
-            // パラメータをリセットする
-            $this->reset();
+        if($this->height) {
+            $html = "<div class='table-responsive' style='{$style}'>{$html}</div>";
         }
+
+        echo $html;
 
         return $this;
     }
 
     private function rows(array $rows)
     {
-        echo "</tbody>";
+        $html = "";
 
-        foreach ($rows as $row)
-        {
-            $this->row($row);
+        foreach ($rows as $key=>$row) {
+            $html .= $this->row($row, $key);
         }
 
-        echo "</tbody>";
+        return "<tbody>{$html}</tbody>";
     }
 
-    private function row(array $row)
+    private function row(array $row, $key="")
     {
-        echo "<tr>";
-        foreach ($this->fields as $field)
-        {
-            echo "<td>";
+        $html = "";
 
-            if($field == Arrayer::instance()->get($this->links, "links.key"))
-            {
-                $url = Arrayer::instance()->get($this->links, "links.url") . $row[$field];
-                $prefix = Arrayer::instance()->get($this->links, "links.prefix");
-                $attributes = Arrayer::instance()->get($this->links, "links.attributes");
+        foreach ($this->fields as $field) {
+            $element_id = "{$field}-{$key}";
 
-                echo "<a href='{$url}' {$attributes}>{$prefix}";
-                HtmlTag::instance()->echo($row[$field]);
-                echo "</a></td>";
+            if(Arrayer::instance()->get($this->links, $field)) {
+                $html_field = $this->makeLink($row, $field, $element_id);
+            } else {
+                $html_field = HtmlTag::instance()->html($row[$field]);
             }
-            else
-            {
-                HtmlTag::instance()->echo($row[$field]);
-            }
-            echo "</td>";
+
+            $html .= "<td id={$element_id}>{$html_field}</td>";
         }
 
-        echo "</tr>";
+        return "<tr>{$html}</tr>";
+    }
+
+
+    private function makeLink(array $row, $field, string $element_id)
+    {
+        $url = Arrayer::instance()->get($this->links, "{$field}.url");
+        $url = empty($url) ? "javascript: void(0);" : $url . $row[$field];
+
+        $attribute = Arrayer::instance()->get($this->links, "{$field}.attribute");
+
+        // TODO
+        $refrences = Arrayer::instance()->get($this->links, "{$field}.refrences");
+        $refrence_json = json_encode($row);
+
+        $html = HtmlTag::instance()->html($row[$field]);
+        return "<a href=\"{$url}\" {$attribute} refrence='{$refrence_json}'>{$html}</a>";
     }
 
 }

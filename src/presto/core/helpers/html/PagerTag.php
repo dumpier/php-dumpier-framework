@@ -70,8 +70,8 @@ class PagerTag extends BaseTag
         list($start, $end) = $this->pager->getStartEndPageNumber($total_page, $this->page);
 
         echo "<ul class='pagination justify-content-end'>";
-        echo "<li class='page-item disabled'><span class='page-link'>Count: {$start_i}~{$end_i} / {$this->count}</span></li>";
-        echo "<li class='page-item disabled'><span class='page-link'>Pages: {$this->page} / {$total_page}</span></li>";
+        echo "<li class='page-item disabled'><span class='page-link'>{$start_i}~{$end_i} / {$this->count}</span></li>";
+        echo "<li class='page-item disabled'><span class='page-link'>Page: {$this->page} / {$total_page}</span></li>";
 
         if($this->page == 1)
         {

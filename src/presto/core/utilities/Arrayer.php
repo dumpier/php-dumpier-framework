@@ -8,6 +8,7 @@ class Arrayer
 {
     use Singletonable;
 
+
     public function get(array $array, $path, $separator = '.')
     {
         $keys = explode($separator, trim($path));
