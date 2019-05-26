@@ -3,6 +3,7 @@ namespace Presto\Core\Databases\Model;
 
 use Presto\Core\Traits\Instanceable;
 use Presto\Core\Databases\QueryBuilder;
+use Presto\Core\Utilities\Debugbar;
 
 /**
  * @property array $table テーブル名
@@ -254,6 +255,13 @@ class Model implements \ArrayAccess
 
         foreach ($this->relations as $key=>$rows)
         {
+            if(empty($rows))
+            {
+                Debugbar::instance()->messages("{$key} is empty !");
+                $array[$key] = [];
+                continue;
+            }
+
             $array[$key] = $rows->toArray();
         }
 
