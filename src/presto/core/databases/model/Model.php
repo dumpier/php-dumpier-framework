@@ -3,6 +3,7 @@ namespace Presto\Core\Databases\Model;
 
 use Presto\Core\Traits\Instanceable;
 use Presto\Core\Databases\QueryBuilder;
+use Presto\Core\Utilities\Debugbar;
 
 /**
  * @property array $table テーブル名
@@ -69,6 +70,21 @@ class Model implements \ArrayAccess
     public function offsetUnset ( $offset )
     {
         unset($this->{$offset});
+    }
+    // ------------------------------------------------
+
+
+    // ------------------------------------------------
+    // Relation
+    // ------------------------------------------------
+    public function __get($property)
+    {
+        return isset($this->relations[$property]) ? $this->relations[$property] : NULL;
+    }
+
+    public function __set($property, $value)
+    {
+        $this->relations[$property] = $value;
     }
     // ------------------------------------------------
 
@@ -239,6 +255,13 @@ class Model implements \ArrayAccess
 
         foreach ($this->relations as $key=>$rows)
         {
+            if(empty($rows))
+            {
+                Debugbar::instance()->messages("{$key} is empty !");
+                $array[$key] = [];
+                continue;
+            }
+
             $array[$key] = $rows->toArray();
         }
 

@@ -32,6 +32,7 @@ class HtmlRender
 
         // コントローラーから渡されたパラメータ
         extract($contents);
+
         eval("?>" . $phtml);
         // include($cache_file);
     }

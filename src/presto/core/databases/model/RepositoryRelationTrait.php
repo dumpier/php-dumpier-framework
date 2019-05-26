@@ -67,7 +67,7 @@ trait RepositoryRelationTrait
         $foreigns = $relation->getRepository()->find(["condition"=>$cond], $recursion);
 
         // 子テーブルを親に代入
-        $rows = Arrayer::instance()->mapping($rows, $foreigns, $relation->join, $relation->type);
+        $rows = Arrayer::instance()->mapping($rows, $foreigns, $relation->join, $relation->type, TRUE);
 
         return $rows;
     }
@@ -94,6 +94,11 @@ trait RepositoryRelationTrait
             // join条件の生成
             foreach ($relation->join as $foreign_name=>$mapping)
             {
+                if(empty($mapping))
+                {
+                    break;
+                }
+
                 $sub_cond = [];
                 foreach ($mapping as $parent_field=>$children_field)
                 {

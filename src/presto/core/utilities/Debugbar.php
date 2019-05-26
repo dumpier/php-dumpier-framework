@@ -23,6 +23,9 @@ class Debugbar
     const TYPE_AUTH = "auth";
     const TYPE_GATE = "gate";
 
+    const LAYOUT = "html/layouts/empty";
+    const TEMPLATE = "html/partials/debugbar";
+
     protected $time_start;
     protected $time_before;
     protected $time_current;
@@ -58,8 +61,8 @@ class Debugbar
         // ログファイルに書き込む
         $this->logging();
 
-        $layout = empty($layout) ? "html/layouts/empty" : $layout;
-        $template = empty($template) ? "html/partials/debugbar" : $template;
+        $layout = empty($layout) ? self::LAYOUT : $layout;
+        $template = empty($template) ? self::TEMPLATE : $template;
         echo View::instance()->layout($layout)->template($template)->render($this->all());
     }
 
@@ -92,7 +95,7 @@ class Debugbar
 
     public function totalTime() { return $this->total_time; }
     public function totalMemory() { return $this->total_memory; }
-
+    public function timerstart() { $this->record(""); }
 
     /**
      * Messageログの記録
@@ -134,11 +137,6 @@ class Debugbar
         $this->record(self::TYPE_QUERIES, $msg, $data);
     }
 
-    public function timerstart()
-    {
-        $this->record("");
-    }
-
 
     /**
      * 記録
@@ -151,8 +149,8 @@ class Debugbar
         $this->time_current = microtime(true);
 
         $row = [];
-        $row['memory_usage'] = round(memory_get_usage() / (1024 * 1024), 3);
-        $row['memory_usage_peak'] = round(memory_get_peak_usage() / (1024 * 1024), 3);
+        $row['memory_usage'] = memory_get_usage();
+        $row['memory_usage_peak'] = memory_get_usage();
 
         $this->total_memory = ($this->total_memory < $row['memory_usage_peak']) ? $row['memory_usage_peak']: $this->total_memory;
         $this->total_time = round($this->time_current - $this->time_start, 4);
@@ -193,15 +191,66 @@ class Debugbar
     public function logging()
     {
         // ファイルに書き込む
-        $directory = Pather::instance()->storage("debugbar/" . date("Y/m/d/H/"));
+        $directory = Pather::instance()->storage("debugbar/" . date("Y/m/d/"));
 
         if(!file_exists($directory))
         {
             mkdir($directory, 0777, TRUE);
         }
 
-        $filename = $directory.date("Ymd-His-").uniqid() . ".json";
-        file_put_contents($filename, json_encode($this->logs, JSON_UNESCAPED_UNICODE));
+        $filename = $directory.date("Ymd-H") . ".json";
+        file_put_contents($filename, json_encode($this->logs, JSON_UNESCAPED_UNICODE). PHP_EOL, FILE_APPEND);
     }
+
+    // --------------------------------------------------------
+    // html
+    // --------------------------------------------------------
+    public function toHtml(array $logs)
+    {
+        $html = "";
+        $html .= "<table class='table table-hover table-striped'>";
+        $html .= "<tr>";
+        $html .= "<th>Total time</th><th>Execute time</th><th>Memory / Peak</th><th>Message</th><th>File</th>";
+        $html .= "</tr>";
+
+        foreach ($logs as $type=>$log)
+        {
+            $html .= $this->logToHtml($log);
+        }
+
+        $html .= "</table>";
+        return $html;
+    }
+
+    public function logToHtml(array $log)
+    {
+        $html = "";
+
+        foreach ($log as $key=>$row)
+        {
+            $html .= "<tr>";
+            $html .= "<td>{$row['time_total']}</td>";
+            $html .= "<td>{$row['time_execute']}</td>";
+            $html .= "<td>" . util()->unit()->auto( $row['memory_usage']) . "&nbsp;/&nbsp;" . util()->unit()->auto( $row['memory_usage_peak']) ."</td>";
+            $html .= "<td>".$this->messageToHtml($row)."</td>";
+            $html .= "<td>{$row['file']}&nbsp;#{{$row['line']}}</td>";
+            $html .= "</tr>";
+        }
+
+        return $html;
+    }
+
+    private function messageToHtml(array $row)
+    {
+        $html = $row['message'];
+        if (!empty($row['data']))
+        {
+            $html .= "<a class='text-info' href='javascript: void(0);' onmouseover=\"$('div.debugbar-data-wrap').hide(); $(this).next('div.debugbar-data-wrap').show();\" onmouseout=\"$(this).next('div.debugbar-data-wrap').hide();\">View</a>";
+            $html .= "<div class=debugbar-data-wrap><div class=debugbar-data-popup>" . print_r($row['data'], TRUE) . "</div></div>";
+        }
+
+        return $html;
+    }
+    // --------------------------------------------------------
 
 }
