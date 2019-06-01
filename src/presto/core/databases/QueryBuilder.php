@@ -154,6 +154,17 @@ class QueryBuilder
         return $this->last_insert_id;
     }
 
+    // TODO 改良
+    public function bulkInsert(string $table, array $rows)
+    {
+        foreach ($rows as $row)
+        {
+            $this->insert($table, $row);
+        }
+
+        return true;
+    }
+
 
     public function update(string $table, array $row, array $condition)
     {
@@ -178,6 +189,11 @@ class QueryBuilder
         $sql = "DELETE FROM `{$table}` {$where}";
 
         return $this->query($sql, $binds);
+    }
+
+    public function truncate(string $table)
+    {
+        return $this->query("TRUNCATE `{$table}`");
     }
 
 
