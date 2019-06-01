@@ -10,7 +10,7 @@ class SeedCommand extends \Presto\Core\Consoles\Command
 {
     protected $signature = 'seed';
     protected $description = 'CSV SEEDER';
-    protected $base_path = "app/resources/csvs";
+    protected $base_path = "app/resources/database/seeds";
     protected $services = [];
 
     public function handler(string $fullpath="")
@@ -29,6 +29,7 @@ class SeedCommand extends \Presto\Core\Consoles\Command
         {
             // フォルダ名よりDB名を取得
             $dbname = preg_replace("/.*\/(.+?)/", "$1", $directory);
+            $this->info(" # {$dbname}");
 
             $this->csvs($directory, $dbname);
         }
@@ -66,7 +67,7 @@ class SeedCommand extends \Presto\Core\Consoles\Command
         // CSVデータをDBに登録する
         $connection->bulkInsert($table, $rows);
 
-        $this->info(" - Import [{$dbname}].[{$table}]\t{$count} rows completed !");
+        $this->info("  - Import [{$dbname}].[{$table}]\t{$count} rows completed !");
     }
 
 }
