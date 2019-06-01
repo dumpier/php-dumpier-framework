@@ -18,7 +18,7 @@ class GenerateModelCommand extends \Presto\Core\Consoles\Command
     const IGNORE_TABLE = ['migrations'];
 
     protected $signature = 'generate:model';
-    protected $description = 'Generate Models';
+    protected $description = 'Generate Repository, Model';
     protected $base_path = "";
 
     protected $services = [
@@ -29,17 +29,9 @@ class GenerateModelCommand extends \Presto\Core\Consoles\Command
 
     public function handler()
     {
-        $this->info("###################################################");
-        $this->info("# START GENERAGE Repository, Model");
-        $this->info("###################################################");
-
         $this->initializeArguments();
 
         $this->generate();
-
-        $this->info("-----------------------------------------------------");
-        $this->info(" COMPLETED! ");
-        $this->info("-----------------------------------------------------");
     }
 
 

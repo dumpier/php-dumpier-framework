@@ -6,14 +6,10 @@ use Presto\Core\Utilities\Pather;
 
 class HelperCommand extends \Presto\Core\Consoles\Command
 {
-    protected $description = "helpers.php ヘルパーの作成";
+    protected $description = "helpers.phpヘルパーの作成(Generate Service, Repository, Model)";
 
     public function handler()
     {
-        $this->info("###################################################");
-        $this->info("# START GENERAGE Service, Repository, Model");
-        $this->info("###################################################");
-
         // サービス一覧
         $service_comment = $this->getServiceAndRepositoryList(Pather::instance()->service());
         // リポジトリ一覧
@@ -36,10 +32,6 @@ EOF;
 
         // facade.phpを生成する
         file_put_contents($filename, $data);
-        $this->info("-----------------------------------------------------");
-        $this->info(" COMPLETED! ");
-        $this->info("-----------------------------------------------------");
-
     }
 
 

@@ -5,33 +5,21 @@ use Presto\Core\Utilities\Pather;
 use Presto\Core\Utilities\Files\DirectoryLoader;
 use Presto\Core\Databases\QueryBuilder;
 use Presto\Core\Utilities\Files\CsvLoader;
-use Presto\Core\Utilities\UnitUtility;
 
 class SeedCommand extends \Presto\Core\Consoles\Command
 {
     protected $signature = 'seed';
     protected $description = 'CSV SEEDER';
     protected $base_path = "app/resources/csvs";
+    protected $services = [];
 
-    protected $services = [
-    ];
-
-    public function handler()
+    public function handler(string $fullpath="")
     {
-        $this->info("###################################################");
-        $this->info("# START LOAD CSV");
-        $this->info("###################################################");
-
-        $this->directories();
-
-        $this->info("-----------------------------------------------------");
-        $this->info(" Memory : " . UnitUtility::instance()->mega(memory_get_peak_usage()) . " MB");
-        $this->info(" COMPLETED! ");
-        $this->info("-----------------------------------------------------");
+        $this->directories($fullpath);
     }
 
 
-    private function directories(string $fullpath="")
+    public function directories(string $fullpath="")
     {
         $fullpath = $fullpath ? $fullpath : Pather::instance()->path($this->base_path);
 
@@ -39,32 +27,34 @@ class SeedCommand extends \Presto\Core\Consoles\Command
 
         foreach ($directories as $directory)
         {
-            $connection_name = preg_replace("/.*\/(.+?)/", "$1", $directory);
-            $this->imports($directory, $connection_name);
+            // フォルダ名よりDB名を取得
+            $dbname = preg_replace("/.*\/(.+?)/", "$1", $directory);
+
+            $this->csvs($directory, $dbname);
         }
     }
 
 
-    private function imports(string $fullpath="", string $connection_name)
+    public function csvs(string $fullpath="", string $dbname)
     {
         $fullpath = $fullpath ? $fullpath : Pather::instance()->path($this->base_path);
         $csvfiles = DirectoryLoader::instance()->files($fullpath);
 
         foreach ($csvfiles as $csvfile)
         {
-            $this->import($csvfile, $connection_name);
+            $this->csv($csvfile, $dbname);
         }
-
     }
 
-    private function import(string $csvfile, string $connection_name)
+
+    public function csv(string $csvfile, string $dbname)
     {
-        $connection = QueryBuilder::instance()->connect($connection_name);
+        $connection = QueryBuilder::instance()->connect($dbname);
 
         $table = preg_replace("/.*\/(.+?)\.csv/", "$1", $csvfile);
 
         // 元のデータをバックアップ
-        // $rows = QueryBuilder::instance()->connect($connection_name)->select($table);
+        // $rows = QueryBuilder::instance()->connect($dbname)->select($table);
 
         // 既存データをTRUNCATE
         $connection->truncate($table);
@@ -76,7 +66,7 @@ class SeedCommand extends \Presto\Core\Consoles\Command
         // CSVデータをDBに登録する
         $connection->bulkInsert($table, $rows);
 
-        $this->info(" - Import [{$connection_name}].[{$table}]\t{$count} rows completed !");
+        $this->info(" - Import [{$dbname}].[{$table}]\t{$count} rows completed !");
     }
 
 }

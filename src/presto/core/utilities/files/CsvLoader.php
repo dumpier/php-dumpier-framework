@@ -24,7 +24,7 @@ class CsvLoader
     }
 
     // CSヘッダーの取得
-    public function getHeaders(string $file)
+    public function getHeader(string $file)
     {
         return $this->load($file)["header"];
     }
@@ -32,7 +32,7 @@ class CsvLoader
     // CSV項目一覧の取得
     public function getFields(string $file)
     {
-        return $this->getHeaders($file)[self::HEADER_LINE_NO_FIELD];
+        return $this->getHeader($file)[self::HEADER_LINE_NO_FIELD];
     }
 
 
