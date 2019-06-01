@@ -84,6 +84,55 @@ class DirectoryLoader
 
 
     /**
+     * ファイル一覧
+     * @param string $basedir
+     * @param bool $require_file_size ファイルサイズを取得するか
+     * @return array
+     */
+    public function files(string $basedir, bool $require_file_size=false)
+    {
+        $files = [];
+
+        foreach (glob("{$basedir}/*") as $file)
+        {
+            if($this->isDirectory($file))
+            {
+                continue;
+            }
+
+            if($require_file_size)
+            {
+                $size = util()->file()->byte($file);
+                $files[] = ["size"=>$size, "name"=>$file];
+            }
+            else
+            {
+                $files[] = $file;
+            }
+        }
+
+        return $files;
+    }
+
+
+    public function directories(string $basedir)
+    {
+        $directories = [];
+
+        foreach (glob("{$basedir}/*") as $sub)
+        {
+            if($this->isDirectory($sub))
+            {
+                $directories[] = $sub;
+            }
+        }
+
+        return $directories;
+    }
+
+
+
+    /**
      * フォルダであるか
      * @param string $path
      * @return boolean
