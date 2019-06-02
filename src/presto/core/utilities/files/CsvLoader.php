@@ -112,6 +112,11 @@ class CsvLoader
      */
     private $caches = [];
 
+    public function clear(string $file="")
+    {
+        $this->caches = [];
+    }
+
     /**
      * csvのロード
      * @param string $csvfile

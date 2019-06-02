@@ -33,7 +33,7 @@ class Command
         $this->info("-----------------------------------------------------");
         $this->info("# RESULT ");
         $this->info(" - Time : " . round(($timeend - $timestart), 3) . " Sec");
-        $this->info(" - Memory : " . util()->unit()->mega(memory_get_peak_usage(TRUE)) . " MB");
+        $this->info(" - Memory : " . util()->unit()->mega(memory_get_peak_usage()) . " MB");
         $this->info("-----------------------------------------------------");
     }
 
