@@ -8,21 +8,42 @@ class Command
     use Injectable;
     protected $services = [];
     protected $repositories = [];
-
+    protected $signature = "";
+    protected $description = "";
 
     const INFO = "info";
     const DEBUG = "debug";
     const WARN = "warning";
     const ERROR = "error";
 
-    public function handler() { }
+
+    public function bootup()
+    {
+        $timestart = microtime(true);
+
+        $this->info("###################################################");
+        $this->info("# START {$this->description}");
+        $this->info("###################################################");
+
+        // ハンドラー
+        $this->handler();
+
+        $timeend = microtime(true);
+
+        $this->info("-----------------------------------------------------");
+        $this->info("# RESULT ");
+        $this->info(" - Time : " . round(($timeend - $timestart), 3) . " Sec");
+        $this->info(" - Memory : " . util()->unit()->mega(memory_get_peak_usage()) . " MB");
+        $this->info("-----------------------------------------------------");
+    }
+
+    public function handler(){}
 
 
     public function info(string $msg, array $datas=[])
     {
         $this->out($msg, $datas, self::INFO);
     }
-
 
     public function debug(string $msg, array $datas=[])
     {
