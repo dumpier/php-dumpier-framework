@@ -17,7 +17,7 @@ class Command
     const ERROR = "error";
 
 
-    public function bootup()
+    public function bootup(...$parameters)
     {
         $timestart = microtime(true);
 
@@ -26,7 +26,7 @@ class Command
         $this->info("###################################################");
 
         // ハンドラー
-        $this->handler();
+        $this->handler(...$parameters);
 
         $timeend = microtime(true);
 
@@ -37,7 +37,7 @@ class Command
         $this->info("-----------------------------------------------------");
     }
 
-    public function handler(){}
+    public function handler(...$parameters){}
 
 
     public function info(string $msg, array $datas=[])
