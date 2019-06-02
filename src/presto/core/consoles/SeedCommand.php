@@ -14,9 +14,10 @@ class SeedCommand extends \Presto\Core\Consoles\Command
     protected $base_path = "app/resources/database/seeds";
     protected $services = [];
 
-    public function handler(string $fullpath="")
+    public function handler(...$parameters)
     {
-        $this->directories($fullpath);
+
+        $this->directories();
     }
 
 
@@ -81,7 +82,7 @@ class SeedCommand extends \Presto\Core\Consoles\Command
         $memory = UnitUtility::instance()->mega(memory_get_usage(), 2);
 
         $this->info("   Import to [{$dbname}].[{$table}]\t{$count} rows completed !");
-        $this->info("   Memory : {$memory} Mb\tTime : {$time_exe} Sec");
+        $this->info("   Time : {$time_exe} Sec\tMemory : {$memory} Mb");
         $this->info("");
     }
 
