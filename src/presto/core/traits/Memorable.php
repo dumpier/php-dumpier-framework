@@ -2,51 +2,74 @@
 namespace Presto\Core\Traits;
 
 /**
- * TODO メモリキャッシュ
+ * メモリキャッシュ
+ * @property array $statusables
  */
-class Memorable
+trait Memorable
 {
-    /** @var array キャッシュ制限個数 */
-    private $limit = [];
-
-    /** @var array キャッシュ */
-    private $caches = [];
-
-
-    public function get(string $name, string $key)
-    {
-        $class = get_class($this);
-
-        if(isset($this->caches[$class][$name]))
-        {
-            return $this->caches[$class][$name];
-        }
-
-        return null;
-    }
-
-
-    public function set(string $name, string $key, $value)
-    {
-        $class = get_class($this);
-
-        $this->caches[$class][$name] = $value;
-
-        return $this;
-    }
-
+    /** キャッシュ配列 */
+    protected static $memory = [];
 
     /**
-     * 制限個数の指定
+     * セット
      * @param string $key
-     * @param int $limit
-     * @return \Presto\Core\Traits\Memorable
+     * @param mixed $data
      */
-    public function limit(string $name, int $limit)
+    public function setMemory(string $key, $data)
     {
-        $class = get_class($this);
-
-        $this->limit[$class][$name] = $limit;
-        return $this;
+        self::$memory[$key] = $data;
     }
+
+    /**
+     * ゲット
+     * @param string $key
+     * @return string|mixed
+     */
+    public function getMemory(string $key)
+    {
+        if (! array_key_exists($key, self::$memory) ) {
+            return 'nothing-in-memory';
+        }
+
+        return self::$memory[$key];
+    }
+
+    // ---------------------------------------------------------
+    // 自動判定
+    // ---------------------------------------------------------
+    public function __call(string $name, array $arguments)
+    {
+        $method = ltrim($name, "_");
+        if (method_exists($this, $method)) {
+            throw new \Exception("");
+        }
+
+        $key = $this->getMemoryKey($name, $arguments);
+
+        if (! array_key_exists($key, self::$memory) ) {
+            self::$memory[$key] = call_user_func_array([$this, $method], $arguments);
+        }
+
+        return self::$memory[$key];
+    }
+
+    /**
+     * キャッシュキー
+     * @param string $name
+     * @param array $arguments
+     * @return string
+     */
+    protected function getMemoryKey(string $name, array $arguments)
+    {
+        $statusables = $this->statusables ?? [];
+
+        $status = [];
+
+        foreach ($statusables as $statusable) {
+            $status[$statusable] = $this->{$statusable};
+        }
+
+        return md5(serialize([$name, $arguments, $status]));
+    }
+    // ---------------------------------------------------------
 }
